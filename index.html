@@ -110,6 +110,16 @@ ul.clean li{margin:.3rem 0}
 .print-btn{margin-top:16px;width:100%;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
 .print-btn:hover{opacity:.92}
 .print-only{display:none}
+/* estimate body (print) */
+.est-lead{font-size:.86rem;color:#333;margin:0 0 10px}
+.est-sec{margin-top:12px}
+.est-h{font-weight:700;font-size:.92rem;border-bottom:1px solid #333;padding-bottom:3px;margin-bottom:6px}
+.est-tbl{width:100%;border-collapse:collapse;font-size:.88rem}
+.est-tbl th,.est-tbl td{border:1px solid #bbb;padding:5px 9px;text-align:left}
+.est-tbl th{background:#eee;font-weight:700}
+.est-tbl td:last-child,.est-tbl th:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.est-formula{font-size:.9rem;border-left:3px solid #333;padding:4px 10px}
+.est-ref{margin-top:8px;font-size:.92rem}
 /* print: one-page estimate */
 @media print{
   :root,:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent-ink:#0a4f4c;color-scheme:light}
@@ -119,15 +129,12 @@ ul.clean li{margin:.3rem 0}
   .wrap{padding:0 10px;max-width:none}
   section{margin-top:0}
   .card.sim{box-shadow:none;border:none;padding:0}
+  .result{display:none !important}
   .print-head{border-bottom:2px solid #111;margin-bottom:14px;padding-bottom:8px}
   .print-head .ph-org{font-weight:700;color:var(--accent-ink);font-size:.9rem}
   .print-head .ph-title{font-family:var(--serif);font-size:1.3rem;font-weight:700;margin-top:2px}
   .print-head .ph-meta{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:#444;margin-top:8px}
-  .result{border-top:none;padding-top:0}
-  .total{border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:10px}
-  .breakdown{font-size:.92rem}
-  .breakdown .row{padding:6px 2px;border-bottom:1px solid #ddd}
-  .breakdown .row span:first-child{color:#111}
+  .est-tbl th{background:#eee !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 </style>
 
@@ -187,6 +194,39 @@ ul.clean li{margin:.3rem 0}
         <div class="breakdown" id="breakdown"></div>
         <p class="note-inline">※ システム管理料10,000円/社は常に含みます（送り出し管理費は含みません）。</p>
       </div>
+
+      <div class="print-only" id="est-detail">
+        <p class="est-lead">本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表A（監理費）の単価でその都度ご確認いただけます。表示はすべて税別・月額。</p>
+        <div class="est-sec">
+          <div class="est-h">A. 監理費（育成就労＋特定技能の合算人数で単価が決まります）</div>
+          <table class="est-tbl">
+            <thead><tr><th>合算人数</th><th>育成就労 単価（1名・月）</th></tr></thead>
+            <tbody>
+              <tr><td>1名</td><td>50,000円</td></tr>
+              <tr><td>2名</td><td>40,000円</td></tr>
+              <tr><td>3〜5名</td><td>35,000円</td></tr>
+              <tr><td>6〜10名</td><td>33,000円</td></tr>
+              <tr><td>11〜15名</td><td>31,000円</td></tr>
+              <tr><td>16名以上</td><td>30,000円</td></tr>
+              <tr><td>特定技能</td><td>30,000円（据置）</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="est-sec">
+          <div class="est-h">B. 固定費（人数に関係なく定額）</div>
+          <table class="est-tbl"><tbody id="est-fixed"></tbody></table>
+        </div>
+        <div class="est-sec">
+          <div class="est-h">C. お申込みオプション（単価）</div>
+          <table class="est-tbl"><tbody id="est-opts"></tbody></table>
+        </div>
+        <div class="est-sec">
+          <div class="est-h">D. 月額の計算方法</div>
+          <div class="est-formula">月額 ＝ 監理費（表A 単価 × 人数）＋ 固定費（B）＋ お申込みオプション（C）</div>
+          <div class="est-ref" id="est-ref"></div>
+        </div>
+      </div>
+
       <button class="print-btn" id="printBtn" type="button">この条件で印刷 / PDF保存</button>
     </div>
   </section>
@@ -411,13 +451,38 @@ ul.clean li{margin:.3rem 0}
   ids.forEach(function(id){var el=document.getElementById(id); el.addEventListener('input',calc); el.addEventListener('change',calc);});
   calc();
 
-  // print / PDF save
+  // print / PDF save — builds a reusable unit-price estimate
   var pbtn=document.getElementById('printBtn');
   if(pbtn){ pbtn.addEventListener('click',function(){
     var c=(document.getElementById('company').value||'').trim();
     document.getElementById('ph-company').textContent = c ? (c+'　御中') : '';
     var d=new Date();
-    document.getElementById('ph-date').textContent='作成日：'+d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
+    document.getElementById('ph-date').textContent='発行日：'+d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
+
+    var ik=Math.max(0,parseInt(document.getElementById('ikusei').value,10)||0);
+    var tk=Math.max(0,parseInt(document.getElementById('tokutei').value,10)||0);
+    var n=ik+tk;
+    var rate=ikuseiRate(n), tkRate=Math.min(TOKUTEI_RATE,rate);
+    var kanri=ik*rate+tk*tkRate;
+
+    // B. fixed costs
+    var fixed=SYS, fixedRows='<tr><td>システム管理料</td><td>10,000円/社・月</td></tr>';
+    if(document.getElementById('o_ccus').checked){ fixed+=CCUS; fixedRows+='<tr><td>建設キャリアアップシステム（CCUS）月次運用サポート</td><td>5,000円/社・月</td></tr>'; }
+    document.getElementById('est-fixed').innerHTML=fixedRows;
+
+    // C. option unit prices (per-head)
+    var opt=0, optRows='';
+    if(document.getElementById('o_soft').checked){ opt+=SOFT*n; optRows+='<tr><td>在留申請書類ソフト 使用料</td><td>5,000円/人・月（従量）</td></tr>'; }
+    if(document.getElementById('o_kyuyo').checked){ opt+=KYUYO_BASE+KYUYO_PER*n; optRows+='<tr><td>給与計算サポート</td><td>基本3,000円/社＋1,000円/人</td></tr>'; }
+    if(!optRows) optRows='<tr><td>お申込みなし</td><td>—</td></tr>';
+    document.getElementById('est-opts').innerHTML=optRows;
+
+    // D. reference calc for current headcount
+    var total=kanri+fixed+opt;
+    document.getElementById('est-ref').innerHTML = n>0
+      ? '参考試算（現在：育成就労 '+ik+'名・特定技能 '+tk+'名／合算 '+n+'名）<br>監理費 '+fmt(kanri)+' ＋ 固定費 '+fmt(fixed)+' ＋ オプション '+fmt(opt)+' ＝ <b>月額 '+fmt(total)+'</b>（税別）'
+      : '※ 人数を入力してから印刷すると、現時点の参考試算も表示されます。';
+
     window.print();
   }); }
 
