@@ -65,6 +65,19 @@ p{margin:.5rem 0}
 .breakdown .sub{color:var(--muted);padding-left:12px;font-size:.84rem}
 .tierpill{display:inline-block;font-size:.76rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);margin-left:8px}
 .note-inline{font-size:.8rem;color:var(--muted);margin-top:10px}
+/* Accordion */
+details.acc{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-top:12px;overflow:hidden}
+details.acc>summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:12px}
+details.acc>summary::-webkit-details-marker{display:none}
+details.acc>summary:hover{background:var(--surface-2)}
+.sm-txt{display:flex;flex-direction:column;gap:3px}
+.sm-txt .eyebrow{font-size:.68rem}
+.sm-txt .t{font-family:var(--serif);font-size:1.08rem;font-weight:700;line-height:1.25}
+details.acc>summary .chev{margin-left:auto;flex:none;color:var(--muted);font-size:1.3rem;line-height:1;transition:transform .2s}
+details.acc[open]>summary .chev{transform:rotate(90deg)}
+details.acc[open]>summary{border-bottom:1px solid var(--line)}
+.acc .body{padding:16px 18px 18px}
+.acc .body>*:first-child{margin-top:0}
 /* Tables */
 .tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
 table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:380px}
@@ -143,22 +156,28 @@ ul.clean li{margin:.3rem 0}
     </div>
   </section>
 
-  <!-- STRUCTURE -->
+  <!-- DETAILS (accordion) -->
   <section>
-    <span class="eyebrow">料金の構造</span>
-    <h2>3層＋追加サービス</h2>
+    <span class="eyebrow">詳細</span>
+    <h2>各項目をクリックで開く</h2>
+
+  <!-- STRUCTURE -->
+  <details class="acc">
+    <summary><div class="sm-txt"><span class="eyebrow">料金の構造</span><span class="t">3層＋追加サービス</span></div><span class="chev">›</span></summary>
+    <div class="body">
     <div class="layers">
       <div class="layer"><div class="k">①</div><div class="b"><b>監理費（人数連動）</b><div class="d">法定監理業務。育成就労＝階段式（人数帯別）／特定技能＝据え置き。合算人数で単価が決まる</div></div></div>
       <div class="layer"><div class="k">②</div><div class="b"><b>システム管理料（全社必須）</b><div class="d">受入管理システム・セキュア環境の運用。10,000円/社・月</div></div></div>
       <div class="layer"><div class="k">③</div><div class="b"><b>付加価値オプション（選択制）</b><div class="d">給与計算サポート・建設キャリアアップシステム（CCUS）・算定基礎届</div></div></div>
       <div class="layer"><div class="k">＋</div><div class="b"><b>都度・休日の実費</b><div class="d">建設キャリアアップシステム（CCUS）代行、休日・時間外の出動は都度対応。<b>在留申請書類は①ソフトで自作（使用料5,000円/人・月）／②提携行政書士（実費）。</b>緊急対応と組合発意の訪問は無料</div></div></div>
     </div>
-  </section>
+    </div>
+  </details>
 
   <!-- KANRIHI TABLE -->
-  <section>
-    <span class="eyebrow">① 監理費</span>
-    <h2>育成就労（階段式・人数帯別）</h2>
+  <details class="acc">
+    <summary><div class="sm-txt"><span class="eyebrow">① 監理費</span><span class="t">育成就労（人数帯別の単価）</span></div><span class="chev">›</span></summary>
+    <div class="body">
     <div class="tablebox">
       <table>
         <caption>合算人数（育成就労＋特定技能）でその会社の単価が決まる。</caption>
@@ -176,12 +195,13 @@ ul.clean li{margin:.3rem 0}
     <div class="callout" style="margin-top:12px">
       <b>特定技能：</b>1名30,000円（据え置き）。育成就労の単価は、育成就労＋特定技能の合算人数帯で決まります。
     </div>
-  </section>
+    </div>
+  </details>
 
   <!-- OPTIONS TABLE -->
-  <section>
-    <span class="eyebrow">②③ 基本料金・付加価値オプション</span>
-    <h2>サービスメニュー</h2>
+  <details class="acc">
+    <summary><div class="sm-txt"><span class="eyebrow">②③ 基本料金・付加価値オプション</span><span class="t">サービスメニュー</span></div><span class="chev">›</span></summary>
+    <div class="body">
     <div class="tablebox">
       <table>
         <thead><tr><th>サービス</th><th class="n">料金</th><th>備考</th></tr></thead>
@@ -194,12 +214,13 @@ ul.clean li{margin:.3rem 0}
         </tbody>
       </table>
     </div>
-  </section>
+    </div>
+  </details>
 
   <!-- CCUS onetime + todo -->
-  <section>
-    <span class="eyebrow">＋ 都度課金</span>
-    <h2>建設キャリアアップシステム（CCUS）代行・在留手続きなど</h2>
+  <details class="acc">
+    <summary><div class="sm-txt"><span class="eyebrow">＋ 都度課金</span><span class="t">CCUS代行・在留手続きなど</span></div><span class="chev">›</span></summary>
+    <div class="body">
     <div class="tablebox">
       <table>
         <caption>建設キャリアアップシステム（CCUS）代行は行政書士相場にアンカーし、会員優遇で下限寄りに設定。公式実費（技能者登録料2,500/4,900円、管理者ID年11,400円等）は受け入れ企業様のご負担。</caption>
@@ -213,12 +234,13 @@ ul.clean li{margin:.3rem 0}
       </table>
     </div>
     <p class="note-inline"><b>在留資格の新規・変更・更新は、いずれも書類作成を①企業が在留申請書類ソフトで自作（使用料5,000円/人・月）、または②組合が提携する行政書士へ依頼（行政書士実費・手続きにより概ね5.5万〜20万円／件）。</b>当組合は、期限管理・チェック・申請取次・窓口を従来どおり一貫して担い、企業様のお手間を増やしません。印紙代等の官公庁への実費は受け入れ企業様のご負担（特定技能の方はご本人負担）。建設就労者の資格取得は、会場への引率・通訳の対価として30,000円/回です。なお当組合では、企業様が従来どおり必要資料をお送りいただく感覚で申請書類を作成できるソフトの開発を進めており、企業様のお手間が増えないよう対応してまいります。</p>
-  </section>
+    </div>
+  </details>
 
   <!-- entry costs -->
-  <section>
-    <span class="eyebrow">＋ 入国・初期諸費用</span>
-    <h2>受け入れ諸費用（初期・1名あたり）</h2>
+  <details class="acc">
+    <summary><div class="sm-txt"><span class="eyebrow">＋ 入国・初期諸費用</span><span class="t">受け入れ諸費用（初期・1名あたり）</span></div><span class="chev">›</span></summary>
+    <div class="body">
     <div class="tablebox">
       <table>
         <caption>入国時にかかる一時金・実費の目安です（毎月の監理費・システム管理料とは別）。</caption>
@@ -234,12 +256,13 @@ ul.clean li{margin:.3rem 0}
       </table>
     </div>
     <p class="note-inline">入国後講習費は講習時間により変動します。育成就労の日本語講習は原則320時間（A）／220時間（B）。入国前に6か月以内で160時間（A）／110時間（B）以上修了すると、入国後は各160／110時間に短縮でき費用を抑えられます。月食費・施設費2万円／月を講習期間分含みます。実費は委託先により異なります。入国前手数料（送り出し）はご本人負担が月給の2か月分まで、超過分は受け入れ企業様のご負担です。住居・家電・備品等の準備費用は受け入れ企業様のご負担（本表には含みません）。</p>
-  </section>
+    </div>
+  </details>
 
   <!-- japanese training -->
-  <section>
-    <span class="eyebrow">＋ 日本語講習</span>
-    <h2>入国後講習の時間（A1=N5の合否で決まる）</h2>
+  <details class="acc">
+    <summary><div class="sm-txt"><span class="eyebrow">＋ 日本語講習</span><span class="t">入国後講習・A2目標講習・来日前A2保証</span></div><span class="chev">›</span></summary>
+    <div class="body">
     <div class="tablebox">
       <table>
         <thead><tr><th>パターン</th><th>申請時点の日本語</th><th class="n">入国後講習</th><th class="n">入国前講習で短縮</th></tr></thead>
@@ -265,12 +288,13 @@ ul.clean li{margin:.3rem 0}
     <div class="callout" style="margin-top:12px">
       <b>来日前A2（N4相当）取得保証（60,000円／人・任意）：</b>育成就労は3年満了後、特定技能へ切り替えるにはA2（N4相当）が必要です。来日前にA2を取得しておくと、①入国後講習が短くなり（Aパターン320時間→Bパターン最短110時間）、②就労開始後のA2目標講習（100時間）の提供義務も不要になり、従来の実習生制度と同じ感覚でスムーズに特定技能へ切り替えられます。結果として16〜70万円程度の費用軽減が見込めます（目安）。以上を踏まえ、ご選択ください。
     </div>
-  </section>
+    </div>
+  </details>
 
   <!-- holiday -->
-  <section>
-    <span class="eyebrow">＋ 休日・時間外</span>
-    <h2>休日出動料</h2>
+  <details class="acc">
+    <summary><div class="sm-txt"><span class="eyebrow">＋ 休日・時間外</span><span class="t">休日出動料</span></div><span class="chev">›</span></summary>
+    <div class="body">
     <div class="tablebox">
       <table>
         <thead><tr><th>区分</th><th>例</th><th class="n">費用</th></tr></thead>
@@ -285,16 +309,21 @@ ul.clean li{margin:.3rem 0}
     </div>
     <p class="note-inline">巡回は平日のみ。事前予約制。</p>
     <p class="note-inline">半日プランはございません。休日は1時間の通訳等でも職員に1日分（8時間）の給与が発生するため、会社都合の休日出動は一律「1日分」で申し受けます。</p>
-  </section>
+    </div>
+  </details>
 
   <!-- rules -->
-  <section>
-    <span class="eyebrow">適用ルール</span>
+  <details class="acc">
+    <summary><div class="sm-txt"><span class="eyebrow">適用ルール</span><span class="t">誰に・いつから適用</span></div><span class="chev">›</span></summary>
+    <div class="body">
     <ul class="clean">
       <li><b>新規（2027年4月〜の育成就労）</b>：この新料金体系を適用。</li>
       <li><b>既存の技能実習・特定技能</b>：現行料金を据え置き（影響なし）。※新サービスルールは2027年4月1日から適用になります。</li>
       <li><b>育成就労を避けたい会社</b>：2026年11月までの面接で技能実習生を受け入れれば、現行制度・現行料金で対応可能。</li>
     </ul>
+    </div>
+  </details>
+
   </section>
 
   <div class="foot">
