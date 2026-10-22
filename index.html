@@ -232,8 +232,8 @@ ul.clean li{margin:.3rem 0}
       </div>
 
       <button class="print-btn" id="printBtn" type="button">この条件で印刷 / PDF保存</button>
-      <button class="apply-btn" id="applyBtn" type="button">この条件で申し込み／見積もり依頼</button>
-      <p class="apply-note">人数・オプション・月額合計が入力された申込フォームが開きます（Googleフォーム）。</p>
+      <button class="apply-btn" id="applyBtn" type="button">この内容で申し込む</button>
+      <p class="apply-note">人数・オプション・月額が入った申込フォームが開きます。送信後、受付メールと見積書PDFが自動で届きます。</p>
     </div>
   </section>
 
@@ -492,7 +492,7 @@ ul.clean li{margin:.3rem 0}
     window.print();
   }); }
 
-  // apply / estimate request — opens the Google Form with simulator values prefilled
+  // apply — opens the Google Form with simulator values prefilled
   var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSf_sHpC5oTnx7XaYh3ojxOVOQMN8-3maqr8Hxqn48md1-YxMQ/viewform';
   var FORM_ENTRY={company:'entry.95220113', ikusei:'entry.291547831', tokutei:'entry.1189208840', options:'entry.1237508071', total:'entry.706478240'};
   var abtn=document.getElementById('applyBtn');
