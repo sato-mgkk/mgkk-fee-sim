@@ -110,31 +110,32 @@ ul.clean li{margin:.3rem 0}
 .print-btn{margin-top:16px;width:100%;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
 .print-btn:hover{opacity:.92}
 .print-only{display:none}
-/* estimate body (print) */
-.est-lead{font-size:.86rem;color:#333;margin:0 0 10px}
-.est-sec{margin-top:12px}
-.est-h{font-weight:700;font-size:.92rem;border-bottom:1px solid #333;padding-bottom:3px;margin-bottom:6px}
-.est-tbl{width:100%;border-collapse:collapse;font-size:.88rem}
-.est-tbl th,.est-tbl td{border:1px solid #bbb;padding:5px 9px;text-align:left}
-.est-tbl th{background:#eee;font-weight:700}
-.est-tbl td:last-child,.est-tbl th:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-.est-formula{font-size:.9rem;border-left:3px solid #333;padding:4px 10px}
-.est-ref{margin-top:8px;font-size:.92rem}
+/* estimate body (print) — colored, compact, larger type */
+.est-lead{font-size:.9rem;color:#555;margin:0 0 12px;line-height:1.55}
+.est-sec{margin-top:13px}
+.est-h{font-weight:700;font-size:1.1rem;color:var(--accent-ink);border-left:6px solid var(--accent);padding:1px 0 1px 11px;margin-bottom:7px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.est-tbl{width:100%;border-collapse:collapse;font-size:1rem}
+.est-tbl th{background:var(--accent);color:#fff;font-weight:700;padding:8px 12px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.est-tbl td{border:1px solid #cfd9dd;padding:7px 12px;text-align:left}
+.est-tbl tbody tr:nth-child(even) td{background:#f0f6f5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.est-tbl td:last-child,.est-tbl th:last-child{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.est-formula{font-size:1.02rem;background:var(--accent-soft);color:var(--accent-ink);border-radius:8px;padding:10px 13px;font-weight:600;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.est-ref{margin-top:10px;font-size:1.05rem;border:2px solid var(--accent);border-radius:10px;padding:13px 15px;line-height:1.65}
+.est-ref b{font-size:1.3rem;color:var(--accent-ink)}
 /* print: one-page estimate */
 @media print{
-  :root,:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent-ink:#0a4f4c;color-scheme:light}
-  .theme-btn,.print-btn,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts{display:none !important}
+  @page{margin:9mm}
+  :root,:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
+  .theme-btn,.print-btn,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result{display:none !important}
   .print-only{display:block !important}
   body{background:#fff;color:#111}
-  .wrap{padding:0 10px;max-width:none}
+  .wrap{padding:0;max-width:none}
   section{margin-top:0}
   .card.sim{box-shadow:none;border:none;padding:0}
-  .result{display:none !important}
-  .print-head{border-bottom:2px solid #111;margin-bottom:14px;padding-bottom:8px}
-  .print-head .ph-org{font-weight:700;color:var(--accent-ink);font-size:.9rem}
-  .print-head .ph-title{font-family:var(--serif);font-size:1.3rem;font-weight:700;margin-top:2px}
-  .print-head .ph-meta{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:#444;margin-top:8px}
-  .est-tbl th{background:#eee !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-head{background:var(--accent);color:#fff;border-radius:10px;padding:16px 20px;margin-bottom:16px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-head .ph-org{font-weight:700;font-size:1rem;opacity:.92}
+  .print-head .ph-title{font-family:var(--serif);font-size:1.7rem;font-weight:700;margin-top:3px}
+  .print-head .ph-meta{display:flex;justify-content:space-between;gap:12px;font-size:1rem;margin-top:11px;opacity:.96}
 }
 </style>
 
