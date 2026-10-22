@@ -186,11 +186,11 @@ ul.clean li{margin:.3rem 0}
       <table>
         <thead><tr><th>サービス</th><th class="n">料金</th><th>備考</th></tr></thead>
         <tbody>
-          <tr class="em"><td>② システム管理料（必須）</td><td class="n">10,000円/社・月</td><td>受入管理システムの運用</td></tr>
+          <tr class="em"><td>システム管理料（必須）</td><td class="n">10,000円/社・月</td><td>受入管理システムの運用</td></tr>
           <tr><td>在留申請書類ソフト 使用料</td><td class="n">5,000円/人・月</td><td>申請を自作する場合</td></tr>
-          <tr><td>B 給与計算サポート（PX）</td><td class="n">基本3,000円/社＋1,000円/人</td><td>月次</td></tr>
-          <tr><td>C 建設キャリアアップシステム（CCUS）月次運用サポート</td><td class="n">5,000円/社・月</td><td>就業履歴等</td></tr>
-          <tr><td>D 算定基礎届サポート</td><td class="n">5,000円/社・年</td><td>自社ワンクリック申告の環境提供</td></tr>
+          <tr><td>給与計算サポート</td><td class="n">基本3,000円/社＋1,000円/人</td><td>月次</td></tr>
+          <tr><td>建設キャリアアップシステム（CCUS）月次運用サポート</td><td class="n">5,000円/社・月</td><td>就業履歴等</td></tr>
+          <tr><td>算定基礎届サポート</td><td class="n">5,000円/社・年</td><td>自社ワンクリック申告の環境提供</td></tr>
         </tbody>
       </table>
     </div>
@@ -270,11 +270,11 @@ ul.clean li{margin:.3rem 0}
     var opt=0, rows=[];
     rows.push(['監理費（育成就労 '+ik+'名 × '+fmt(rate)+'）', kanriIk, false]);
     rows.push(['監理費（特定技能 '+tk+'名 × '+fmt(tkRate)+(tkRate<TOKUTEI_RATE?'・育成就労と同額':'・据置')+'）', kanriTk, false]);
-    rows.push(['② システム管理料', SYS, false]); opt+=0;
+    rows.push(['システム管理料', SYS, false]); opt+=0;
     var base=kanri+SYS;
     if(document.getElementById('o_soft').checked){var sf=SOFT*n; opt+=sf; rows.push(['在留申請書類ソフト使用料（5,000×'+n+'名）', sf, true]);}
-    if(document.getElementById('o_kyuyo').checked){var ky=KYUYO_BASE+KYUYO_PER*n; opt+=ky; rows.push(['B 給与計算サポート（基本3,000＋1,000×'+n+'名）', ky, true]);}
-    if(document.getElementById('o_ccus').checked){opt+=CCUS; rows.push(['C 建設キャリアアップシステム（CCUS）月次サポート', CCUS, true]);}
+    if(document.getElementById('o_kyuyo').checked){var ky=KYUYO_BASE+KYUYO_PER*n; opt+=ky; rows.push(['給与計算サポート（基本3,000＋1,000×'+n+'名）', ky, true]);}
+    if(document.getElementById('o_ccus').checked){opt+=CCUS; rows.push(['建設キャリアアップシステム（CCUS）月次サポート', CCUS, true]);}
     var total=base+opt;
     var bd=document.getElementById('breakdown'); bd.innerHTML='';
     if(n<=0){
