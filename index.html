@@ -109,6 +109,9 @@ ul.clean li{margin:.3rem 0}
 .field input[type=text]{width:100%;font-size:1rem;font-family:var(--sans);padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
 .print-btn{margin-top:16px;width:100%;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
 .print-btn:hover{opacity:.92}
+.apply-btn{margin-top:10px;width:100%;border:2px solid var(--accent);background:transparent;color:var(--accent);border-radius:10px;padding:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.apply-btn:hover{background:var(--accent);color:#fff}
+.apply-note{margin-top:6px;font-size:.78rem;color:var(--muted);text-align:center}
 .print-only{display:none}
 /* estimate body (print) — colored, compact, larger type */
 .est-lead{font-size:.9rem;color:#555;margin:0 0 12px;line-height:1.55}
@@ -126,7 +129,7 @@ ul.clean li{margin:.3rem 0}
 @media print{
   @page{margin:9mm}
   :root,:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
-  .theme-btn,.print-btn,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result{display:none !important}
+  .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result{display:none !important}
   .print-only{display:block !important}
   body{background:#fff;color:#111}
   .wrap{padding:0;max-width:none}
@@ -229,6 +232,8 @@ ul.clean li{margin:.3rem 0}
       </div>
 
       <button class="print-btn" id="printBtn" type="button">この条件で印刷 / PDF保存</button>
+      <button class="apply-btn" id="applyBtn" type="button">この条件で申し込み／見積もり依頼</button>
+      <p class="apply-note">人数・オプション・月額合計が入力された申込フォームが開きます（Googleフォーム）。</p>
     </div>
   </section>
 
@@ -485,6 +490,30 @@ ul.clean li{margin:.3rem 0}
       : '※ 人数を入力してから印刷すると、現時点の参考試算も表示されます。';
 
     window.print();
+  }); }
+
+  // apply / estimate request — opens the Google Form with simulator values prefilled
+  var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSf_sHpC5oTnx7XaYh3ojxOVOQMN8-3maqr8Hxqn48md1-YxMQ/viewform';
+  var FORM_ENTRY={company:'entry.95220113', ikusei:'entry.291547831', tokutei:'entry.1189208840', options:'entry.1237508071', total:'entry.706478240'};
+  var abtn=document.getElementById('applyBtn');
+  if(abtn){ abtn.addEventListener('click',function(){
+    calc();
+    var ik=Math.max(0,parseInt(document.getElementById('ikusei').value,10)||0);
+    var tk=Math.max(0,parseInt(document.getElementById('tokutei').value,10)||0);
+    var opts=[];
+    document.querySelectorAll('#breakdown .row.sub').forEach(function(r){
+      var s=r.querySelectorAll('span'); opts.push(s[0].textContent+'：'+s[1].textContent);
+    });
+    if(!opts.length){ document.querySelectorAll('.opts input:checked').forEach(function(c){ opts.push(c.nextElementSibling.textContent); }); }
+    var v={
+      company:(document.getElementById('company').value||'').trim(),
+      ikusei:String(ik), tokutei:String(tk),
+      options:opts.length?opts.join('\n'):'なし',
+      total:(ik+tk>0)?document.getElementById('total').textContent+'（税別・月額・システム管理料10,000円含む）':'未試算'
+    };
+    var q=['usp=pp_url'];
+    Object.keys(FORM_ENTRY).forEach(function(k){ if(v[k]) q.push(FORM_ENTRY[k]+'='+encodeURIComponent(v[k])); });
+    window.open(FORM_URL+'?'+q.join('&'),'_blank','noopener');
   }); }
 
   // theme toggle
