@@ -106,6 +106,11 @@ ul.clean li{margin:.3rem 0}
   .total .big{font-size:1.9rem}
 }
 /* text field + print button */
+.field select{width:100%;font-size:1rem;font-family:var(--sans);padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
+.field select:disabled{opacity:.7}
+.result .big.range{font-size:1.55rem}
+.est-tbl td.tag{font-weight:400;color:#555;font-size:.85rem;white-space:nowrap;text-align:left}
+.est-page2{break-before:page}
 .field input[type=text]{width:100%;font-size:1rem;font-family:var(--sans);padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
 .print-btn{margin-top:16px;width:100%;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
 .print-btn:hover{opacity:.92}
@@ -156,7 +161,7 @@ ul.clean li{margin:.3rem 0}
     <div class="card sim">
       <div class="print-only print-head">
         <div class="ph-org">MGKK協同組合</div>
-        <div class="ph-title">月額お見積り（概算・税別）</div>
+        <div class="ph-title">お見積り（月額・初期費用／概算・税別）</div>
         <div class="ph-meta"><span id="ph-company"></span><span id="ph-date"></span></div>
       </div>
       <h2 id="sim-h2">月額を試算する</h2>
@@ -182,6 +187,27 @@ ul.clean li{margin:.3rem 0}
         <label class="opt"><input type="checkbox" id="o_soft"><span>在留申請書類ソフト 使用料</span><span class="price">5,000円/人・月</span></label>
         <label class="opt"><input type="checkbox" id="o_kyuyo"><span>給与計算サポート</span><span class="price">基本3,000＋1,000円/人</span></label>
         <label class="opt"><input type="checkbox" id="o_ccus"><span>建設キャリアアップシステム（CCUS）月次運用サポート</span><span class="price">5,000円/社・月</span></label>
+        <label class="opt"><input type="checkbox" id="o_santei"><span>算定基礎届サポート（年1回）</span><span class="price">5,000円/社・年</span></label>
+      </div>
+
+      <div class="opts" id="init-opts">
+        <span class="ohead">入国時の初期費用（育成就労で新しく入国する方）</span>
+        <div class="grid" style="margin-top:0">
+          <div class="field">
+            <label for="nyukoku">うち新規入国（名）</label>
+            <input type="number" id="nyukoku" min="0" value="0" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="jlv">申請時の日本語レベル</label>
+            <select id="jlv">
+              <option value="B">A1（N5）合格済み（Bパターン）</option>
+              <option value="A">A1（N5）未合格（Aパターン）</option>
+            </select>
+          </div>
+        </div>
+        <label class="opt"><input type="checkbox" id="o_a2"><span>来日前A2（N4相当）取得保証</span><span class="price">60,000円/人</span></label>
+        <label class="opt"><input type="checkbox" id="o_ccusreg"><span>建設キャリアアップシステム（CCUS）技能者登録 代行</span><span class="price">15,000円/人</span></label>
+        <label class="opt"><input type="checkbox" id="o_ccusjigyo"><span>建設キャリアアップシステム（CCUS）事業者登録 代行</span><span class="price">30,000円/社</span></label>
       </div>
 
       <div class="result">
@@ -197,10 +223,26 @@ ul.clean li{margin:.3rem 0}
         </div>
         <div class="breakdown" id="breakdown"></div>
         <p class="note-inline">※ システム管理料10,000円/社は常に含みます（送り出し管理費は含みません）。</p>
+        <div class="breakdown" id="extra"></div>
+      </div>
+
+      <div class="result" id="init-result">
+        <div class="total">
+          <div>
+            <div style="font-size:.82rem;color:var(--muted);font-weight:700">初期費用 合計（入国時・一時金／概算・税別）</div>
+            <div class="big range num" id="itotal">¥0</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:.82rem;color:var(--muted);font-weight:700">1人あたり</div>
+            <div class="num" style="font-size:1.1rem;font-weight:700" id="iperhead">¥0</div>
+          </div>
+        </div>
+        <div class="breakdown" id="ibreakdown"></div>
+        <p class="note-inline">※ 幅のある項目は目安の下限〜上限です。航空券代は実費のため合計に含みません。</p>
       </div>
 
       <div class="print-only" id="est-detail">
-        <p class="est-lead">本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表A（監理費）の単価でその都度ご確認いただけます。表示はすべて税別・月額。</p>
+        <p class="est-lead">本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表A（監理費）の単価でその都度ご確認いただけます。表示はすべて税別。A〜Dは月額、Eは入国時の初期費用、F・Gは発生時のみの費用です。</p>
         <div class="est-sec">
           <div class="est-h">A. 監理費（育成就労＋特定技能の合算人数で単価が決まります）</div>
           <table class="est-tbl">
@@ -229,11 +271,38 @@ ul.clean li{margin:.3rem 0}
           <div class="est-formula">月額 ＝ 監理費（表A 単価 × 人数）＋ 固定費（B）＋ お申込みオプション（C）</div>
           <div class="est-ref" id="est-ref"></div>
         </div>
+        <div class="est-sec est-page2">
+          <div class="est-h">E. 入国時の初期費用（育成就労・一時金）</div>
+          <table class="est-tbl"><thead><tr><th>項目</th><th>区分</th><th>単価</th></tr></thead><tbody id="est-init"></tbody></table>
+          <div class="est-ref" id="est-iref"></div>
+        </div>
+        <div class="est-sec">
+          <div class="est-h">F. 発生時のみの費用（単価）</div>
+          <table class="est-tbl"><tbody>
+            <tr><td>送り出し機関 管理費（送り出し機関へ直接お支払い）</td><td>5,000円/人・月</td></tr>
+            <tr><td>休日・時間外の出動（会社都合・非緊急／1日分）</td><td>30,000円/回＋交通費実費</td></tr>
+            <tr><td>建設就労者 資格取得の引率・通訳（送迎含む）</td><td>30,000円/回</td></tr>
+            <tr><td>建設キャリアアップシステム（CCUS）変更・更新 代行</td><td>5,000円/件</td></tr>
+            <tr><td>在留資格の変更・更新 書類作成（提携行政書士へ依頼の場合）</td><td>概ね5.5万〜20万円/件</td></tr>
+          </tbody></table>
+        </div>
+        <div class="est-sec">
+          <div class="est-h">G. 実費（企業さまご負担）</div>
+          <table class="est-tbl"><tbody>
+            <tr><td>航空券（入国時・片道）</td><td>実費</td></tr>
+            <tr><td>技能検定・技能評価試験 受検料（職種・級で変動）</td><td>実費</td></tr>
+            <tr><td>在留資格の変更・更新 入管手数料（組合が納付し請求）</td><td>実費</td></tr>
+            <tr><td>CCUS 公式登録料（技能者2,500/4,900円、管理者ID 年11,400円 等）</td><td>実費</td></tr>
+            <tr><td>送り出し機関の入国前手数料（本人負担 月給2か月分の超過分）</td><td>実費</td></tr>
+            <tr><td>住居・家電・備品等の準備費用</td><td>実費</td></tr>
+          </tbody></table>
+          <p class="est-lead" style="margin-top:8px">入国後講習費・保険・A2目標講習は委託先・コースにより変動する目安です。緊急時の出動・組合発意の訪問は無料です。正式な料金は組合より改めてご案内いたします。</p>
+        </div>
       </div>
 
       <button class="print-btn" id="printBtn" type="button">この条件で印刷 / PDF保存</button>
       <button class="apply-btn" id="applyBtn" type="button">この内容で申し込む</button>
-      <p class="apply-note">人数・オプション・月額が入った申込フォームが開きます。送信後、受付メールと見積書PDFが自動で届きます。</p>
+      <p class="apply-note">人数・オプション・月額・初期費用が入った申込フォームが開きます。送信後、受付メールと見積書PDFが自動で届きます。</p>
     </div>
   </section>
 
@@ -418,76 +487,130 @@ ul.clean li{margin:.3rem 0}
 <script>
 (function(){
   var fmt=function(n){return '¥'+Math.round(n).toLocaleString('ja-JP');};
-  var ids=['ikusei','tokutei','o_soft','o_kyuyo','o_ccus'];
-  var SYS=10000, SOFT=5000, KYUYO_BASE=3000, KYUYO_PER=1000, CCUS=5000, TOKUTEI_RATE=30000;
+  var rng=function(lo,hi){return lo===hi?fmt(lo):fmt(lo)+'〜'+fmt(hi);};
+  var $=function(id){return document.getElementById(id);};
+  var ids=['ikusei','tokutei','nyukoku','jlv','o_soft','o_kyuyo','o_ccus','o_santei','o_a2','o_ccusreg','o_ccusjigyo'];
+  var SYS=10000, SOFT=5000, KYUYO_BASE=3000, KYUYO_PER=1000, CCUS=5000, TOKUTEI_RATE=30000, SANTEI=5000, OKURI=5000;
+  // 入国時の初期費用（1名あたり。[下限, 上限]）
+  var PRE=15000, POST={A:[160000,260000], B:[100000,160000]}, TRAVEL=30000, INS=[20000,33000], NINTEI=6100,
+      GYOSEI=[55000,200000], A2KOSHU=[100000,200000], A2HOSHO=60000, CCUS_REG=15000, CCUS_JIGYO=30000;
   function ikuseiRate(n){ if(n<=1)return 50000; if(n<=2)return 40000; if(n<=5)return 35000; if(n<=10)return 33000; if(n<=15)return 31000; return 30000; }
-  function tierName(n){ if(n<=0)return '—'; if(n<=1)return '1名 単独'; if(n<=2)return '2名 少数'; if(n<=5)return '3〜5名 小口'; if(n<=10)return '6〜10名 中堅'; if(n<=15)return '11〜15名 大口'; return '16名以上 特大'; }
-  function calc(){
-    var ik=Math.max(0,parseInt(document.getElementById('ikusei').value,10)||0);
-    var tk=Math.max(0,parseInt(document.getElementById('tokutei').value,10)||0);
-    var n=ik+tk;
-    var rate=ikuseiRate(n);
-    var tkRate=Math.min(TOKUTEI_RATE, rate);
-    var kanriIk=ik*rate, kanriTk=tk*tkRate, kanri=kanriIk+kanriTk;
-    var opt=0, rows=[];
-    rows.push(['監理費（育成就労 '+ik+'名 × '+fmt(rate)+'）', kanriIk, false]);
-    rows.push(['監理費（特定技能 '+tk+'名 × '+fmt(tkRate)+(tkRate<TOKUTEI_RATE?'・育成就労と同額':'・据置')+'）', kanriTk, false]);
-    rows.push(['システム管理料', SYS, false]); opt+=0;
-    var base=kanri+SYS;
-    if(document.getElementById('o_soft').checked){var sf=SOFT*n; opt+=sf; rows.push(['在留申請書類ソフト使用料（5,000×'+n+'名）', sf, true]);}
-    if(document.getElementById('o_kyuyo').checked){var ky=KYUYO_BASE+KYUYO_PER*n; opt+=ky; rows.push(['給与計算サポート（基本3,000＋1,000×'+n+'名）', ky, true]);}
-    if(document.getElementById('o_ccus').checked){opt+=CCUS; rows.push(['建設キャリアアップシステム（CCUS）月次サポート', CCUS, true]);}
-    var total=base+opt;
-    var bd=document.getElementById('breakdown'); bd.innerHTML='';
-    if(n<=0){
-      document.getElementById('total').textContent='¥0';
-      document.getElementById('perhead').textContent='¥0';
-      bd.innerHTML='<div class="row"><span>人数を入力すると自動計算されます。</span></div>';
-      return;
-    }
-    document.getElementById('total').textContent=fmt(total);
-    document.getElementById('perhead').textContent = fmt(total/n);
-    rows.forEach(function(r){
-      var div=document.createElement('div'); div.className='row'+(r[2]?' sub':'');
-      var a=document.createElement('span'); a.textContent=r[0];
-      var b=document.createElement('span'); b.className='num'; b.textContent=fmt(r[1]);
-      div.appendChild(a); div.appendChild(b); bd.appendChild(div);
-    });
+  function num(id){return Math.max(0,parseInt($(id).value,10)||0);}
+
+  // 新規入国の人数は、手で変えるまで育成就労の人数に合わせる
+  var nyTouched=false;
+  $('nyukoku').addEventListener('input',function(){nyTouched=true;});
+  $('ikusei').addEventListener('input',function(){ if(!nyTouched) $('nyukoku').value=$('ikusei').value; });
+
+  function state(){
+    var s={ik:num('ikusei'), tk:num('tokutei'), ny:num('nyukoku'), a2:$('o_a2').checked,
+      soft:$('o_soft').checked, kyuyo:$('o_kyuyo').checked, ccus:$('o_ccus').checked, santei:$('o_santei').checked,
+      ccusReg:$('o_ccusreg').checked, ccusJigyo:$('o_ccusjigyo').checked};
+    // A2取得済みならA1も合格なのでBパターン
+    $('jlv').disabled=s.a2; if(s.a2) $('jlv').value='B';
+    s.pat=$('jlv').value; s.n=s.ik+s.tk;
+    return s;
   }
-  ids.forEach(function(id){var el=document.getElementById(id); el.addEventListener('input',calc); el.addEventListener('change',calc);});
+
+  // 月額
+  function monthly(s){
+    var rate=ikuseiRate(s.n), tkRate=Math.min(TOKUTEI_RATE,rate);
+    var kanri=s.ik*rate+s.tk*tkRate, fixed=SYS+(s.ccus?CCUS:0);
+    var opt=(s.soft?SOFT*s.n:0)+(s.kyuyo?KYUYO_BASE+KYUYO_PER*s.n:0);
+    return {rate:rate, tkRate:tkRate, kanri:kanri, fixed:fixed, opt:opt, total:kanri+fixed+opt};
+  }
+
+  // 初期費用：[項目, 単価表示, 下限, 上限, オプション?]
+  function initRows(s){
+    var ny=s.ny, post=POST[s.pat], r=[];
+    r.push(['入国前講習費', '15,000円/人', PRE*ny, PRE*ny, false]);
+    r.push(['入国後講習費＋手当・施設（'+s.pat+'パターン）', s.pat==='A'?'16〜26万円/人':'10〜16万円/人', post[0]*ny, post[1]*ny, false]);
+    r.push(['渡航費 人件費（空港送迎等）※航空券は実費', '30,000円/人', TRAVEL*ny, TRAVEL*ny, false]);
+    r.push(['技能実習生総合保険（3年一括）', '約2〜3.3万円/人', INS[0]*ny, INS[1]*ny, false]);
+    r.push(['育成就労計画 認定申請手数料（機構）', '6,100円/人', NINTEI*ny, NINTEI*ny, false]);
+    if(!s.soft) r.push(['在留資格認定 申請書類（提携行政書士）※ソフト利用時は不要', '概ね5.5〜20万円/件', GYOSEI[0]*ny, GYOSEI[1]*ny, false]);
+    if(!s.a2) r.push(['A2目標講習（就労開始後100時間・他社合同オンライン）※A2保証で不要', '約10〜20万円/人', A2KOSHU[0]*ny, A2KOSHU[1]*ny, false]);
+    if(s.a2) r.push(['来日前A2（N4相当）取得保証', '60,000円/人', A2HOSHO*ny, A2HOSHO*ny, true]);
+    if(s.ccusReg) r.push(['CCUS 技能者登録 代行', '15,000円/人', CCUS_REG*ny, CCUS_REG*ny, true]);
+    if(s.ccusJigyo) r.push(['CCUS 事業者登録 代行', '30,000円/社', CCUS_JIGYO, CCUS_JIGYO, true]);
+    var lo=0, hi=0; r.forEach(function(x){lo+=x[2]; hi+=x[3];});
+    return {rows:r, lo:lo, hi:hi};
+  }
+
+  function line(box,label,val,sub){
+    var div=document.createElement('div'); div.className='row'+(sub?' sub':'');
+    var a=document.createElement('span'); a.textContent=label;
+    var b=document.createElement('span'); b.className='num'; b.textContent=val;
+    div.appendChild(a); div.appendChild(b); box.appendChild(div);
+  }
+
+  function calc(){
+    var s=state(), m=monthly(s);
+    var bd=$('breakdown'), ex=$('extra'), ib=$('ibreakdown');
+    bd.innerHTML=''; ex.innerHTML=''; ib.innerHTML='';
+    if(s.n<=0){
+      $('total').textContent='¥0'; $('perhead').textContent='¥0';
+      bd.innerHTML='<div class="row"><span>人数を入力すると自動計算されます。</span></div>';
+    } else {
+      $('total').textContent=fmt(m.total); $('perhead').textContent=fmt(m.total/s.n);
+      line(bd,'監理費（育成就労 '+s.ik+'名 × '+fmt(m.rate)+'）', fmt(s.ik*m.rate));
+      line(bd,'監理費（特定技能 '+s.tk+'名 × '+fmt(m.tkRate)+(m.tkRate<TOKUTEI_RATE?'・育成就労と同額':'・据置')+'）', fmt(s.tk*m.tkRate));
+      line(bd,'システム管理料', fmt(SYS));
+      if(s.soft) line(bd,'在留申請書類ソフト使用料（5,000×'+s.n+'名）', fmt(SOFT*s.n), true);
+      if(s.kyuyo) line(bd,'給与計算サポート（基本3,000＋1,000×'+s.n+'名）', fmt(KYUYO_BASE+KYUYO_PER*s.n), true);
+      if(s.ccus) line(bd,'建設キャリアアップシステム（CCUS）月次サポート', fmt(CCUS), true);
+    }
+    if(s.ik>0) line(ex,'別途：送り出し機関 管理費（5,000×'+s.ik+'名・直接お支払い）', fmt(OKURI*s.ik)+'/月');
+    if(s.santei) line(ex,'別途：算定基礎届サポート（年1回）', fmt(SANTEI)+'/年');
+
+    var it=initRows(s);
+    if(s.ny<=0){
+      $('itotal').textContent='¥0'; $('iperhead').textContent='¥0';
+      ib.innerHTML='<div class="row"><span>新規入国の人数を入れると初期費用を計算します。</span></div>';
+    } else {
+      $('itotal').textContent=rng(it.lo,it.hi);
+      $('iperhead').textContent=rng(Math.round(it.lo/s.ny),Math.round(it.hi/s.ny));
+      it.rows.forEach(function(x){ line(ib,x[0],rng(x[2],x[3]),x[4]); });
+    }
+    return {s:s, m:m, it:it};
+  }
+  ids.forEach(function(id){var el=$(id); el.addEventListener('input',calc); el.addEventListener('change',calc);});
   calc();
 
   // print / PDF save — builds a reusable unit-price estimate
-  var pbtn=document.getElementById('printBtn');
+  var pbtn=$('printBtn');
   if(pbtn){ pbtn.addEventListener('click',function(){
-    var c=(document.getElementById('company').value||'').trim();
-    document.getElementById('ph-company').textContent = c ? (c+'　御中') : '';
+    var c=($('company').value||'').trim();
+    $('ph-company').textContent = c ? (c+'　御中') : '';
     var d=new Date();
-    document.getElementById('ph-date').textContent='発行日：'+d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
-
-    var ik=Math.max(0,parseInt(document.getElementById('ikusei').value,10)||0);
-    var tk=Math.max(0,parseInt(document.getElementById('tokutei').value,10)||0);
-    var n=ik+tk;
-    var rate=ikuseiRate(n), tkRate=Math.min(TOKUTEI_RATE,rate);
-    var kanri=ik*rate+tk*tkRate;
+    $('ph-date').textContent='発行日：'+d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
+    var r=calc(), s=r.s, m=r.m, it=r.it;
 
     // B. fixed costs
-    var fixed=SYS, fixedRows='<tr><td>システム管理料</td><td>10,000円/社・月</td></tr>';
-    if(document.getElementById('o_ccus').checked){ fixed+=CCUS; fixedRows+='<tr><td>建設キャリアアップシステム（CCUS）月次運用サポート</td><td>5,000円/社・月</td></tr>'; }
-    document.getElementById('est-fixed').innerHTML=fixedRows;
+    var fixedRows='<tr><td>システム管理料</td><td>10,000円/社・月</td></tr>';
+    if(s.ccus) fixedRows+='<tr><td>建設キャリアアップシステム（CCUS）月次運用サポート</td><td>5,000円/社・月</td></tr>';
+    $('est-fixed').innerHTML=fixedRows;
 
-    // C. option unit prices (per-head)
-    var opt=0, optRows='';
-    if(document.getElementById('o_soft').checked){ opt+=SOFT*n; optRows+='<tr><td>在留申請書類ソフト 使用料</td><td>5,000円/人・月（従量）</td></tr>'; }
-    if(document.getElementById('o_kyuyo').checked){ opt+=KYUYO_BASE+KYUYO_PER*n; optRows+='<tr><td>給与計算サポート</td><td>基本3,000円/社＋1,000円/人</td></tr>'; }
+    // C. option unit prices
+    var optRows='';
+    if(s.soft) optRows+='<tr><td>在留申請書類ソフト 使用料</td><td>5,000円/人・月（従量）</td></tr>';
+    if(s.kyuyo) optRows+='<tr><td>給与計算サポート</td><td>基本3,000円/社＋1,000円/人</td></tr>';
+    if(s.santei) optRows+='<tr><td>算定基礎届サポート（年1回・月額には含みません）</td><td>5,000円/社・年</td></tr>';
     if(!optRows) optRows='<tr><td>お申込みなし</td><td>—</td></tr>';
-    document.getElementById('est-opts').innerHTML=optRows;
+    $('est-opts').innerHTML=optRows;
 
     // D. reference calc for current headcount
-    var total=kanri+fixed+opt;
-    document.getElementById('est-ref').innerHTML = n>0
-      ? '参考試算（現在：育成就労 '+ik+'名・特定技能 '+tk+'名／合算 '+n+'名）<br>監理費 '+fmt(kanri)+' ＋ 固定費 '+fmt(fixed)+' ＋ オプション '+fmt(opt)+' ＝ <b>月額 '+fmt(total)+'</b>（税別）'
+    $('est-ref').innerHTML = s.n>0
+      ? '参考試算（現在：育成就労 '+s.ik+'名・特定技能 '+s.tk+'名／合算 '+s.n+'名）<br>監理費 '+fmt(m.kanri)+' ＋ 固定費 '+fmt(m.fixed)+' ＋ オプション '+fmt(m.opt)+' ＝ <b>月額 '+fmt(m.total)+'</b>（税別）'
       : '※ 人数を入力してから印刷すると、現時点の参考試算も表示されます。';
+
+    // E. initial costs
+    $('est-init').innerHTML = it.rows.map(function(x){
+      return '<tr><td>'+x[0]+'</td><td class="tag">'+(x[4]?'お申込み':'必須')+'</td><td>'+x[1]+'</td></tr>';
+    }).join('');
+    $('est-iref').innerHTML = s.ny>0
+      ? '参考試算（新規入国 '+s.ny+'名・'+s.pat+'パターン）<br>初期費用 合計 <b>'+rng(it.lo,it.hi)+'</b>（税別・一時金）＋航空券 実費'
+      : '※ 新規入国の人数を入力してから印刷すると、初期費用の参考試算も表示されます。';
 
     window.print();
   }); }
@@ -495,21 +618,24 @@ ul.clean li{margin:.3rem 0}
   // apply — opens the Google Form with simulator values prefilled
   var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSf_sHpC5oTnx7XaYh3ojxOVOQMN8-3maqr8Hxqn48md1-YxMQ/viewform';
   var FORM_ENTRY={company:'entry.95220113', ikusei:'entry.291547831', tokutei:'entry.1189208840', options:'entry.1237508071', total:'entry.706478240'};
-  var abtn=document.getElementById('applyBtn');
+  var abtn=$('applyBtn');
   if(abtn){ abtn.addEventListener('click',function(){
-    calc();
-    var ik=Math.max(0,parseInt(document.getElementById('ikusei').value,10)||0);
-    var tk=Math.max(0,parseInt(document.getElementById('tokutei').value,10)||0);
-    var opts=[];
-    document.querySelectorAll('#breakdown .row.sub').forEach(function(r){
-      var s=r.querySelectorAll('span'); opts.push(s[0].textContent+'：'+s[1].textContent);
+    var r=calc(), s=r.s, it=r.it, opts=[];
+    document.querySelectorAll('#breakdown .row.sub').forEach(function(row){
+      var sp=row.querySelectorAll('span'); opts.push(sp[0].textContent+'：'+sp[1].textContent);
     });
-    if(!opts.length){ document.querySelectorAll('.opts input:checked').forEach(function(c){ opts.push(c.nextElementSibling.textContent); }); }
+    if(s.santei) opts.push('算定基礎届サポート：5,000円/社・年');
+    // Apps Script はこの行から新規入国人数・パターン・初期オプションを読み取る
+    var init='【初期費用】新規入国 '+s.ny+'名・日本語'+s.pat+'パターン';
+    if(s.a2) init+='・来日前A2取得保証';
+    if(s.ccusReg) init+='・CCUS技能者登録代行';
+    if(s.ccusJigyo) init+='・CCUS事業者登録代行';
+    opts.push(init);
     var v={
-      company:(document.getElementById('company').value||'').trim(),
-      ikusei:String(ik), tokutei:String(tk),
-      options:opts.length?opts.join('\n'):'なし',
-      total:(ik+tk>0)?document.getElementById('total').textContent+'（税別・月額）':'未試算'
+      company:($('company').value||'').trim(),
+      ikusei:String(s.ik), tokutei:String(s.tk),
+      options:opts.join('\n'),
+      total:(s.n>0?$('total').textContent+'（税別・月額）':'未試算')+(s.ny>0?'／初期費用 '+rng(it.lo,it.hi)+'（税別・一時金）':'')
     };
     var q=['usp=pp_url'];
     Object.keys(FORM_ENTRY).forEach(function(k){ if(v[k]) q.push(FORM_ENTRY[k]+'='+encodeURIComponent(v[k])); });

@@ -3,9 +3,13 @@ var FORM_ID = '1Sf1Qs0uK0aYLk9h9jADdwAFrR_SbwcxvaHBzM7K0-qU';
 var SIM_URL = 'https://sato-mgkk.github.io/mgkk-fee-sim/';
 
 // 料金（シミュレーターと同じ）
-var SYS = 10000, SOFT = 5000, KYUYO_BASE = 3000, KYUYO_PER = 1000, CCUS = 5000, TOKUTEI_RATE = 30000;
+var SYS = 10000, SOFT = 5000, KYUYO_BASE = 3000, KYUYO_PER = 1000, CCUS = 5000, TOKUTEI_RATE = 30000, SANTEI = 5000;
+// 入国時の初期費用（1名あたり。[下限, 上限]）
+var PRE = 15000, POST = { A: [160000, 260000], B: [100000, 160000] }, TRAVEL = 30000, INS = [20000, 33000], NINTEI = 6100,
+  GYOSEI = [55000, 200000], A2KOSHU = [100000, 200000], A2HOSHO = 60000, CCUS_REG = 15000, CCUS_JIGYO = 30000;
 function ikuseiRate(n) { if (n <= 1) return 50000; if (n <= 2) return 40000; if (n <= 5) return 35000; if (n <= 10) return 33000; if (n <= 15) return 31000; return 30000; }
 function yen(n) { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
+function rng(lo, hi) { return lo === hi ? yen(lo) : yen(lo) + '〜' + yen(hi); }
 function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 /** 1回だけ実行：フォームの題名・説明を「申し込み」用に変更 */
@@ -19,7 +23,8 @@ function updateForm() {
 
 /** テスト用：サンプルの見積書PDFを組合のGmailに送る */
 function testPdf() {
-  var d = { company: 'テスト株式会社', person: 'テスト太郎', tel: '000-0000-0000', email: NOTIFY_TO, ikusei: 2, tokutei: 5, soft: true, kyuyo: true, ccus: false, note: '' };
+  var d = { company: 'テスト株式会社', person: 'テスト太郎', tel: '000-0000-0000', email: NOTIFY_TO, ikusei: 2, tokutei: 5, soft: true, kyuyo: true, ccus: false, santei: true,
+    ny: 2, pat: 'B', a2: true, ccusReg: true, ccusJigyo: false, note: '' };
   MailApp.sendEmail({ to: NOTIFY_TO, subject: '【テスト】月額お見積書PDF', body: 'テスト用の見積書PDFです。', attachments: [makePdf(d, new Date())] });
 }
 
@@ -40,16 +45,25 @@ function onFormSubmit(e) {
   });
   d.soft = d.options.indexOf('在留申請書類ソフト') >= 0;
   d.kyuyo = d.options.indexOf('給与計算') >= 0;
-  d.ccus = d.options.indexOf('CCUS') >= 0 || d.options.indexOf('キャリアアップ') >= 0;
+  d.ccus = d.options.indexOf('月次') >= 0;
+  d.santei = d.options.indexOf('算定基礎届') >= 0;
+  // 初期費用：シミュレーターが送る「【初期費用】新規入国 N名・日本語Bパターン・…」の行から読む
+  var m = d.options.match(/新規入国\s*(\d+)\s*名/);
+  d.ny = m ? parseInt(m[1], 10) : d.ikusei;
+  d.a2 = d.options.indexOf('来日前A2') >= 0;
+  d.pat = (!d.a2 && d.options.indexOf('日本語Aパターン') >= 0) ? 'A' : 'B';
+  d.ccusReg = d.options.indexOf('技能者登録代行') >= 0;
+  d.ccusJigyo = d.options.indexOf('事業者登録代行') >= 0;
 
   var now = e.response.getTimestamp();
-  var c = calc(d);
+  var c = calc(d), it = initCalc(d);
   var pdf = makePdf(d, now);
   var when = Utilities.formatDate(now, 'Asia/Tokyo', 'yyyy/MM/dd HH:mm');
 
   // 1) 組合への通知（PDF付き）
   var body = '料金シミュレーターからお申し込みが届きました。\n申込者には受付メールと見積書PDFを自動送信済みです。\n\n' +
     lines.join('\n\n') + '\n\n■組合側で再計算した月額（税別）\n' + yen(c.total) +
+    '\n\n■組合側で再計算した初期費用（新規入国 ' + d.ny + '名・税別・一時金）\n' + rng(it.lo, it.hi) + '＋航空券実費' +
     '\n\n受付日時：' + when + '\n\n※ 全件はスプレッドシート「MGKK 申し込み控え」に記録されています。';
   var opt = { attachments: [pdf] };
   if (d.email) opt.replyTo = d.email;
@@ -58,12 +72,13 @@ function onFormSubmit(e) {
   // 2) 申込者への受付メール（PDF付き）
   if (d.email) {
     var cbody = (d.company ? d.company + '\n' : '') + (d.person ? d.person + ' 様\n' : '') + '\n' +
-      'このたびはお申し込みいただき、誠にありがとうございます。\n以下の内容で受け付けました。月額お見積書（PDF）を添付いたします。\n\n' +
+      'このたびはお申し込みいただき、誠にありがとうございます。\n以下の内容で受け付けました。お見積書（PDF）を添付いたします。\n\n' +
       '・育成就労：' + d.ikusei + '名\n・特定技能：' + d.tokutei + '名\n・オプション：' + (c.optNames.length ? c.optNames.join('、') : 'なし') + '\n' +
-      '・月額（概算・税別）：' + yen(c.total) + '\n\n' +
+      '・月額（概算・税別）：' + yen(c.total) + '\n' +
+      '・初期費用（新規入国 ' + d.ny + '名・概算・税別）：' + rng(it.lo, it.hi) + '＋航空券実費\n\n' +
       '内容を確認のうえ、組合よりあらためてご連絡いたします。\nご不明な点は、このメールにご返信ください。\n\n' +
       '――――――――――\nMGKK協同組合\n' + NOTIFY_TO + '\n' + SIM_URL + '\n';
-    MailApp.sendEmail(d.email, '【MGKK協同組合】お申し込み受付・月額お見積書', cbody, { attachments: [pdf], replyTo: NOTIFY_TO, name: 'MGKK協同組合' });
+    MailApp.sendEmail(d.email, '【MGKK協同組合】お申し込み受付・お見積書', cbody, { attachments: [pdf], replyTo: NOTIFY_TO, name: 'MGKK協同組合' });
   }
 }
 
@@ -76,14 +91,33 @@ function calc(d) {
   if (d.soft) names.push('在留申請書類ソフト');
   if (d.kyuyo) names.push('給与計算サポート');
   if (d.ccus) names.push('CCUS月次運用サポート');
+  if (d.santei) names.push('算定基礎届サポート（年額）');
   return { n: n, rate: rate, tkRate: tkRate, kanri: kanri, fixed: fixed, opt: opt, total: kanri + fixed + opt, optNames: names };
+}
+
+// 初期費用：rows は [項目, 単価表示, 下限, 上限, オプションか]
+function initCalc(d) {
+  var ny = d.ny || 0, pat = d.a2 ? 'B' : (d.pat || 'B'), post = POST[pat], r = [];
+  r.push(['入国前講習費', '15,000円/人', PRE * ny, PRE * ny, false]);
+  r.push(['入国後講習費＋手当・施設（' + pat + 'パターン）', pat === 'A' ? '16〜26万円/人' : '10〜16万円/人', post[0] * ny, post[1] * ny, false]);
+  r.push(['渡航費 人件費（空港送迎等）※航空券は実費', '30,000円/人', TRAVEL * ny, TRAVEL * ny, false]);
+  r.push(['技能実習生総合保険（3年一括）', '約2〜3.3万円/人', INS[0] * ny, INS[1] * ny, false]);
+  r.push(['育成就労計画 認定申請手数料（機構）', '6,100円/人', NINTEI * ny, NINTEI * ny, false]);
+  if (!d.soft) r.push(['在留資格認定 申請書類（提携行政書士）※ソフト利用時は不要', '概ね5.5〜20万円/件', GYOSEI[0] * ny, GYOSEI[1] * ny, false]);
+  if (!d.a2) r.push(['A2目標講習（就労開始後100時間・他社合同オンライン）※A2保証で不要', '約10〜20万円/人', A2KOSHU[0] * ny, A2KOSHU[1] * ny, false]);
+  if (d.a2) r.push(['来日前A2（N4相当）取得保証', '60,000円/人', A2HOSHO * ny, A2HOSHO * ny, true]);
+  if (d.ccusReg) r.push(['CCUS 技能者登録 代行', '15,000円/人', CCUS_REG * ny, CCUS_REG * ny, true]);
+  if (d.ccusJigyo) r.push(['CCUS 事業者登録 代行', '30,000円/社', CCUS_JIGYO, CCUS_JIGYO, true]);
+  var lo = 0, hi = 0; r.forEach(function (x) { lo += x[2]; hi += x[3]; });
+  return { rows: r, lo: lo, hi: hi, pat: pat };
 }
 
 function makePdf(d, date) {
   var c = calc(d);
   var T = '#0f6e6a', INK = '#0a4f4c', TL = '#d7ebe9', Z = '#f0f6f5', LINE = '#cfd9dd', FONT = 'Noto Sans JP';
   var W = 515; // A4幅(595pt) − 左右余白40pt×2
-  var name = '月額お見積書_' + (d.company || 'MGKK') + '_' + Utilities.formatDate(date, 'Asia/Tokyo', 'yyyyMMdd');
+  var it = initCalc(d);
+  var name = 'お見積書_' + (d.company || 'MGKK') + '_' + Utilities.formatDate(date, 'Asia/Tokyo', 'yyyyMMdd');
   var doc = DocumentApp.create(name);
   var body = doc.getBody();
   body.setMarginTop(20).setMarginBottom(16).setMarginLeft(40).setMarginRight(40);
@@ -123,13 +157,13 @@ function makePdf(d, date) {
   var h = body.appendTable([['MGKK協同組合']]); h.setColumnWidth(0, W).setBorderWidth(0).setBorderColor(T);
   var hc = pad(h.getCell(0, 0), 6, 14); hc.setBackgroundColor(T);
   txt(hc.getChild(0).asParagraph(), 11, '#ffffff', true);
-  txt(hc.appendParagraph('月額お見積り（概算・税別）'), 18, '#ffffff', true);
+  txt(hc.appendParagraph('お見積り（月額・初期費用／概算・税別）'), 18, '#ffffff', true);
   txt(hc.appendParagraph(d.company ? d.company + '　御中' : ''), 12, '#ffffff', true);
   var dp = txt(hc.appendParagraph('発行日：' + Utilities.formatDate(date, 'Asia/Tokyo', 'yyyy/M/d')), 10, '#ffffff', false);
   dp.setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
 
   gap(4);
-  txt(body.appendParagraph('本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表A（監理費）の単価でその都度ご確認いただけます。表示はすべて税別・月額。'), 8, '#555555', false);
+  txt(body.appendParagraph('本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表A（監理費）の単価でその都度ご確認いただけます。表示はすべて税別。A〜Dは月額、Eは入国時の初期費用、F・Gは発生時のみの費用です。'), 8, '#555555', false);
 
   section('A. 監理費（育成就労＋特定技能の合算人数で単価が決まります）');
   table([['1名', '50,000円'], ['2名', '40,000円'], ['3〜5名', '35,000円'], ['6〜10名', '33,000円'], ['11〜15名', '31,000円'], ['16名以上', '30,000円'], ['特定技能', '30,000円（据置）']],
@@ -144,6 +178,7 @@ function makePdf(d, date) {
   var C = [];
   if (d.soft) C.push(['在留申請書類ソフト 使用料', '5,000円/人・月（従量）']);
   if (d.kyuyo) C.push(['給与計算サポート', '基本3,000円/社＋1,000円/人']);
+  if (d.santei) C.push(['算定基礎届サポート（年1回・月額には含みません）', '5,000円/社・年']);
   if (!C.length) C.push(['お申込みなし', '—']);
   table(C);
 
@@ -157,8 +192,34 @@ function makePdf(d, date) {
   rp.appendText(tail).setFontSize(16).setBold(true).setForegroundColor(INK);
   rp.appendText('（税別）').setFontSize(10).setBold(false).setForegroundColor('#111111');
 
+  // 2ページ目：初期費用・発生時のみの費用・実費
+  body.appendPageBreak();
+  section('E. 入国時の初期費用（育成就労・一時金）');
+  table(it.rows.map(function (x) { return [x[0] + (x[4] ? '（お申込み）' : '（必須）'), x[1]]; }), ['項目', '単価']);
+  gap(3);
+  var ic = box('参考試算（お申込み時：新規入国 ' + d.ny + '名・' + it.pat + 'パターン）', '#ffffff', '#111111', 10, false, T);
+  var ip = ic.appendParagraph('初期費用 合計 ');
+  txt(ip, 11, '#111111', false);
+  ip.appendText(rng(it.lo, it.hi)).setFontSize(14).setBold(true).setForegroundColor(INK);
+  ip.appendText('（税別・一時金）＋航空券 実費').setFontSize(10).setBold(false).setForegroundColor('#111111');
+
+  section('F. 発生時のみの費用（単価）');
+  table([['送り出し機関 管理費（送り出し機関へ直接お支払い）', '5,000円/人・月'],
+    ['休日・時間外の出動（会社都合・非緊急／1日分）', '30,000円/回＋交通費実費'],
+    ['建設就労者 資格取得の引率・通訳（送迎含む）', '30,000円/回'],
+    ['建設キャリアアップシステム（CCUS）変更・更新 代行', '5,000円/件'],
+    ['在留資格の変更・更新 書類作成（提携行政書士へ依頼の場合）', '概ね5.5万〜20万円/件']]);
+
+  section('G. 実費（企業さまご負担）');
+  table([['航空券（入国時・片道）', '実費'],
+    ['技能検定・技能評価試験 受検料（職種・級で変動）', '実費'],
+    ['在留資格の変更・更新 入管手数料（組合が納付し請求）', '実費'],
+    ['CCUS 公式登録料（技能者2,500/4,900円、管理者ID 年11,400円 等）', '実費'],
+    ['送り出し機関の入国前手数料（本人負担 月給2か月分の超過分）', '実費'],
+    ['住居・家電・備品等の準備費用', '実費']]);
+
   gap(2);
-  txt(body.appendParagraph('表示は税別・予定価格です。送り出し機関の管理費は含みません。正式な料金は組合より改めてご案内いたします。'), 8, '#777777', false);
+  txt(body.appendParagraph('表示は税別・予定価格です。入国後講習費・保険・A2目標講習は委託先・コースにより変動する目安です。緊急時の出動・組合発意の訪問は無料です。正式な料金は組合より改めてご案内いたします。'), 8, '#777777', false);
 
   // 先頭の空行を詰める
   for (var i = 0; i < body.getNumChildren(); i++) { var el = body.getChild(i); if (el.getType() === DocumentApp.ElementType.PARAGRAPH) el.asParagraph().setSpacingBefore(0).setSpacingAfter(0).setLineSpacing(1); }
