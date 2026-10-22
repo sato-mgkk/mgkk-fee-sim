@@ -88,12 +88,12 @@ function onFormSubmit(e) {
 function calc(d) {
   var n = d.ikusei + d.tokutei, rate = ikuseiRate(n), tkRate = Math.min(TOKUTEI_RATE, rate);
   var kanri = d.ikusei * rate + d.tokutei * tkRate;
-  var fixed = SYS + OKURI * n + (d.ccus ? CCUS : 0);
-  var opt = (d.soft ? SOFT * n : 0) + (d.kyuyo ? KYUYO_BASE + KYUYO_PER * n : 0);
+  var fixed = SYS + OKURI * n;
+  var opt = (d.soft ? SOFT * n : 0) + (d.kyuyo ? KYUYO_BASE + KYUYO_PER * n : 0) + (d.ccus ? CCUS : 0);
   var names = [];
   if (d.soft) names.push('在留申請書類ソフト');
   if (d.kyuyo) names.push('給与計算サポート');
-  if (d.ccus) names.push('CCUS月次運用サポート');
+  if (d.ccus) names.push('建設キャリアアップシステム（CCUS）月次運用サポート');
   if (d.santei) names.push('算定基礎届サポート（年額）');
   return { n: n, rate: rate, tkRate: tkRate, kanri: kanri, fixed: fixed, opt: opt, total: kanri + fixed + opt, optNames: names };
 }
@@ -185,13 +185,13 @@ function makePdf(d, date) {
 
   section('B. 必須費用（毎月）');
   var B = [['システム管理料', '10,000円/社・月'], ['送り出し機関 管理費（送り出し機関へ直接お支払い）', '5,000円/人・月']];
-  if (d.ccus) B.push(['建設キャリアアップシステム（CCUS）月次運用サポート', '5,000円/社・月']);
   table(B);
 
   section('C. お申込みオプション（単価）');
   var C = [];
   if (d.soft) C.push(['在留申請書類ソフト 使用料', '5,000円/人・月（従量）']);
   if (d.kyuyo) C.push(['給与計算サポート', '基本3,000円/社＋1,000円/人']);
+  if (d.ccus) C.push(['建設キャリアアップシステム（CCUS）月次運用サポート', '5,000円/社・月']);
   if (d.santei) C.push(['算定基礎届サポート（年1回・月額には含みません）', '5,000円/社・年']);
   if (!C.length) C.push(['お申込みなし', '—']);
   table(C);
