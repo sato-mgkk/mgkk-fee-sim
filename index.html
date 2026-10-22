@@ -129,7 +129,7 @@ ul.clean li{margin:.3rem 0}
       <div class="result">
         <div class="total">
           <div>
-            <div style="font-size:.82rem;color:var(--muted);font-weight:700">月額合計（概算・税別）<span class="tierpill" id="tierPill">—</span></div>
+            <div style="font-size:.82rem;color:var(--muted);font-weight:700">月額合計（概算・税別）</div>
             <div class="big num" id="total">¥0</div>
           </div>
           <div style="text-align:right">
@@ -330,13 +330,11 @@ ul.clean li{margin:.3rem 0}
     if(n<=0){
       document.getElementById('total').textContent='¥0';
       document.getElementById('perhead').textContent='¥0';
-      document.getElementById('tierPill').textContent='—';
       bd.innerHTML='<div class="row"><span>人数を入力すると自動計算されます。</span></div>';
       return;
     }
     document.getElementById('total').textContent=fmt(total);
     document.getElementById('perhead').textContent = fmt(total/n);
-    document.getElementById('tierPill').textContent=tierName(n);
     rows.forEach(function(r){
       var div=document.createElement('div'); div.className='row'+(r[2]?' sub':'');
       var a=document.createElement('span'); a.textContent=r[0];
