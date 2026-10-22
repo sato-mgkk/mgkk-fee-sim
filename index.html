@@ -509,7 +509,7 @@ ul.clean li{margin:.3rem 0}
       company:(document.getElementById('company').value||'').trim(),
       ikusei:String(ik), tokutei:String(tk),
       options:opts.length?opts.join('\n'):'なし',
-      total:(ik+tk>0)?document.getElementById('total').textContent+'（税別・月額・システム管理料10,000円含む）':'未試算'
+      total:(ik+tk>0)?document.getElementById('total').textContent+'（税別・月額）':'未試算'
     };
     var q=['usp=pp_url'];
     Object.keys(FORM_ENTRY).forEach(function(k){ if(v[k]) q.push(FORM_ENTRY[k]+'='+encodeURIComponent(v[k])); });
