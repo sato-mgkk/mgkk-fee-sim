@@ -86,7 +86,7 @@ function makePdf(d, date) {
   var name = '月額お見積書_' + (d.company || 'MGKK') + '_' + Utilities.formatDate(date, 'Asia/Tokyo', 'yyyyMMdd');
   var doc = DocumentApp.create(name);
   var body = doc.getBody();
-  body.setMarginTop(28).setMarginBottom(24).setMarginLeft(40).setMarginRight(40);
+  body.setMarginTop(20).setMarginBottom(16).setMarginLeft(40).setMarginRight(40);
   var base = {}; base[DocumentApp.Attribute.FONT_FAMILY] = FONT; base[DocumentApp.Attribute.FONT_SIZE] = 10;
   body.setAttributes(base);
 
@@ -104,14 +104,14 @@ function makePdf(d, date) {
     var cell = pad(t.getCell(0, 0), 4, 10); cell.setBackgroundColor(bg); txt(cell, size, color, bold);
     return cell;
   }
-  function section(title) { gap(4); box(title, TL, INK, 11, true); gap(2); }
+  function section(title) { gap(3); box(title, TL, INK, 11, true); gap(1); }
   function table(rows, head) {
     var data = head ? [head].concat(rows) : rows;
     var t = body.appendTable(data); t.setBorderColor(LINE).setBorderWidth(1).setColumnWidth(0, W * 0.55).setColumnWidth(1, W * 0.45);
     for (var r = 0; r < data.length; r++) {
       var isHead = head && r === 0, zebra = (head ? r : r + 1) % 2 === 0;
       for (var k = 0; k < 2; k++) {
-        var cell = pad(t.getCell(r, k), 2, 10);
+        var cell = pad(t.getCell(r, k), 1, 10);
         cell.setBackgroundColor(isHead ? T : (zebra ? Z : '#ffffff'));
         txt(cell, isHead ? 9 : 10, isHead ? '#ffffff' : '#111111', isHead || k === 1);
         if (k === 1) cell.getChild(0).asParagraph().setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
@@ -121,7 +121,7 @@ function makePdf(d, date) {
 
   // ヘッダー（緑の帯）
   var h = body.appendTable([['MGKK協同組合']]); h.setColumnWidth(0, W).setBorderWidth(0).setBorderColor(T);
-  var hc = pad(h.getCell(0, 0), 8, 14); hc.setBackgroundColor(T);
+  var hc = pad(h.getCell(0, 0), 6, 14); hc.setBackgroundColor(T);
   txt(hc.getChild(0).asParagraph(), 11, '#ffffff', true);
   txt(hc.appendParagraph('月額お見積り（概算・税別）'), 18, '#ffffff', true);
   txt(hc.appendParagraph(d.company ? d.company + '　御中' : ''), 12, '#ffffff', true);
@@ -129,7 +129,7 @@ function makePdf(d, date) {
   dp.setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
 
   gap(4);
-  txt(body.appendParagraph('本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表A（監理費）の単価でその都度ご確認いただけます。表示はすべて税別・月額。'), 9, '#555555', false);
+  txt(body.appendParagraph('本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表A（監理費）の単価でその都度ご確認いただけます。表示はすべて税別・月額。'), 8, '#555555', false);
 
   section('A. 監理費（育成就労＋特定技能の合算人数で単価が決まります）');
   table([['1名', '50,000円'], ['2名', '40,000円'], ['3〜5名', '35,000円'], ['6〜10名', '33,000円'], ['11〜15名', '31,000円'], ['16名以上', '30,000円'], ['特定技能', '30,000円（据置）']],
@@ -149,7 +149,7 @@ function makePdf(d, date) {
 
   section('D. 月額の計算方法');
   box('月額 ＝ 監理費（表A 単価 × 人数）＋ 固定費（B）＋ お申込みオプション（C）', TL, INK, 10, true);
-  gap(4);
+  gap(3);
   var rc = box('参考試算（お申込み時：育成就労 ' + d.ikusei + '名・特定技能 ' + d.tokutei + '名／合算 ' + c.n + '名）', '#ffffff', '#111111', 10, false, T);
   var rp = rc.appendParagraph('監理費 ' + yen(c.kanri) + ' ＋ 固定費 ' + yen(c.fixed) + ' ＋ オプション ' + yen(c.opt) + ' ＝ ');
   txt(rp, 11, '#111111', false);
@@ -157,7 +157,7 @@ function makePdf(d, date) {
   rp.appendText(tail).setFontSize(16).setBold(true).setForegroundColor(INK);
   rp.appendText('（税別）').setFontSize(10).setBold(false).setForegroundColor('#111111');
 
-  gap(4);
+  gap(2);
   txt(body.appendParagraph('表示は税別・予定価格です。送り出し機関の管理費は含みません。正式な料金は組合より改めてご案内いたします。'), 8, '#777777', false);
 
   // 先頭の空行を詰める
