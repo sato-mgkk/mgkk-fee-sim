@@ -1,0 +1,306 @@
+<title>MGKK新料金体系</title>
+<meta name="description" content="育成就労の新規対象者向け新料金体系。人数を入れると月額が出る料金シミュレーターです。">
+<style>
+/* Layout: single column reading flow with a sticky-feel simulator card up top; tables scroll inside their own box on phones */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --surface-2:#eef2f5;
+  --fg:#15202b; --muted:#5a6b7a; --line:#d8e0e6;
+  --accent:#0f6e6a; --accent-soft:#d7ebe9; --accent-ink:#0a4f4c;
+  --gold:#9a7b23; --good:#1f7a4d; --warn:#9a5b16; --warn-soft:#f6e6d2;
+  --shadow:0 1px 2px rgba(20,40,60,.06),0 8px 24px rgba(20,40,60,.07);
+  --serif:"Noto Serif JP",Georgia,"Yu Mincho",serif;
+  --sans:"Noto Sans JP",system-ui,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1518; --surface:#151f24; --surface-2:#1b272d;
+  --fg:#e6edf1; --muted:#9bb0bd; --line:#2a3a43;
+  --accent:#43b8b0; --accent-soft:#143634; --accent-ink:#8fe0d9;
+  --gold:#d6b45e; --good:#56c48a; --warn:#e0a05a; --warn-soft:#2e2112;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1518; --surface:#151f24; --surface-2:#1b272d;
+  --fg:#e6edf1; --muted:#9bb0bd; --line:#2a3a43;
+  --accent:#43b8b0; --accent-soft:#143634; --accent-ink:#8fe0d9;
+  --gold:#d6b45e; --good:#56c48a; --warn:#e0a05a; --warn-soft:#2e2112;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding-block:28px 64px;padding-left:16px;padding-right:16px}
+h1,h2,h3{font-family:var(--serif);text-wrap:balance;line-height:1.3;margin:0}
+.eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.lead{color:var(--muted);font-size:1rem}
+.num{font-variant-numeric:tabular-nums}
+header.page{border-bottom:2px solid var(--line);padding-bottom:20px;margin-bottom:8px}
+header.page h1{font-size:1.9rem;margin:.25rem 0 .4rem}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.badge{font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+.badge.draft{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.badge.ok{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent}
+section{margin-top:36px}
+section>.eyebrow{display:block;margin-bottom:6px}
+section>h2{font-size:1.3rem;margin-bottom:14px}
+p{margin:.5rem 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+/* Simulator */
+.sim{padding:20px}
+.sim h2{font-size:1.25rem}
+.sim .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.field label{display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:5px}
+.field input[type=number]{width:100%;font-size:1.3rem;font-family:var(--sans);font-variant-numeric:tabular-nums;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
+.opts{margin-top:16px;display:grid;gap:8px}
+.opts .ohead{font-size:.82rem;font-weight:700;color:var(--muted)}
+.opt{display:flex;align-items:center;gap:10px;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2)}
+.opt input{width:18px;height:18px;accent-color:var(--accent);flex:none}
+.opt .price{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap}
+.result{margin-top:18px;border-top:1px dashed var(--line);padding-top:16px}
+.total{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.total .big{font-family:var(--serif);font-size:2.2rem;font-weight:700;color:var(--accent-ink)}
+.breakdown{margin-top:12px;display:grid;gap:4px;font-size:.9rem}
+.breakdown .row{display:flex;justify-content:space-between;gap:12px}
+.breakdown .row span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+.breakdown .sub{color:var(--muted);padding-left:12px;font-size:.84rem}
+.tierpill{display:inline-block;font-size:.76rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);margin-left:8px}
+.note-inline{font-size:.8rem;color:var(--muted);margin-top:10px}
+/* Tables */
+.tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:380px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:var(--surface-2);font-weight:700;font-size:.82rem;color:var(--muted);white-space:nowrap}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr.em td{background:var(--accent-soft);font-weight:600}
+caption{caption-side:top;text-align:left;font-size:.8rem;color:var(--muted);padding:0 2px 8px}
+/* diagram */
+.layers{display:grid;gap:10px;margin-top:6px}
+.layer{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:11px;border:1px solid var(--line);background:var(--surface)}
+.layer .k{font-family:var(--serif);font-weight:700;color:var(--accent);font-size:1.05rem;flex:none;width:26px;text-align:center}
+.layer .b{font-size:.9rem}
+.layer .b b{font-size:.98rem}
+.layer .b .d{color:var(--muted);font-size:.84rem}
+ul.clean{margin:.4rem 0;padding-left:1.1rem}
+ul.clean li{margin:.3rem 0}
+.callout{border-left:3px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:12px 14px;font-size:.9rem}
+.callout.warn{border-left-color:var(--warn)}
+.foot{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;font-size:.8rem;color:var(--muted)}
+.theme-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:10;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px;font-size:.76rem;cursor:pointer;box-shadow:var(--shadow)}
+@media (max-width:460px){
+  .sim .grid{grid-template-columns:1fr}
+  header.page h1{font-size:1.6rem}
+  .total .big{font-size:1.9rem}
+}
+</style>
+
+<button class="theme-btn" id="themeBtn" type="button">テーマ切替</button>
+<div class="wrap">
+
+  <header class="page">
+    <span class="eyebrow">MGKK協同組合｜料金改定</span>
+    <h1>MGKK新料金体系</h1>
+    <p class="lead">2027年4月〜の<b>育成就労（新規対象者）</b>から適用する新料金。既存の会社・実習生は<b>現行料金のまま（影響なし）</b>。</p>
+    <div class="badges">
+      <span class="badge draft">税別・予定価格（正式決定後にご案内）</span>
+      <span class="badge ok">既存は据え置き</span>
+      <span class="badge ok">大口ほど割安</span>
+    </div>
+  </header>
+
+  <!-- SIMULATOR -->
+  <section>
+    <span class="eyebrow">料金シミュレーター</span>
+    <div class="card sim">
+      <h2>月額を試算する</h2>
+      <p class="note-inline">育成就労と特定技能の人数を入れると、合算人数で監理費の単価が決まります（大口ほど割安）。初期表示は例です。</p>
+      <div class="grid">
+        <div class="field">
+          <label for="ikusei">育成就労 の人数（名）</label>
+          <input type="number" id="ikusei" min="0" value="3" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="tokutei">特定技能・特定活動 の人数（名）</label>
+          <input type="number" id="tokutei" min="0" value="2" inputmode="numeric">
+        </div>
+      </div>
+
+      <div class="opts">
+        <span class="ohead">付加価値オプション（必要なものだけ）</span>
+        <label class="opt"><input type="checkbox" id="o_soft" checked><span>在留申請書類ソフト 使用料</span><span class="price">5,000円/人・月</span></label>
+        <label class="opt"><input type="checkbox" id="o_kyuyo" checked><span>給与計算サポート</span><span class="price">基本3,000＋1,000円/人</span></label>
+        <label class="opt"><input type="checkbox" id="o_ccus"><span>建設キャリアアップシステム（CCUS）月次運用サポート</span><span class="price">5,000円/社・月</span></label>
+      </div>
+
+      <div class="result">
+        <div class="total">
+          <div>
+            <div style="font-size:.82rem;color:var(--muted);font-weight:700">月額合計（概算・税別）<span class="tierpill" id="tierPill">—</span></div>
+            <div class="big num" id="total">¥0</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:.82rem;color:var(--muted);font-weight:700">1人あたり平均</div>
+            <div class="num" style="font-size:1.3rem;font-weight:700" id="perhead">¥0</div>
+          </div>
+        </div>
+        <div class="breakdown" id="breakdown"></div>
+        <p class="note-inline">※ システム管理料（基本料金）10,000円/社は全社必須で常に含みます。在留申請書類は①ソフトで自作（使用料5,000円/人・月）／②提携行政書士（実費）。更新も同様で、期限管理は監理費の範囲。CCUS登録代行・休日出動などの<b>都度課金</b>は別途（下表）。算定基礎届サポートは年額のため試算に含めていません。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRUCTURE -->
+  <section>
+    <span class="eyebrow">料金の構造</span>
+    <h2>3層＋追加サービス</h2>
+    <div class="layers">
+      <div class="layer"><div class="k">①</div><div class="b"><b>監理費（人数連動）</b><div class="d">法定監理業務。育成就労＝階段式（人数帯別）／特定技能＝据え置き。合算人数で単価が決まる</div></div></div>
+      <div class="layer"><div class="k">②</div><div class="b"><b>システム管理料（全社必須）</b><div class="d">受入管理システム・セキュア環境の運用。10,000円/社・月</div></div></div>
+      <div class="layer"><div class="k">③</div><div class="b"><b>付加価値オプション（選択制）</b><div class="d">給与計算サポート・建設キャリアアップシステム（CCUS）・算定基礎届。使う会社だけ払う</div></div></div>
+      <div class="layer"><div class="k">＋</div><div class="b"><b>都度・休日の実費</b><div class="d">建設キャリアアップシステム（CCUS）代行、休日・時間外の出動は都度対応。<b>在留申請書類は①ソフトで自作（使用料5,000円/人・月）／②提携行政書士（実費）。</b>緊急対応と組合発意の訪問は無料</div></div></div>
+    </div>
+  </section>
+
+  <!-- KANRIHI TABLE -->
+  <section>
+    <span class="eyebrow">① 監理費</span>
+    <h2>育成就労（階段式・人数帯別）</h2>
+    <div class="tablebox">
+      <table>
+        <caption>合算人数（育成就労＋特定技能）でその会社の単価が決まる。少人数は割高、人数が増えるほど1人単価が下がる。</caption>
+        <thead><tr><th>合算人数</th><th class="n">育成就労 単価</th><th>区分</th></tr></thead>
+        <tbody>
+          <tr><td>1名</td><td class="n">50,000円</td><td>単独</td></tr>
+          <tr><td>2名</td><td class="n">40,000円</td><td>少数</td></tr>
+          <tr><td>3〜5名</td><td class="n">35,000円</td><td>小口</td></tr>
+          <tr><td>6〜10名</td><td class="n">33,000円</td><td>中堅</td></tr>
+          <tr><td>11〜15名</td><td class="n">31,000円</td><td>大口</td></tr>
+          <tr class="em"><td>16名以上</td><td class="n">30,000円</td><td>特大（ここで止める＝大口は現状維持に近い）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:12px">
+      <b>特定技能：</b>1名30,000円（据え置き）。育成就労の単価は、育成就労＋特定技能の合算人数帯で決まります。
+    </div>
+  </section>
+
+  <!-- OPTIONS TABLE -->
+  <section>
+    <span class="eyebrow">②③ 基本料金・付加価値オプション</span>
+    <h2>サービスメニュー</h2>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>サービス</th><th class="n">料金</th><th>備考</th></tr></thead>
+        <tbody>
+          <tr class="em"><td>② システム管理料（必須）</td><td class="n">10,000円/社・月</td><td>受入管理システムの運用</td></tr>
+          <tr><td>在留申請書類ソフト 使用料</td><td class="n">5,000円/人・月</td><td>申請を自作する場合</td></tr>
+          <tr><td>B 給与計算サポート（PX）</td><td class="n">基本3,000円/社＋1,000円/人</td><td>月次</td></tr>
+          <tr><td>C 建設キャリアアップシステム（CCUS）月次運用サポート</td><td class="n">5,000円/社・月</td><td>就業履歴等</td></tr>
+          <tr><td>D 算定基礎届サポート</td><td class="n">5,000円/社・年</td><td>自社ワンクリック申告の環境提供</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note-inline">オプション項目・金額は、職員との協議により増減する可能性あり。</p>
+  </section>
+
+  <!-- CCUS onetime + todo -->
+  <section>
+    <span class="eyebrow">＋ 都度課金</span>
+    <h2>建設キャリアアップシステム（CCUS）代行・在留手続きなど</h2>
+    <div class="tablebox">
+      <table>
+        <caption>建設キャリアアップシステム（CCUS）代行は行政書士相場にアンカーし、会員優遇で下限寄りに設定。公式実費（技能者登録料2,500/4,900円、管理者ID年11,400円等）は受け入れ企業様のご負担。</caption>
+        <thead><tr><th>項目</th><th class="n">料金</th><th>単位</th></tr></thead>
+        <tbody>
+          <tr><td>建設キャリアアップシステム（CCUS）技能者登録 代行</td><td class="n">15,000円</td><td>1人・都度</td></tr>
+          <tr><td>建設キャリアアップシステム（CCUS）事業者登録 代行</td><td class="n">30,000円</td><td>1社・都度</td></tr>
+          <tr><td>建設キャリアアップシステム（CCUS）変更・更新 代行</td><td class="n">5,000円</td><td>1件・都度</td></tr>
+          <tr><td>建設就労者 資格取得の引率・通訳（送迎含む）</td><td class="n">30,000円</td><td>1回・都度</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note-inline"><b>在留資格の新規・変更・更新は、いずれも書類作成を①企業が在留申請書類ソフトで自作（使用料5,000円/人・月）、または②組合が提携する行政書士へ依頼（行政書士実費・手続きにより概ね5.5万〜20万円／件）。</b>当組合は、期限管理・チェック・申請取次・窓口を従来どおり一貫して担い、企業様のお手間を増やしません。印紙代等の官公庁への実費は受け入れ企業様のご負担（特定技能の方はご本人負担）。建設就労者の資格取得は、会場への引率・通訳の対価として30,000円/回です。なお当組合では、企業様が従来どおり必要資料をお送りいただく感覚で申請書類を作成できるソフトの開発を進めており、企業様のお手間が増えないよう対応してまいります。</p>
+  </section>
+
+  <!-- holiday -->
+  <section>
+    <span class="eyebrow">＋ 休日・時間外</span>
+    <h2>休日出動料</h2>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>区分</th><th>例</th><th class="n">費用</th></tr></thead>
+        <tbody>
+          <tr><td>緊急</td><td>事故・急病・失踪・事件・災害</td><td class="n" style="color:var(--good);font-weight:700">無料</td></tr>
+          <tr><td>組合発意</td><td>組合から行きたいと申し出た訪問</td><td class="n" style="color:var(--good);font-weight:700">無料</td></tr>
+          <tr class="em"><td>会社都合・非緊急</td><td>休日の面談希望・立会い・書類対応</td><td class="n">出動料＋交通費</td></tr>
+          <tr><td>　出動料（休日1回・1日分）</td><td>法定休日割増（35%）込み</td><td class="n">30,000円/回</td></tr>
+          <tr><td>　交通費</td><td>ガソリン・高速・公共交通</td><td class="n">実費</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note-inline">巡回は平日のみ。事前予約制。<b>半日プランは設けない</b>——休日は1時間の通訳等でも職員に1日分（8時間）の給与が発生するため、会社都合の休日出動は一律「1日分」。狙いは「非緊急の呼び出しを減らし、職員の休息を確保する」こと。</p>
+  </section>
+
+  <!-- rules -->
+  <section>
+    <span class="eyebrow">適用ルール</span>
+    <h2>誰に・いつから</h2>
+    <ul class="clean">
+      <li><b>新規（2027年4月〜の育成就労）</b>：この新料金体系を適用。</li>
+      <li><b>既存の技能実習・特定技能</b>：現行料金を据え置き（影響なし）。※休日出動料・オプション等の新サービスルールは全社共通で案内。</li>
+      <li><b>育成就労を避けたい会社</b>：2026年11月までの面接で技能実習生を受け入れれば、現行制度・現行料金で対応可能。</li>
+      <li><b>人数割</b>：育成就労＋特定技能の合算人数で監理費の単価が決定。両方をMGKKに預けるほど割安（囲い込み効果）。</li>
+    </ul>
+  </section>
+
+  <div class="foot">
+    <p>表示は税別・予定価格です。相場に基づく目安の項目は委託先・案件により変動します。正式な料金は改めてご案内いたします。</p>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var fmt=function(n){return '¥'+Math.round(n).toLocaleString('ja-JP');};
+  var ids=['ikusei','tokutei','o_soft','o_kyuyo','o_ccus'];
+  var SYS=10000, SOFT=5000, KYUYO_BASE=3000, KYUYO_PER=1000, CCUS=5000, TOKUTEI_RATE=30000;
+  function ikuseiRate(n){ if(n<=1)return 50000; if(n<=2)return 40000; if(n<=5)return 35000; if(n<=10)return 33000; if(n<=15)return 31000; return 30000; }
+  function tierName(n){ if(n<=0)return '—'; if(n<=1)return '1名 単独'; if(n<=2)return '2名 少数'; if(n<=5)return '3〜5名 小口'; if(n<=10)return '6〜10名 中堅'; if(n<=15)return '11〜15名 大口'; return '16名以上 特大'; }
+  function calc(){
+    var ik=Math.max(0,parseInt(document.getElementById('ikusei').value,10)||0);
+    var tk=Math.max(0,parseInt(document.getElementById('tokutei').value,10)||0);
+    var n=ik+tk;
+    var rate=ikuseiRate(n);
+    var tkRate=Math.min(TOKUTEI_RATE, rate);
+    var kanriIk=ik*rate, kanriTk=tk*tkRate, kanri=kanriIk+kanriTk;
+    var opt=0, rows=[];
+    rows.push(['監理費（育成就労 '+ik+'名 × '+fmt(rate)+'）', kanriIk, false]);
+    rows.push(['監理費（特定技能 '+tk+'名 × '+fmt(tkRate)+(tkRate<TOKUTEI_RATE?'・育成就労と同額':'・据置')+'）', kanriTk, false]);
+    rows.push(['② システム管理料', SYS, false]); opt+=0;
+    var base=kanri+SYS;
+    if(document.getElementById('o_soft').checked){var sf=SOFT*n; opt+=sf; rows.push(['在留申請書類ソフト使用料（5,000×'+n+'名）', sf, true]);}
+    if(document.getElementById('o_kyuyo').checked){var ky=KYUYO_BASE+KYUYO_PER*n; opt+=ky; rows.push(['B 給与計算サポート（基本3,000＋1,000×'+n+'名）', ky, true]);}
+    if(document.getElementById('o_ccus').checked){opt+=CCUS; rows.push(['C 建設キャリアアップシステム（CCUS）月次サポート', CCUS, true]);}
+    var total=base+opt;
+    document.getElementById('total').textContent=fmt(total);
+    document.getElementById('perhead').textContent = n>0 ? fmt(total/n) : '¥0';
+    document.getElementById('tierPill').textContent=tierName(n);
+    var bd=document.getElementById('breakdown'); bd.innerHTML='';
+    rows.forEach(function(r){
+      var div=document.createElement('div'); div.className='row'+(r[2]?' sub':'');
+      var a=document.createElement('span'); a.textContent=r[0];
+      var b=document.createElement('span'); b.className='num'; b.textContent=fmt(r[1]);
+      div.appendChild(a); div.appendChild(b); bd.appendChild(div);
+    });
+  }
+  ids.forEach(function(id){var el=document.getElementById(id); el.addEventListener('input',calc); el.addEventListener('change',calc);});
+  calc();
+
+  // theme toggle
+  var btn=document.getElementById('themeBtn');
+  function cur(){var a=document.documentElement.getAttribute('data-theme'); if(a)return a; return window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}
+  btn.addEventListener('click',function(){var next=cur()==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',next); try{localStorage.setItem('mgkk-theme',next);}catch(e){}});
+  try{var s=localStorage.getItem('mgkk-theme'); if(s)document.documentElement.setAttribute('data-theme',s);}catch(e){}
+})();
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&family=Noto+Serif+JP:wght@600;700&display=swap">
