@@ -113,17 +113,21 @@ ul.clean li{margin:.3rem 0}
 /* print: one-page estimate */
 @media print{
   :root,:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent-ink:#0a4f4c;color-scheme:light}
-  .theme-btn,.print-btn,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field{display:none !important}
+  .theme-btn,.print-btn,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts{display:none !important}
   .print-only{display:block !important}
   body{background:#fff;color:#111}
   .wrap{padding:0 10px;max-width:none}
   section{margin-top:0}
   .card.sim{box-shadow:none;border:none;padding:0}
-  .print-head{border-bottom:2px solid #111;margin-bottom:12px;padding-bottom:8px}
+  .print-head{border-bottom:2px solid #111;margin-bottom:14px;padding-bottom:8px}
   .print-head .ph-org{font-weight:700;color:var(--accent-ink);font-size:.9rem}
   .print-head .ph-title{font-family:var(--serif);font-size:1.3rem;font-weight:700;margin-top:2px}
   .print-head .ph-meta{display:flex;justify-content:space-between;gap:12px;font-size:.85rem;color:#444;margin-top:8px}
-  .field input,.opt{background:#fff !important;border:1px solid #ccc !important}
+  .result{border-top:none;padding-top:0}
+  .total{border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:10px}
+  .breakdown{font-size:.92rem}
+  .breakdown .row{padding:6px 2px;border-bottom:1px solid #ddd}
+  .breakdown .row span:first-child{color:#111}
 }
 </style>
 
@@ -144,8 +148,8 @@ ul.clean li{margin:.3rem 0}
         <div class="ph-title">月額お見積り（概算・税別）</div>
         <div class="ph-meta"><span id="ph-company"></span><span id="ph-date"></span></div>
       </div>
-      <h2>月額を試算する</h2>
-      <p class="note-inline">人数を入れると月額を自動計算します。</p>
+      <h2 id="sim-h2">月額を試算する</h2>
+      <p class="note-inline" id="sim-intro">人数を入れると月額を自動計算します。</p>
       <div class="grid">
         <div class="field">
           <label for="ikusei">育成就労（名）</label>
