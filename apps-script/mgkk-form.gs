@@ -126,7 +126,7 @@ function onceCalc(d) {
 
 function makePdf(d, date) {
   var c = calc(d);
-  var T = '#0f6e6a', INK = '#0a4f4c', TL = '#d7ebe9', Z = '#f0f6f5', LINE = '#cfd9dd', FONT = 'Zen Maru Gothic';
+  var T = '#0f6e6a', INK = '#0a4f4c', TL = '#d7ebe9', Z = '#f0f6f5', LINE = '#cfd9dd', FONT = 'Noto Sans JP';
   var W = 515; // A4幅(595pt) − 左右余白40pt×2
   var on = onceCalc(d);
   var name = 'お見積書_' + (d.company || 'MGKK') + '_' + Utilities.formatDate(date, 'Asia/Tokyo', 'yyyyMMdd');
