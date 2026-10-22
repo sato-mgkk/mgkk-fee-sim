@@ -113,22 +113,22 @@ ul.clean li{margin:.3rem 0}
     <span class="eyebrow">料金シミュレーター</span>
     <div class="card sim">
       <h2>月額を試算する</h2>
-      <p class="note-inline">育成就労と特定技能の人数を入れると、合算人数で監理費の単価が決まります（大口ほど割安）。初期表示は例です。</p>
+      <p class="note-inline">育成就労と特定技能の人数を入れると、合算人数で監理費の単価が決まります（大口ほど割安）。まず人数をご入力ください。</p>
       <div class="grid">
         <div class="field">
           <label for="ikusei">育成就労 の人数（名）</label>
-          <input type="number" id="ikusei" min="0" value="3" inputmode="numeric">
+          <input type="number" id="ikusei" min="0" value="0" inputmode="numeric">
         </div>
         <div class="field">
           <label for="tokutei">特定技能・特定活動 の人数（名）</label>
-          <input type="number" id="tokutei" min="0" value="2" inputmode="numeric">
+          <input type="number" id="tokutei" min="0" value="0" inputmode="numeric">
         </div>
       </div>
 
       <div class="opts">
         <span class="ohead">付加価値オプション（必要なものだけ）</span>
-        <label class="opt"><input type="checkbox" id="o_soft" checked><span>在留申請書類ソフト 使用料</span><span class="price">5,000円/人・月</span></label>
-        <label class="opt"><input type="checkbox" id="o_kyuyo" checked><span>給与計算サポート</span><span class="price">基本3,000＋1,000円/人</span></label>
+        <label class="opt"><input type="checkbox" id="o_soft"><span>在留申請書類ソフト 使用料</span><span class="price">5,000円/人・月</span></label>
+        <label class="opt"><input type="checkbox" id="o_kyuyo"><span>給与計算サポート</span><span class="price">基本3,000＋1,000円/人</span></label>
         <label class="opt"><input type="checkbox" id="o_ccus"><span>建設キャリアアップシステム（CCUS）月次運用サポート</span><span class="price">5,000円/社・月</span></label>
       </div>
 
@@ -282,10 +282,17 @@ ul.clean li{margin:.3rem 0}
     if(document.getElementById('o_kyuyo').checked){var ky=KYUYO_BASE+KYUYO_PER*n; opt+=ky; rows.push(['B 給与計算サポート（基本3,000＋1,000×'+n+'名）', ky, true]);}
     if(document.getElementById('o_ccus').checked){opt+=CCUS; rows.push(['C 建設キャリアアップシステム（CCUS）月次サポート', CCUS, true]);}
     var total=base+opt;
-    document.getElementById('total').textContent=fmt(total);
-    document.getElementById('perhead').textContent = n>0 ? fmt(total/n) : '¥0';
-    document.getElementById('tierPill').textContent=tierName(n);
     var bd=document.getElementById('breakdown'); bd.innerHTML='';
+    if(n<=0){
+      document.getElementById('total').textContent='¥0';
+      document.getElementById('perhead').textContent='¥0';
+      document.getElementById('tierPill').textContent='—';
+      bd.innerHTML='<div class="row"><span>人数を入力すると自動計算されます。</span></div>';
+      return;
+    }
+    document.getElementById('total').textContent=fmt(total);
+    document.getElementById('perhead').textContent = fmt(total/n);
+    document.getElementById('tierPill').textContent=tierName(n);
     rows.forEach(function(r){
       var div=document.createElement('div'); div.className='row'+(r[2]?' sub':'');
       var a=document.createElement('span'); a.textContent=r[0];
