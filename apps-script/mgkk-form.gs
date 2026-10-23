@@ -3,10 +3,10 @@ var FORM_ID = '1Sf1Qs0uK0aYLk9h9jADdwAFrR_SbwcxvaHBzM7K0-qU';
 var SIM_URL = 'https://sato-mgkk.github.io/mgkk-fee-sim/';
 
 // 料金（シミュレーターと同じ）
-var SYS = 10000, SOFT = 5000, KYUYO_BASE = 3000, KYUYO_PER = 1000, CCUS = 5000, TOKUTEI_RATE = 30000, SANTEI = 5000, OKURI = 5000;
+var SYS = 10000, SOFT = 5000, KYUYO_BASE = 3000, KYUYO_PER = 1000, TOKUTEI_RATE = 30000, OKURI = 5000;
 // 入国時の初期費用（1名あたり。[下限, 上限]）
 var PRE = 15000, POST = { A: [160000, 260000], B: [100000, 160000] }, AIR = [70000, 100000], TRAVEL = 30000, INS = [20000, 33000], NINTEI = 6100,
-  GYOSEI = [55000, 200000], A2KOSHU = [100000, 200000], A2HOSHO = 60000, CCUS_REG = 15000, CCUS_JIGYO = 30000;
+  GYOSEI = [55000, 200000], A2KOSHU = [100000, 200000], A2HOSHO = 60000;
 function ikuseiRate(n) { if (n <= 1) return 50000; if (n <= 2) return 40000; if (n <= 5) return 35000; if (n <= 10) return 33000; if (n <= 15) return 31000; return 30000; }
 function yen(n) { return '¥' + Math.round(n).toLocaleString('ja-JP'); }
 function rng(lo, hi) { return lo === hi ? yen(lo) : yen(lo) + '〜' + yen(hi); }
@@ -23,13 +23,13 @@ function updateForm() {
 
 /** テスト用：サンプルの見積書PDFを組合のGmailに送る */
 function testPdf() {
-  var d = { company: 'テスト株式会社', person: 'テスト太郎', tel: '000-0000-0000', email: NOTIFY_TO, ikusei: 2, tokutei: 5, soft: true, kyuyo: true, ccus: false, santei: true,
-    ny: 2, pat: 'B', a2: true, ccusReg: true, ccusJigyo: false, a2koshu: false, note: '' };
+  var d = { company: 'テスト株式会社', person: 'テスト太郎', tel: '000-0000-0000', email: NOTIFY_TO, ikusei: 2, tokutei: 5, soft: true, kyuyo: true,
+    ny: 2, pat: 'B', a2: true, a2koshu: false, note: '' };
   MailApp.sendEmail({ to: NOTIFY_TO, subject: '【テスト】月額お見積書PDF', body: 'テスト用の見積書PDFです。', attachments: [makePdf(d, new Date())] });
 }
 
 function onFormSubmit(e) {
-  var d = { company: '', person: '', tel: '', email: '', ikusei: 0, tokutei: 0, soft: false, kyuyo: false, ccus: false, note: '', options: '' };
+  var d = { company: '', person: '', tel: '', email: '', ikusei: 0, tokutei: 0, soft: false, kyuyo: false, note: '', options: '' };
   var lines = [];
   e.response.getItemResponses().forEach(function (r) {
     var t = r.getItem().getTitle(), v = String(r.getResponse());
@@ -45,15 +45,11 @@ function onFormSubmit(e) {
   });
   d.soft = d.options.indexOf('在留申請書類ソフト') >= 0;
   d.kyuyo = d.options.indexOf('給与計算') >= 0;
-  d.ccus = d.options.indexOf('月次') >= 0;
-  d.santei = d.options.indexOf('算定基礎届') >= 0;
   // 入国諸費用：シミュレーターが送る「【入国諸費用】新規入国 N名・日本語Bパターン・…」の行から読む
   var m = d.options.match(/新規入国\s*(\d+)\s*名/);
   d.ny = m ? parseInt(m[1], 10) : d.ikusei;
   d.a2 = d.options.indexOf('来日前A2') >= 0;
   d.pat = (!d.a2 && d.options.indexOf('日本語Aパターン') >= 0) ? 'A' : 'B';
-  d.ccusReg = d.options.indexOf('技能者登録代行') >= 0;
-  d.ccusJigyo = d.options.indexOf('事業者登録代行') >= 0;
   d.a2koshu = !d.a2 && d.options.indexOf('A2目標講習') >= 0;
 
   var now = e.response.getTimestamp();
@@ -89,12 +85,10 @@ function calc(d) {
   var n = d.ikusei + d.tokutei, rate = ikuseiRate(n), tkRate = Math.min(TOKUTEI_RATE, rate);
   var kanri = d.ikusei * rate + d.tokutei * tkRate;
   var fixed = SYS + OKURI * n;
-  var opt = (d.soft ? SOFT * n : 0) + (d.kyuyo ? KYUYO_BASE + KYUYO_PER * n : 0) + (d.ccus ? CCUS : 0);
+  var opt = (d.soft ? SOFT * n : 0) + (d.kyuyo ? KYUYO_BASE + KYUYO_PER * n : 0);
   var names = [];
   if (d.soft) names.push('在留申請書類ソフト');
   if (d.kyuyo) names.push('給与計算サポート');
-  if (d.ccus) names.push('建設キャリアアップシステム（CCUS）月次運用サポート');
-  if (d.santei) names.push('算定基礎届サポート（年額）');
   return { n: n, rate: rate, tkRate: tkRate, kanri: kanri, fixed: fixed, opt: opt, total: kanri + fixed + opt, optNames: names };
 }
 
@@ -118,8 +112,6 @@ function initCalc(d) {
 // 一時金オプション（入国諸費用とは別・必要な時だけ）
 function onceCalc(d) {
   var n = d.ikusei + d.tokutei, r = [];
-  if (d.ccusReg) r.push(['建設キャリアアップシステム（CCUS）技能者登録 代行（' + n + '名）', '15,000円/人', CCUS_REG * n, CCUS_REG * n, true]);
-  if (d.ccusJigyo) r.push(['建設キャリアアップシステム（CCUS）事業者登録 代行', '30,000円/社', CCUS_JIGYO, CCUS_JIGYO, true]);
   if (d.a2koshu) r.push(['A2目標講習（就労開始後100時間・他社合同オンライン／育成就労' + d.ikusei + '名）', '約10〜20万円/人', A2KOSHU[0] * d.ikusei, A2KOSHU[1] * d.ikusei, true]);
   return sumRows(r);
 }
@@ -191,8 +183,6 @@ function makePdf(d, date) {
   var C = [];
   if (d.soft) C.push(['在留申請書類ソフト 使用料', '5,000円/人・月（従量）']);
   if (d.kyuyo) C.push(['給与計算サポート', '基本3,000円/社＋1,000円/人']);
-  if (d.ccus) C.push(['建設キャリアアップシステム（CCUS）月次運用サポート', '5,000円/社・月']);
-  if (d.santei) C.push(['算定基礎届サポート（年1回・月額には含みません）', '5,000円/社・年']);
   if (!C.length) C.push(['お申込みなし', '—']);
   table(C);
 
@@ -232,13 +222,11 @@ function makePdf(d, date) {
   section('G. 発生時のみの費用（単価）');
   table([['休日・時間外の出動（会社都合・非緊急／1日分）', '30,000円/回＋交通費実費'],
     ['建設就労者 資格取得の引率・通訳（送迎含む）', '30,000円/回'],
-    ['建設キャリアアップシステム（CCUS）変更・更新 代行', '5,000円/件'],
     ['在留資格の変更・更新 書類作成（提携行政書士へ依頼の場合）', '概ね5.5万〜20万円/件']]);
 
   section('H. 実費（企業さまご負担）');
   table([['技能検定・技能評価試験 受検料（職種・級で変動）', '実費'],
     ['在留資格の変更・更新 入管手数料（組合が納付し請求）', '実費'],
-    ['建設キャリアアップシステム（CCUS）公式登録料（技能者2,500/4,900円、管理者ID 年11,400円 等）', '実費'],
     ['送り出し機関の入国前手数料（本人負担 月給2か月分の超過分）', '実費'],
     ['住居・家電・備品等の準備費用', '実費']]);
 
