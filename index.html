@@ -227,7 +227,7 @@ ul.clean li{margin:.3rem 0}
           </div>
         </div>
         <div class="breakdown" id="breakdown"></div>
-        <p class="note-inline">※ システム管理料10,000円/社と送り出し機関 管理費5,000円/人は常に含みます（送り出し機関 管理費は送り出し機関へ直接お支払い）。</p>
+        <p class="note-inline">※ システム管理料10,000円/社と送り出し機関 管理費5,000円/人は常に含みます。</p>
         <div class="breakdown" id="extra"></div>
       </div>
 
@@ -350,7 +350,7 @@ ul.clean li{margin:.3rem 0}
     <div class="callout" style="margin-top:12px">
       <b>特定技能：</b>1名30,000円（据え置き）。育成就労の単価は、育成就労＋特定技能の合算人数帯で決まります。
     </div>
-    <p class="note-inline">このほか毎月の費用として、<b>送り出し機関への管理費 5,000円/人・月</b>がかかります（送り出し機関へ直接お支払い・組合の監理費とは別勘定）。上のシミュレーターの月額試算に含めています。</p>
+    <p class="note-inline">このほか毎月の費用として、<b>送り出し機関への管理費 5,000円/人・月</b>がかかります（組合の監理費とは別勘定）。上のシミュレーターの月額試算に含めています。</p>
     </div>
   </details>
 
@@ -562,7 +562,7 @@ ul.clean li{margin:.3rem 0}
       line(bd,'監理費（育成就労 '+s.ik+'名 × '+fmt(m.rate)+'）', fmt(s.ik*m.rate));
       line(bd,'監理費（特定技能 '+s.tk+'名 × '+fmt(m.tkRate)+(m.tkRate<TOKUTEI_RATE?'・育成就労と同額':'・据置')+'）', fmt(s.tk*m.tkRate));
       line(bd,'システム管理料', fmt(SYS));
-      line(bd,'送り出し機関 管理費（5,000×'+s.n+'名・送り出し機関へ直接お支払い）', fmt(OKURI*s.n));
+      line(bd,'送り出し機関 管理費（5,000×'+s.n+'名）', fmt(OKURI*s.n));
       if(s.soft) line(bd,'在留申請書類ソフト使用料（5,000×'+s.n+'名）', fmt(SOFT*s.n), true);
       if(s.kyuyo) line(bd,'給与計算サポート（基本3,000＋1,000×'+s.n+'名）', fmt(KYUYO_BASE+KYUYO_PER*s.n), true);
     }
@@ -594,7 +594,7 @@ ul.clean li{margin:.3rem 0}
     var r=calc(), s=r.s, m=r.m, it=r.it, on=r.on;
 
     // B. required monthly costs
-    var fixedRows='<tr><td>システム管理料</td><td>10,000円/社・月</td></tr><tr><td>送り出し機関 管理費（送り出し機関へ直接お支払い）</td><td>5,000円/人・月</td></tr>';
+    var fixedRows='<tr><td>システム管理料</td><td>10,000円/社・月</td></tr><tr><td>送り出し機関 管理費</td><td>5,000円/人・月</td></tr>';
     $('est-fixed').innerHTML=fixedRows;
 
     // C. option unit prices
