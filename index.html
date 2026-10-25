@@ -147,6 +147,11 @@ ul.clean li{margin:.3rem 0}
 .ibd>summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.98rem;padding:6px 0}
 /* 文字を大きく設定した端末・とても小さい画面向け */
 .sim .grid>*{min-width:0}
+.sim .grid.grid1{grid-template-columns:1fr}
+.field label.opt{display:flex;font-weight:400;margin-bottom:0}
+.qlabel{display:block;font-size:.98rem;font-weight:700;margin-bottom:8px}
+#init-opts .field{display:grid;gap:8px}
+#init-opts .field>label:not(.opt){margin-bottom:0}
 @media (max-width:360px){
   .wrap{padding-left:8px;padding-right:8px}
   .sim{padding:12px}
@@ -249,28 +254,28 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       <p class="hint no-print">育成就労＝2027年4月から始まる新しい制度（技能実習のあとの制度）。特定技能＝技能と日本語の試験に合格した方の在留資格。迷ったら「育成就労」のままで大丈夫です。</p>
 
       <div class="step-h no-print"><span class="step-no">2</span>人数を入れてください</div>
-      <div class="grid">
+      <div class="grid grid1">
         <div class="field ik-only">
           <label for="ikusei">育成就労で受け入れる人数</label>
           <div class="stepper"><button type="button" class="st-btn" data-for="ikusei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="ikusei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="ikusei" data-d="1" aria-label="1名ふやす">＋</button></div>
-        </div>
-        <div class="field">
-          <label for="tokutei"><span class="tk-only">特定技能で受け入れる人数</span><span class="ik-only"><span class="pub-only">御社</span><span class="staff-only">この会社</span>の特定技能の方の人数（いなければ0）</span></label>
-          <div class="stepper"><button type="button" class="st-btn" data-for="tokutei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="tokutei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="tokutei" data-d="1" aria-label="1名ふやす">＋</button></div>
-          <p class="hint ik-only">特定技能の方と合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります。特定技能の方の費用は、上の「特定技能」を選ぶと別に計算・お申し込みできます。</p>
         </div>
       </div>
 
       <div class="opts ik-only" id="init-opts">
         <div class="field">
-          <label for="nyukoku">そのうち、海外から新しく呼ぶ人数</label>
+          <span class="qlabel">その方たちは、全員これから海外から来日しますか？</span>
+          <label class="opt"><input type="radio" name="nyq" id="ny_all" checked><span class="otxt">はい、全員これから来日する</span></label>
+          <label class="opt"><input type="radio" name="nyq" id="ny_some"><span class="otxt">いいえ、すでに日本にいる方もいる<small>転籍や、国内からの切り替えの方など</small></span></label>
+        </div>
+        <div class="field" id="ny-some">
+          <label for="nyukoku">海外から来日する人数</label>
           <div class="stepper"><button type="button" class="st-btn" data-for="nyukoku" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="nyukoku" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="nyukoku" data-d="1" aria-label="1名ふやす">＋</button></div>
-          <p class="hint">入国時の費用（講習・航空券など）の計算に使います。ふつうは上の人数と同じです。</p>
+          <p class="hint">すでに日本にいる方の分は、入国時の費用（講習・航空券など）がかかりません。</p>
           <p class="warnmsg" id="ny-warn" hidden></p>
         </div>
         <div id="ny-detail">
           <div class="field">
-            <label for="jlv">その方は、日本語試験 N5（A1）に合格していますか？</label>
+            <label for="jlv">来日する方は、日本語試験 N5（A1）に合格していますか？</label>
             <select id="jlv">
               <option value="A">合格していない・わからない（Aパターン）</option>
               <option value="B">合格している（Bパターン）</option>
@@ -278,6 +283,14 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
             <p class="hint">はじめは「合格していない・わからない」（高めの安全な金額）で計算しています。合格している場合だけ変えてください。</p>
             <p class="hint" id="a2-note" hidden>「来日前A2取得保証」を選んだため、来日時はN5合格以上になる前提（Bパターン）で計算しています。</p>
           </div>
+        </div>
+      </div>
+
+      <div class="grid grid1">
+        <div class="field">
+          <label for="tokutei"><span class="tk-only">特定技能で受け入れる人数</span><span class="ik-only">ほかに、<span class="pub-only">御社</span><span class="staff-only">この会社</span>で働く特定技能の方は何名ですか？（いなければ0）</span></label>
+          <div class="stepper"><button type="button" class="st-btn" data-for="tokutei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="tokutei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="tokutei" data-d="1" aria-label="1名ふやす">＋</button></div>
+          <p class="hint ik-only">特定技能の方と合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります。特定技能の方の費用は、上の「特定技能」を選ぶと別に計算・お申し込みできます。</p>
         </div>
       </div>
 
@@ -646,7 +659,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   var fmt=function(n){return '¥'+Math.round(n).toLocaleString('ja-JP');};
   var rng=function(lo,hi){return lo===hi?fmt(lo):fmt(lo)+'〜'+fmt(hi);};
   var $=function(id){return document.getElementById(id);};
-  var ids=['ikusei','tokutei','nyukoku','jlv','o_soft','o_kyuyo','o_a2','o_a2koshu','tkplan'];
+  var ids=['ikusei','tokutei','nyukoku','ny_all','ny_some','jlv','o_soft','o_kyuyo','o_a2','o_a2koshu','tkplan'];
   var SYS=10000, SOFT=5000, KYUYO_BASE=3000, KYUYO_PER=1000, TOKUTEI_RATE=30000, OKURI=5000;
   // 入国時の初期費用（1名あたり。[下限, 上限]）
   var PRE=15000, POST={A:[160000,260000], B:[100000,160000]}, AIR=[70000,100000], TRAVEL=30000, INS=[20000,33000], NINTEI=6100,
@@ -680,9 +693,10 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   document.querySelectorAll('.mode-tab').forEach(function(b){ b.addEventListener('click',function(){ setMode(b.getAttribute('data-mode')); }); });
 
   // 新規入国の人数は、手で変えるまで育成就労の人数に合わせる
-  var nyTouched=false;
-  $('nyukoku').addEventListener('input',function(e){ if(e.isTrusted||e.detail==='step') nyTouched=true; });
-  $('ikusei').addEventListener('input',function(){ if(!nyTouched) $('nyukoku').value=num('ikusei'); });
+  // 「全員これから来日する」なら、来日する人数＝育成就労の人数
+  function nyAll(){ return $('ny_all').checked; }
+  $('ikusei').addEventListener('input',function(){ if(nyAll()) $('nyukoku').value=num('ikusei'); });
+  $('ny_some').addEventListener('change',function(){ if(num('nyukoku')>=num('ikusei')) $('nyukoku').value=Math.max(0,num('ikusei')-1); });
 
   // ＋／−ボタン（キーボード入力が苦手な方向け）
   document.querySelectorAll('.st-btn').forEach(function(b){
@@ -702,6 +716,8 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   var jlvBefore='A';
   function state(){
+    if(nyAll()) $('nyukoku').value=num('ikusei');
+    $('ny-some').style.display = nyAll() ? 'none' : '';
     var s={ik:num('ikusei'), tk:num('tokutei'), ny:num('nyukoku'), a2:$('o_a2').checked,
       soft:$('o_soft').checked, kyuyo:$('o_kyuyo').checked};
     // A2取得済みならA1も合格なのでBパターン、A2目標講習も不要
@@ -845,16 +861,16 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   var SAVE_KEY='mgkk-sim-input';
   function save(){
     try{
-      var v={mode:mode, company:$('company').value, ny:nyTouched};
-      ids.forEach(function(id){ var el=$(id); v[id]= el.type==='checkbox' ? el.checked : el.value; });
+      var v={mode:mode, company:$('company').value};
+      ids.forEach(function(id){ var el=$(id); v[id]= el.type==='checkbox'||el.type==='radio' ? el.checked : el.value; });
       localStorage.setItem(SAVE_KEY,JSON.stringify(v));
     }catch(e){}
   }
   function restore(){
     try{
       var v=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(!v) return false;
-      ids.forEach(function(id){ var el=$(id); if(!(id in v)) return; if(el.type==='checkbox') el.checked=!!v[id]; else el.value=v[id]; });
-      if(!STAFF) $('company').value=v.company||''; nyTouched=!!v.ny;
+      ids.forEach(function(id){ var el=$(id); if(!(id in v)) return; if(el.type==='checkbox'||el.type==='radio') el.checked=!!v[id]; else el.value=v[id]; });
+      if(!STAFF) $('company').value=v.company||'';
       if(v.mode==='tk') setMode('tk');
       return num('ikusei')+num('tokutei')>0;
     }catch(e){ return false; }
