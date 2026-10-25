@@ -140,8 +140,30 @@ ul.clean li{margin:.3rem 0}
 .breakdown .warnrow{color:var(--warn);font-weight:700}
 .ibd{margin-top:10px}
 .ibd>summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.98rem;padding:6px 0}
+/* 文字を大きく設定した端末・とても小さい画面向け */
+.sim .grid>*{min-width:0}
+@media (max-width:360px){
+  .wrap{padding-left:8px;padding-right:8px}
+  .sim{padding:12px}
+  .sim-guide{padding:8px 10px}
+  .stepper{gap:4px}
+  .st-btn{width:44px;height:44px}
+  .opt .price{padding-left:0}
+}
+@media (max-width:300px){
+  .stepper .unit{display:none}
+  .st-btn{width:40px;height:40px;font-size:1.3rem}
+  .stepper input[type=text]{min-width:2.6em;font-size:1.3rem;padding:6px 2px}
+  .minibar .mini-lbl,.minibar .mini-go{display:none}
+  .minibar{justify-content:center}
+}
+@media (max-width:260px){
+  .mode-tabs{grid-template-columns:1fr}
+  .step-h{font-size:1rem}
+}
 .minibar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 -4px 16px rgba(0,0,0,.18);font-size:.95rem}
 .minibar b{font-size:1.3rem}
+.minibar .mini-lbl{white-space:nowrap}
 .minibar .mini-go{margin-left:auto;font-weight:700;font-size:.9rem;white-space:nowrap}
 .minibar[hidden]{display:none}
 body.has-mini{padding-bottom:72px}
@@ -190,7 +212,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 </style>
 
 <button class="theme-btn" id="themeBtn" type="button">テーマ切替</button>
-<a class="minibar" id="minibar" href="#result-anchor" hidden><span>毎月の費用（目安）</span><b class="num" id="mini-total">¥0</b><span class="mini-go">金額を見る ↓</span></a>
+<a class="minibar" id="minibar" href="#result-anchor" hidden><span class="mini-lbl">毎月の費用（目安）</span><b class="num" id="mini-total">¥0</b><span class="mini-go">金額を見る ↓</span></a>
 <div class="wrap">
 
   <header class="page">
