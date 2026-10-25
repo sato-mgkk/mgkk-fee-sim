@@ -240,12 +240,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         </div>
       </div>
 
-      <div class="step-h no-print"><span class="step-no">3</span>ご希望のサービスにチェック（なければ飛ばしてOK）</div>
-      <div class="opts">
-        <label class="opt"><input type="checkbox" id="o_soft"><span class="otxt">在留申請書類ソフト 使用料<small>在留申請の書類を御社で作るためのソフトです。使わない場合は、入国時に提携の行政書士への依頼料（概ね5.5〜20万円/人）がかかります。</small></span><span class="price">5,000円/人・月</span></label>
-        <label class="opt"><input type="checkbox" id="o_kyuyo"><span class="otxt">給与計算サポート<small>毎月の給与計算をお手伝いします。</small></span><span class="price">基本3,000円＋1,000円/人・月</span></label>
-      </div>
-
+      <div class="step-h no-print"><span class="step-no">3</span><span class="ik-only">ご希望のサービスにチェック（なければ飛ばしてOK）</span><span class="tk-only">支援業務の頼み方とサービスを選ぶ</span></div>
       <div class="opts tk-only" id="tk-opts">
         <div class="field">
           <label for="tkplan">支援業務の頼み方</label>
@@ -256,6 +251,11 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
           <p class="hint">10項目すべてを個別に頼むと60,000円/人・月です。一括契約のほうが1名あたり月30,000円お得です。</p>
         </div>
         <div id="tk-items"></div>
+      </div>
+
+      <div class="opts">
+        <label class="opt"><input type="checkbox" id="o_soft"><span class="otxt">在留申請書類ソフト 使用料<small>在留申請の書類を御社で作るためのソフトです。<span class="ik-only">使わない場合は、入国時に提携の行政書士への依頼料（概ね5.5〜20万円/人）がかかります。</span><span class="tk-only">使わない場合は、提携の行政書士へ依頼（実費）になります。</span></small></span><span class="price">5,000円/人・月</span></label>
+        <label class="opt"><input type="checkbox" id="o_kyuyo"><span class="otxt">給与計算サポート<small>毎月の給与計算をお手伝いします。</small></span><span class="price">基本3,000円＋1,000円/人・月</span></label>
       </div>
 
       <div class="opts ik-only" id="a2-opts">
@@ -419,7 +419,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- STRUCTURE -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">料金の構造</span><span class="t">3層＋追加サービス</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">全体像</span><span class="t">料金のしくみ</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="layers">
       <div class="layer"><div class="k">①</div><div class="b"><b>監理費（人数連動）</b><div class="d">法定監理業務。育成就労＝階段式（人数帯別）／特定技能＝据え置き。合算人数で単価が決まる</div></div></div>
@@ -432,7 +432,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- KANRIHI TABLE -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">① 監理費</span><span class="t">育成就労（人数帯別の単価）</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">毎月</span><span class="t">人数ごとの監理費（育成就労・1名あたり）</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
       <table>
@@ -457,7 +457,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- OPTIONS TABLE -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">②③ 基本料金・付加価値オプション</span><span class="t">サービスメニュー</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">毎月</span><span class="t">システム管理料とオプションの料金</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
       <table>
@@ -474,7 +474,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- onetime + todo -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">＋ 都度課金</span><span class="t">在留手続き・資格取得など</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">必要な時だけ</span><span class="t">在留手続き・資格取得などの費用</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
       <table>
@@ -487,13 +487,21 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         </tbody>
       </table>
     </div>
-    <p class="note-inline"><b>在留資格の新規・変更・更新は、いずれも書類作成を①企業が在留申請書類ソフトで自作（使用料5,000円/人・月）、または②組合が提携する行政書士へ依頼（行政書士実費・手続きにより概ね5.5万〜20万円／件）。</b>当組合は、期限管理・チェック・申請取次・窓口を従来どおり一貫して担い、企業様のお手間を増やしません。印紙代や技能検定・技能評価試験の受検料等の実費は受け入れ企業様のご負担（特定技能の方はご本人負担）。受検料は職種・級により変動します。育成就労計画の認定申請手数料（育成就労機構）6,100円（ペイジー払いの場合は＋440円）も企業様のご負担です。在留資格の変更・更新にかかる入管手数料は、在留期間（発行年数）に応じた実費で、当組合が入管へ納付のうえ企業様へご請求します（会社負担を推奨）。建設就労者の資格取得は、会場への引率・通訳の対価として30,000円/回です。なお当組合では、企業様が従来どおり必要資料をお送りいただく感覚で申請書類を作成できるソフトの開発を進めており、企業様のお手間が増えないよう対応してまいります。</p>
+    <ul class="clean note-inline">
+      <li><b>在留資格の新規・変更・更新の書類作成</b>は、①企業が在留申請書類ソフトで自作（使用料5,000円/人・月）、または②組合が提携する行政書士へ依頼（行政書士実費・手続きにより概ね5.5万〜20万円／件）。</li>
+      <li>当組合は、期限管理・チェック・申請取次・窓口を従来どおり一貫して担い、企業様のお手間を増やしません。</li>
+      <li>印紙代や技能検定・技能評価試験の受検料等の実費は受け入れ企業様のご負担（特定技能の方はご本人負担）。受検料は職種・級により変動します。</li>
+      <li>育成就労計画の認定申請手数料（育成就労機構）6,100円（ペイジー払いの場合は＋440円）も企業様のご負担です。</li>
+      <li>在留資格の変更・更新にかかる入管手数料は、在留期間（発行年数）に応じた実費で、当組合が入管へ納付のうえ企業様へご請求します（会社負担を推奨）。</li>
+      <li>建設就労者の資格取得は、会場への引率・通訳の対価として30,000円/回です。</li>
+      <li>当組合では、企業様が従来どおり必要資料をお送りいただく感覚で申請書類を作成できるソフトの開発を進めており、企業様のお手間が増えないよう対応してまいります。</li>
+    </ul>
     </div>
   </details>
 
   <!-- entry costs -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">＋ 入国・初期諸費用</span><span class="t">受け入れ諸費用（初期・1名あたり）</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">入国時に1回</span><span class="t">入国時にかかる費用（1名あたり）</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
       <table>
@@ -515,7 +523,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- japanese training -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">＋ 日本語講習</span><span class="t">入国後講習・A2目標講習・来日前A2保証</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">日本語</span><span class="t">日本語の講習とA2保証について</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
       <table>
@@ -547,7 +555,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- holiday -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">＋ 休日・時間外</span><span class="t">休日出動料</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">必要な時だけ</span><span class="t">休日・時間外の出動料</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
       <table>
@@ -568,7 +576,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- rules -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">適用ルール</span><span class="t">誰に・いつから適用</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">適用</span><span class="t">この料金はいつから・誰に？</span></div><span class="chev">›</span></summary>
     <div class="body">
     <ul class="clean">
       <li><b>新規（2027年4月〜の育成就労）</b>：この新料金体系を適用。</li>
@@ -611,7 +619,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   var tkBox=$('tk-items');
   SHIEN_ITEMS.forEach(function(x,i){
     var l=document.createElement('label'); l.className='opt sub-item';
-    l.innerHTML='<input type="checkbox" id="tki'+i+'" checked><span>'+x[0]+'</span><span class="price">'+x[1].toLocaleString('ja-JP')+'円/人・月</span>';
+    l.innerHTML='<input type="checkbox" id="tki'+i+'" checked><span class="otxt">'+x[0]+'</span><span class="price">'+x[1].toLocaleString('ja-JP')+'円/人・月</span>';
     tkBox.appendChild(l); ids.push('tki'+i);
   });
 
@@ -716,6 +724,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   function calc(){
     var s=state(), m=monthly(s);
+    $('apply-msg').hidden=true;
     var bd=$('breakdown'), ex=$('extra'), ib=$('ibreakdown');
     bd.innerHTML=''; ex.innerHTML=''; ib.innerHTML='';
     var c=m.cnt;
