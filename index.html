@@ -254,16 +254,21 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       <p class="hint no-print">育成就労＝2027年4月から始まる新しい制度（技能実習のあとの制度）。特定技能＝技能と日本語の試験に合格した方の在留資格。迷ったら「育成就労」のままで大丈夫です。</p>
 
       <div class="step-h no-print"><span class="step-no">2</span>人数を入れてください</div>
-      <div class="grid grid1">
+      <div class="grid">
         <div class="field ik-only">
           <label for="ikusei">育成就労で受け入れる人数</label>
           <div class="stepper"><button type="button" class="st-btn" data-for="ikusei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="ikusei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="ikusei" data-d="1" aria-label="1名ふやす">＋</button></div>
+        </div>
+        <div class="field">
+          <label for="tokutei"><span class="tk-only">特定技能で受け入れる人数</span><span class="ik-only"><span class="pub-only">御社</span><span class="staff-only">この会社</span>の特定技能の方の人数（いなければ0）</span></label>
+          <div class="stepper"><button type="button" class="st-btn" data-for="tokutei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="tokutei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="tokutei" data-d="1" aria-label="1名ふやす">＋</button></div>
+          <p class="hint ik-only">特定技能の方と合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります。特定技能の方の費用は、上の「特定技能」を選ぶと別に計算できます。</p>
         </div>
       </div>
 
       <div class="opts ik-only" id="init-opts">
         <div class="field">
-          <span class="qlabel">その方たちは、全員これから海外から来日しますか？</span>
+          <span class="qlabel">育成就労の方は、全員これから海外から来日しますか？</span>
           <label class="opt"><input type="radio" name="nyq" id="ny_all" checked><span class="otxt">はい、全員これから来日する</span></label>
           <label class="opt"><input type="radio" name="nyq" id="ny_some"><span class="otxt">いいえ、すでに日本にいる方もいる<small>転籍や、国内からの切り替えの方など</small></span></label>
         </div>
@@ -283,14 +288,6 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
             <p class="hint">はじめは「合格していない・わからない」（高めの安全な金額）で計算しています。合格している場合だけ変えてください。</p>
             <p class="hint" id="a2-note" hidden>「来日前A2取得保証」を選んだため、来日時はN5合格以上になる前提（Bパターン）で計算しています。</p>
           </div>
-        </div>
-      </div>
-
-      <div class="grid grid1">
-        <div class="field">
-          <label for="tokutei"><span class="tk-only">特定技能で受け入れる人数</span><span class="ik-only">ほかに、<span class="pub-only">御社</span><span class="staff-only">この会社</span>で働く特定技能の方は何名ですか？（いなければ0）</span></label>
-          <div class="stepper"><button type="button" class="st-btn" data-for="tokutei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="tokutei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="tokutei" data-d="1" aria-label="1名ふやす">＋</button></div>
-          <p class="hint ik-only">特定技能の方と合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります。特定技能の方の費用は、上の「特定技能」を選ぶと別に計算・お申し込みできます。</p>
         </div>
       </div>
 
