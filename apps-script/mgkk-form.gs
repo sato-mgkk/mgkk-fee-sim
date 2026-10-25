@@ -1,4 +1,4 @@
-// 組合の窓口（通知の送り先・お客様の返信先・見積書の問い合わせ先）。Apps Script は mgkk6271@gmail.com のアカウントで動くが、このGmailは誰も見ていないため使わない
+// 組合の窓口（通知の送り先・お客様の返信先）。Apps Script は mgkk6271@gmail.com のアカウントで動くが、このGmailは誰も見ていないため使わない
 var NOTIFY_TO = 'info@mgkk-navi.com';
 var FORM_ID = '1Sf1Qs0uK0aYLk9h9jADdwAFrR_SbwcxvaHBzM7K0-qU';
 var SIM_URL = 'https://sato-mgkk.github.io/mgkk-fee-sim/';
@@ -236,7 +236,6 @@ function makePdf(d, date) {
   txt(hc.appendParagraph(d.company ? d.company + '　御中' : ''), 12, '#ffffff', true);
   var dp = txt(hc.appendParagraph('発行日：' + Utilities.formatDate(date, 'Asia/Tokyo', 'yyyy/M/d')), 10, '#ffffff', false);
   dp.setAlignment(DocumentApp.HorizontalAlignment.RIGHT);
-  txt(hc.appendParagraph('お問い合わせ：MGKK協同組合　' + NOTIFY_TO), 9, '#ffffff', false);
 
   gap(4);
   if (d.mode === 'tk') { tokuteiPages(); return finish(); }
