@@ -175,6 +175,8 @@ ul.clean li{margin:.3rem 0}
 .restored[hidden]{display:none}
 .staff-login{display:grid;gap:8px;max-width:360px;border:2px solid var(--warn);border-radius:12px;padding:14px;margin:0 0 14px;background:var(--surface)}
 .staff-login[hidden]{display:none}
+.staff-link{text-align:right;margin-top:14px}
+.staff-link a{color:var(--muted);font-size:.78rem}
 .staff-login input{font-size:1.1rem;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg);font-family:var(--sans)}
 .staff-login button,.staff-bar button{border:2px solid var(--accent);background:var(--accent);color:#fff;border-radius:9px;padding:10px 14px;font-weight:700;font-size:1rem;cursor:pointer;font-family:var(--sans)}
 .staff-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.92rem;font-weight:700;color:var(--warn);background:var(--warn-soft);border-radius:10px;padding:8px 12px;margin:0 0 10px}
@@ -662,6 +664,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <div class="foot">
     <p>表示は税別・予定価格です。相場に基づく目安の項目は委託先・案件により変動します。正式な料金は改めてご案内いたします。</p>
+    <p class="pub-only staff-link"><a href="?staff">職員ログイン</a></p>
   </div>
 
 </div>
@@ -869,17 +872,21 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   ids.forEach(function(id){var el=$(id); el.addEventListener('input',calc); el.addEventListener('change',calc);});
 
   // 組合職員用：URLの末尾に ?staff を付けて開くと、見積書を作る画面になる
-  // パスワードはこのページに書かず、照合用の値（SHA-256）だけを置く。合えばこの端末では次回から入力不要
+  // パスワードはこのページに書かず、照合用の値（SHA-256）だけを置く。合えばこの端末では12時間だけ入力不要（借りた端末での閉じ忘れ対策）
   var STAFF_HASH='4c7b420d9aa045df334a5c4e38a48824f66629a4ac980d0d2ae858cf95a919aa', STAFF_KEY='mgkk-staff-ok';
   var wantStaff=/[?&#]staff\b/.test(location.search+location.hash), STAFF=false;
-  try{ STAFF = wantStaff && localStorage.getItem(STAFF_KEY)===STAFF_HASH; }catch(e){}
+  var STAFF_HOURS=12;
+  try{
+    var ok=JSON.parse(localStorage.getItem(STAFF_KEY)||'null');
+    STAFF = wantStaff && !!ok && ok.h===STAFF_HASH && Date.now()-ok.t < STAFF_HOURS*3600e3;
+  }catch(e){}
   document.body.classList.toggle('staff',STAFF);
   function sha256(t){ return crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)).then(function(b){ return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join(''); }); }
   if(wantStaff && !STAFF){
     $('staff-login').hidden=false;
     var go=function(){ sha256($('staff-pw').value).then(function(h){
       if(h!==STAFF_HASH){ $('staff-err').hidden=false; return; }
-      try{ localStorage.setItem(STAFF_KEY,h); }catch(e){}
+      try{ localStorage.setItem(STAFF_KEY,JSON.stringify({h:h,t:Date.now()})); }catch(e){}
       location.reload();
     }); };
     $('staff-go').addEventListener('click',go);
