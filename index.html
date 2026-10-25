@@ -331,7 +331,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
           </div>
         </div>
         <div class="breakdown" id="breakdown"></div>
-        <p class="note-inline">※ システム管理料10,000円/社と送り出し機関 管理費5,000円/人は常に含みます。<span class="tk-only">育成就労と同じ会社でご契約の場合、システム管理料は1社につき1回です。</span></p>
+        <p class="note-inline">※ システム管理料10,000円/社<span class="ik-only">と送り出し機関 管理費5,000円/人</span>は常に含みます。<span class="tk-only">育成就労と同じ会社でご契約の場合、システム管理料は1社につき1回です。</span></p>
         <div class="breakdown" id="extra"></div>
       </div>
 
@@ -420,7 +420,6 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
           <div class="est-h">B. 必須費用（毎月）</div>
           <table class="est-tbl"><tbody>
             <tr><td>システム管理料（育成就労と同じ会社でご契約の場合は1社1回）</td><td>10,000円/社・月</td></tr>
-            <tr><td>送り出し機関 管理費</td><td>5,000円/人・月</td></tr>
           </tbody></table>
         </div>
         <div class="est-sec">
@@ -756,7 +755,8 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     } else {
       cnt=s.ik; kanri=cnt*rate;
     }
-    var fixed=cnt>0?SYS+OKURI*cnt:0;
+    // 送り出し機関 管理費は育成就労のみ（特定技能にはかからない）
+    var fixed=cnt>0?SYS+(s.mode==='tk'?0:OKURI*cnt):0;
     var opt=cnt>0?(s.soft?SOFT*cnt:0)+(s.kyuyo?KYUYO_BASE+KYUYO_PER*cnt:0):0;
     return {rate:rate, per:per, cnt:cnt, kanri:kanri, fixed:fixed, opt:opt, total:kanri+fixed+opt};
   }
@@ -829,7 +829,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         for(var nx=s.n+1; nx<=16; nx++){ if(ikuseiRate(nx)<m.rate){ bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>あと'+(nx-s.n)+'名（特定技能・技能実習・特定活動を含む）で、育成就労の単価が1名'+fmt(ikuseiRate(nx))+'に下がります</span></div>'); break; } }
       }
       line(bd,'システム管理料', fmt(SYS));
-      line(bd,'送り出し機関 管理費（5,000×'+c+'名）', fmt(OKURI*c));
+      if(s.mode!=='tk') line(bd,'送り出し機関 管理費（5,000×'+c+'名）', fmt(OKURI*c));
       if(s.soft) line(bd,'在留申請書類ソフト使用料（5,000×'+c+'名）', fmt(SOFT*c), true);
       if(s.kyuyo) line(bd,'給与計算サポート（基本3,000＋1,000×'+c+'名）', fmt(KYUYO_BASE+KYUYO_PER*c), true);
     }
