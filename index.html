@@ -137,6 +137,7 @@ ul.clean li{margin:.3rem 0}
 .st-btn:active{background:var(--accent);color:#fff}
 .otxt{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
 .otxt small{font-size:.84rem;color:var(--muted);line-height:1.5}
+.breakdown .tierhint{color:var(--accent-ink);padding-left:12px;font-size:.88rem}
 .breakdown .warnrow{color:var(--warn);font-weight:700}
 .ibd{margin-top:10px}
 .ibd>summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.98rem;padding:6px 0}
@@ -798,6 +799,8 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         else line(bd,'支援委託費・個別依頼 '+s.items.length+'項目（特定技能 '+c+'名 × '+fmt(m.per)+'）', fmt(m.kanri));
       } else {
         line(bd,'監理費（育成就労 '+c+'名 × '+fmt(m.rate)+(s.tk>0?'・特定技能と合わせて'+s.n+'名の単価':'')+'）', fmt(m.kanri));
+        // 次の人数帯まであと何名かを案内（人数が増えるほど単価が下がる）
+        for(var nx=s.n+1; nx<=16; nx++){ if(ikuseiRate(nx)<m.rate){ bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>あと'+(nx-s.n)+'名（特定技能を含む）で、育成就労の単価が1名'+fmt(ikuseiRate(nx))+'に下がります</span></div>'); break; } }
       }
       line(bd,'システム管理料', fmt(SYS));
       line(bd,'送り出し機関 管理費（5,000×'+c+'名）', fmt(OKURI*c));
