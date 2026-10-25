@@ -175,9 +175,10 @@ ul.clean li{margin:.3rem 0}
 .minibar .mini-go{margin-left:auto;font-weight:700;font-size:.9rem;white-space:nowrap}
 .minibar[hidden]{display:none}
 body.has-mini{padding-bottom:72px}
-#apply-ok:not([hidden])+.apply-note{display:none}
-.apply-ok{font-size:.95rem;background:var(--accent-soft);color:var(--accent-ink);border-radius:8px;padding:10px 12px;margin:10px 0 0;line-height:1.6}
-.apply-ok a{color:var(--accent-ink);font-weight:700}
+/* 企業向け（目安だけ）／組合職員向け（?staff で見積書を作る） */
+body:not(.staff) .staff-only,body.staff .pub-only{display:none !important}
+.staff-badge{display:none;margin-left:8px;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--warn-soft);color:var(--warn);vertical-align:middle}
+body.staff .staff-badge{display:inline-block}
 .rlabel{font-size:.95rem;color:var(--muted);font-weight:700}
 .opt input:disabled+.otxt{opacity:.55}
 .print-only{display:none}
@@ -206,7 +207,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   :root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
   .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result,.no-print,.hint,.warnmsg{display:none !important}
   .print-only{display:block !important}
-  .minibar,.apply-ok{display:none !important}
+  .minibar{display:none !important}
   body{background:#fff;color:#111}
   .wrap{padding:0;max-width:none}
   section{margin-top:0}
@@ -223,7 +224,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 <div class="wrap">
 
   <header class="page">
-    <span class="eyebrow">MGKK協同組合｜料金改定</span>
+    <span class="eyebrow">MGKK協同組合｜料金改定</span><span class="staff-badge">組合職員用</span>
     <h1>MGKK新料金体系</h1>
   </header>
 
@@ -238,7 +239,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="ph-meta"><span id="ph-company"></span><span id="ph-date"></span></div>
       </div>
       <p class="restored no-print" id="restored" hidden>前回の入力内容を表示しています。<button type="button" id="resetBtn">最初からやり直す</button></p>
-      <p class="sim-guide no-print" id="sim-intro">上から順に入れるだけで、<b>毎月の費用</b>と<b>入国時の費用</b>の目安がわかります。<br>わからない所は、そのままで大丈夫です。</p>
+      <p class="sim-guide no-print" id="sim-intro"><span class="pub-only">上から順に入れるだけで、<b>毎月の費用</b>と<b>入国時の費用</b>の目安がわかります。<br>わからない所は、そのままで大丈夫です。</span><span class="staff-only">企業の状況を上から順に入れ、最後に「見積書を作る」を押してください。<br>見積書は単価表と、入れた人数での参考試算が載ります。</span></p>
 
       <div class="step-h no-print"><span class="step-no">1</span>どちらの制度で受け入れますか？</div>
       <div class="mode-tabs" role="tablist" aria-label="在留資格">
@@ -254,7 +255,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
           <div class="stepper"><button type="button" class="st-btn" data-for="ikusei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="ikusei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="ikusei" data-d="1" aria-label="1名ふやす">＋</button></div>
         </div>
         <div class="field">
-          <label for="tokutei"><span class="tk-only">特定技能で受け入れる人数</span><span class="ik-only">御社の特定技能の方の人数（いなければ0）</span></label>
+          <label for="tokutei"><span class="tk-only">特定技能で受け入れる人数</span><span class="ik-only"><span class="pub-only">御社</span><span class="staff-only">この会社</span>の特定技能の方の人数（いなければ0）</span></label>
           <div class="stepper"><button type="button" class="st-btn" data-for="tokutei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="tokutei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="tokutei" data-d="1" aria-label="1名ふやす">＋</button></div>
           <p class="hint ik-only">特定技能の方と合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります。特定技能の方の費用は、上の「特定技能」を選ぶと別に計算・お申し込みできます。</p>
         </div>
@@ -440,23 +441,24 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         </div>
       </div>
 
-      <div class="step-h no-print"><span class="step-no">5</span>お申し込み・見積書</div>
-      <div class="field" id="company-field">
-        <label for="company">会社名（見積書に載ります）</label>
-        <input type="text" id="company" placeholder="例：〇〇農園、〇〇株式会社" autocomplete="organization">
+      <div class="step-h no-print" id="step5"><span class="step-no">5</span><span class="pub-only">正式なお見積書について</span><span class="staff-only">見積書を作る</span></div>
+      <p class="sim-guide pub-only no-print">この金額は目安です。<b>正式なお見積書は、いつもの組合の担当者にお声がけください。</b>担当者がお作りしてお送りします。</p>
+      <div class="staff-only">
+        <div class="field" id="company-field">
+          <label for="company">会社名（見積書の宛名になります）</label>
+          <input type="text" id="company" placeholder="例：〇〇農園、〇〇株式会社" autocomplete="off">
+        </div>
+        <p class="warnmsg no-print" id="print-msg" role="alert" hidden></p>
+        <button class="apply-btn" id="printBtn" type="button">見積書を作る（印刷・PDF保存）</button>
+        <p class="apply-note">印刷の画面が開きます。メールで送る時は、プリンターの欄で「PDFに保存」を選んでください。</p>
       </div>
-      <p class="warnmsg no-print" id="apply-msg" role="alert" hidden></p>
-      <button class="apply-btn" id="applyBtn" type="button">この内容で申し込む</button>
-      <p class="apply-ok no-print" id="apply-ok" hidden>申込フォームを新しい画面で開きました。お名前などを入れて「送信」を押すと完了です。<br>画面が開かない場合は <a id="apply-link" href="#" target="_blank" rel="noopener">こちらを押してください</a>。</p>
-      <p class="apply-note">次の画面で、お名前・電話番号・メールアドレスを入れて「送信」を押してください。<br>見積書（PDF）がメールで届き、組合からもご連絡します。</p>
-      <button class="print-btn" id="printBtn" type="button">見積書を印刷・PDF保存する（申し込まずに確認だけ）</button>
     </div>
   </section>
 
   <!-- DETAILS (accordion) -->
   <section id="details-wrap">
     <span class="eyebrow">詳細</span>
-    <h2>料金の詳しい説明（読まなくても申し込めます）</h2>
+    <h2>料金の詳しい説明（読まなくても大丈夫です）</h2>
 
   <!-- STRUCTURE -->
   <details class="acc">
@@ -631,6 +633,8 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <div class="foot">
     <p>表示は税別・予定価格です。相場に基づく目安の項目は委託先・案件により変動します。正式な料金は改めてご案内いたします。</p>
+    <p class="pub-only"><a href="?staff">組合職員の方（見積書を作る）</a></p>
+    <p class="staff-only"><a href="?">企業向けの表示に戻る</a></p>
   </div>
 
 </div>
@@ -669,7 +673,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   // 育成就労 / 特定技能 の切り替え
   var mode='ik';
   function setMode(m){
-    mode=m; document.body.setAttribute('data-mode',m); $('apply-msg').hidden=true;
+    mode=m; document.body.setAttribute('data-mode',m); $('print-msg').hidden=true;
     document.querySelectorAll('.mode-tab').forEach(function(b){ var on=b.getAttribute('data-mode')===m; b.classList.toggle('on',on); b.setAttribute('aria-selected',on?'true':'false'); });
     calc();
   }
@@ -783,13 +787,13 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       es.forEach(function(e){ seen[e.target.id]=e.isIntersecting; });
       resultSeen=Object.keys(seen).some(function(k){return seen[k];}); updMini();
     });
-    ['result-anchor','total','applyBtn'].forEach(function(id){ io.observe($(id)); });
+    ['result-anchor','total','step5'].forEach(function(id){ io.observe($(id)); });
   }
   window.addEventListener('resize',updMini);
 
   function calc(){
     var s=state(), m=monthly(s);
-    $('apply-msg').hidden=true; $('apply-ok').hidden=true;
+    $('print-msg').hidden=true;
     $('mini-total').textContent=fmt(m.total); miniOn=m.cnt>0; updMini();
     var bd=$('breakdown'), ex=$('extra'), ib=$('ibreakdown');
     bd.innerHTML=''; ex.innerHTML=''; ib.innerHTML='';
@@ -833,7 +837,11 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   }
   ids.forEach(function(id){var el=$(id); el.addEventListener('input',calc); el.addEventListener('change',calc);});
 
-  // 入力内容をこの端末に保存し、戻る・再読み込み・申込後に戻った時に復元する
+  // 組合職員用：URLの末尾に ?staff を付けて開くと、見積書を作る画面になる
+  var STAFF=/[?&#]staff\b/.test(location.search+location.hash);
+  document.body.classList.toggle('staff',STAFF);
+
+  // 入力内容をこの端末に保存し、戻る・再読み込みで消えないようにする（職員用は別の会社と混ざらないよう会社名は残さない）
   var SAVE_KEY='mgkk-sim-input';
   function save(){
     try{
@@ -846,7 +854,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     try{
       var v=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(!v) return false;
       ids.forEach(function(id){ var el=$(id); if(!(id in v)) return; if(el.type==='checkbox') el.checked=!!v[id]; else el.value=v[id]; });
-      $('company').value=v.company||''; nyTouched=!!v.ny;
+      if(!STAFF) $('company').value=v.company||''; nyTouched=!!v.ny;
       if(v.mode==='tk') setMode('tk');
       return num('ikusei')+num('tokutei')>0;
     }catch(e){ return false; }
@@ -863,7 +871,8 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   // print / PDF save — builds a reusable unit-price estimate
   var pbtn=$('printBtn');
   if(pbtn){ pbtn.addEventListener('click',function(){
-    var c=($('company').value||'').trim();
+    var c=($('company').value||'').trim(), msg=$('print-msg');
+    if(!c){ msg.hidden=false; msg.textContent='会社名を入れてください（見積書の宛名になります）。'; $('company').focus(); return; }
     $('ph-company').textContent = c ? (c+'　御中') : '';
     var d=new Date();
     $('ph-date').textContent='発行日：'+d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();
@@ -929,43 +938,6 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     $('tk-cmp').innerHTML=h;
     window.print();
   }
-
-  // apply — opens the Google Form with simulator values prefilled
-  var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSf_sHpC5oTnx7XaYh3ojxOVOQMN8-3maqr8Hxqn48md1-YxMQ/viewform';
-  var FORM_ENTRY={company:'entry.95220113', ikusei:'entry.291547831', tokutei:'entry.1189208840', options:'entry.1237508071', total:'entry.706478240'};
-  var abtn=$('applyBtn');
-  if(abtn){ abtn.addEventListener('click',function(){
-    var r=calc(), s=r.s, it=r.it, on=r.on, opts=[], msg=$('apply-msg');
-    var bad = r.m.cnt<=0 ? (s.mode==='tk'?'特定技能':'育成就労')+'の人数が0名です。「2」で人数を入れてからお申し込みください。'
-      : (s.mode==='tk'&&s.plan==='each'&&!s.items.length) ? '頼みたい支援業務に1つ以上チェックを入れてください。' : '';
-    if(bad){ msg.hidden=false; msg.textContent=bad; msg.scrollIntoView({behavior:'smooth',block:'center'}); return; }
-    msg.hidden=true;
-    document.querySelectorAll('#breakdown .row.sub').forEach(function(row){
-      var sp=row.querySelectorAll('span'); opts.push(sp[0].textContent+'：'+sp[1].textContent);
-    });
-    var tk=s.mode==='tk';
-    if(tk){
-      // Apps Script はこの行から特定技能の見積もりと契約方法を読み取る
-      opts.push('【特定技能】'+(s.plan==='pkg'?'一括契約':'個別依頼：'+s.items.map(function(x){return x[0];}).join('、')));
-    } else {
-      // Apps Script はこの行から新規入国人数・パターン・初期オプションを読み取る
-      var init='【入国諸費用】新規入国 '+s.ny+'名・日本語'+s.pat+'パターン';
-      if(s.a2) init+='・来日前A2取得保証';
-      opts.push(init);
-      if(s.a2koshu) opts.push('【一時金】A2目標講習（'+s.ik+'名）：'+rng(A2KOSHU[0]*s.ik,A2KOSHU[1]*s.ik));
-    }
-    var v={
-      company:($('company').value||'').trim(),
-      ikusei:String(tk?0:s.ik), tokutei:String(s.tk),
-      options:opts.join('\n'),
-      total:(r.m.cnt>0?$('total').textContent+'（税別・月額）':'未試算')+(!tk&&s.ny>0?'／入国諸費用 '+rng(it.lo,it.hi)+'（税別・一時金）':'')+(on.rows.length?'／一時金オプション '+rng(on.lo,on.hi):'')
-    };
-    var q=['usp=pp_url'];
-    Object.keys(FORM_ENTRY).forEach(function(k){ if(v[k]) q.push(FORM_ENTRY[k]+'='+encodeURIComponent(v[k])); });
-    var url=FORM_URL+'?'+q.join('&');
-    $('apply-link').href=url; $('apply-ok').hidden=false;
-    window.open(url,'_blank','noopener');
-  }); }
 
   // theme toggle
   var btn=document.getElementById('themeBtn');
