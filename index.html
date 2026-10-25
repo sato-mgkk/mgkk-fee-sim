@@ -656,10 +656,10 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       el.dispatchEvent(new CustomEvent('input',{detail:'step'}));
     });
   });
-  // 入力欄を押したら中身を選択（「0」を消さずにそのまま打ち直せる）。離れたら数字だけに整える
+  // 入力欄を押したら「0」は消し、それ以外は選択して打ち直せるように。離れたら数字だけに整える
   ['ikusei','tokutei','nyukoku'].forEach(function(id){
     var el=$(id);
-    el.addEventListener('focus',function(){ setTimeout(function(){ try{el.select();}catch(e){} },0); });
+    el.addEventListener('focus',function(){ if(num(id)===0) el.value=''; else setTimeout(function(){ try{el.select();}catch(e){} },0); });
     el.addEventListener('blur',function(){ el.value=num(id); calc(); });
   });
 
