@@ -64,7 +64,8 @@ function onFormSubmit(e) {
   var m = d.options.match(/新規入国\s*(\d+)\s*名/);
   d.ny = m ? parseInt(m[1], 10) : d.ikusei;
   d.a2 = d.options.indexOf('来日前A2') >= 0;
-  d.pat = (!d.a2 && d.options.indexOf('日本語Aパターン') >= 0) ? 'A' : 'B';
+  // 日本語レベルの指定がなければ、シミュレーターと同じく高めの安全なAパターンで計算
+  d.pat = d.a2 || d.options.indexOf('日本語Bパターン') >= 0 ? 'B' : 'A';
   d.a2koshu = !d.a2 && d.options.indexOf('A2目標講習') >= 0;
   // 特定技能：シミュレーターが送る「【特定技能】一括契約」または「【特定技能】個別依頼：項目、項目…」の行から読む
   var tk = d.options.match(/【特定技能】([^\n]*)/);
