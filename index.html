@@ -279,7 +279,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="field ik-only">
           <label for="others">特定技能・技能実習・特定活動の合計人数</label>
           <div class="stepper"><button type="button" class="st-btn" data-for="others" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="others" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="others" data-d="1" aria-label="1名ふやす">＋</button></div>
-          <p class="hint"><span class="pub-only">御社</span><span class="staff-only">この会社</span>で働いている方の合計です（いなければ0）。合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります。特定技能の方の支援費は、上の「特定技能」を選ぶと別に計算できます。</p>
+          <p class="hint"><span class="pub-only">御社</span><span class="staff-only">この会社</span>で働いている方の合計です（いなければ0）。合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります（今いる方の料金は上がりも下がりもしません）。特定技能の方の支援費は、上の「特定技能」を選ぶと別に計算できます。</p>
         </div>
         <div class="field tk-only">
           <label for="tokutei">特定技能・特定活動で受け入れる人数</label>
@@ -370,7 +370,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       <div class="print-only ik-only" id="est-detail">
         <p class="est-lead">本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表A（監理費）の単価でその都度ご確認いただけます。表示はすべて税別。A〜Dは月額、Eは入国時の諸費用、Fは一時金オプション、G・Hは発生時のみの費用です。</p>
         <div class="est-sec">
-          <div class="est-h">A. 監理費（育成就労＋特定技能・技能実習・特定活動の合算人数で単価が決まります）</div>
+          <div class="est-h">A. 育成就労の監理費（単価は、特定技能・技能実習・特定活動の方も含めた合算人数で決まります。特定技能・技能実習・特定活動の方の料金は変わりません）</div>
           <table class="est-tbl">
             <thead><tr><th>合算人数</th><th>育成就労 単価（1名・月）</th></tr></thead>
             <tbody>
@@ -496,7 +496,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     <summary><div class="sm-txt"><span class="eyebrow">全体像</span><span class="t">料金のしくみ</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="layers">
-      <div class="layer"><div class="k">①</div><div class="b"><b>監理費（人数連動）</b><div class="d">法定監理業務。育成就労＝階段式（人数帯別）／特定技能＝据え置き。育成就労＋特定技能・技能実習・特定活動の合算人数で単価が決まる</div></div></div>
+      <div class="layer"><div class="k">①</div><div class="b"><b>監理費（人数連動）</b><div class="d">法定監理業務。育成就労＝階段式（人数帯別）／特定技能＝据え置き。育成就労＋特定技能・技能実習・特定活動の合算人数で育成就労の単価が決まる（既存の方の料金は変わらない）</div></div></div>
       <div class="layer"><div class="k">②</div><div class="b"><b>システム管理料（全社必須）</b><div class="d">受入管理システム・セキュア環境の運用。10,000円/社・月</div></div></div>
       <div class="layer"><div class="k">③</div><div class="b"><b>付加価値オプション（選択制）</b><div class="d">在留申請書類ソフト・給与計算サポート</div></div></div>
       <div class="layer"><div class="k">＋</div><div class="b"><b>都度・休日の実費</b><div class="d">休日・時間外の出動は都度対応。<b>在留申請書類は①ソフトで自作（使用料5,000円/人・月）／②提携行政書士（実費）。</b>緊急対応と組合発意の訪問は無料</div></div></div>
@@ -510,7 +510,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     <div class="body">
     <div class="tablebox">
       <table>
-        <caption>合算人数（育成就労＋特定技能・技能実習・特定活動）でその会社の単価が決まる。</caption>
+        <caption>合算人数（育成就労＋特定技能・技能実習・特定活動）で、その会社の育成就労の単価が決まる。既存の特定技能・技能実習・特定活動の方の料金は変わらない。</caption>
         <thead><tr><th>合算人数</th><th class="n">育成就労 単価</th></tr></thead>
         <tbody>
           <tr><td>1名</td><td class="n">50,000円</td></tr>
@@ -523,7 +523,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       </table>
     </div>
     <div class="callout" style="margin-top:12px">
-      <b>特定技能：</b>1名30,000円（据え置き）。育成就労の単価は、育成就労＋特定技能・技能実習・特定活動の合算人数帯で決まります。
+      <b>特定技能：</b>1名30,000円（据え置き）。育成就労の単価は、育成就労＋特定技能・技能実習・特定活動の合算人数帯で決まります。既存の方の料金は上がりも下がりもしません。
     </div>
     <p class="note-inline">このほか毎月の費用として、<b>送り出し機関への管理費 5,000円/人・月</b>がかかります（組合の監理費とは別勘定）。上のシミュレーターの月額試算に含めています。</p>
     </div>
@@ -841,9 +841,10 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         if(s.plan==='pkg') line(bd,'支援委託費・一括契約（特定技能 '+c+'名 × '+fmt(SHIEN_PKG)+'）', fmt(m.kanri));
         else line(bd,'支援委託費・個別依頼 '+s.items.length+'項目（特定技能 '+c+'名 × '+fmt(m.per)+'）', fmt(m.kanri));
       } else {
-        line(bd,'監理費（育成就労 '+c+'名 × '+fmt(m.rate)+(s.oth>0?'・特定技能・技能実習・特定活動と合わせて'+s.n+'名の単価':'')+'）', fmt(m.kanri));
+        line(bd,'監理費（育成就労 '+c+'名 × '+fmt(m.rate)+'）', fmt(m.kanri));
+        if(s.oth>0) bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>この単価は、今いる特定技能・技能実習・特定活動の方'+s.oth+'名も数えた'+s.n+'名の単価です。今いる方の料金は変わりません</span></div>');
         // 次の人数帯まであと何名かを案内（人数が増えるほど単価が下がる）
-        for(var nx=s.n+1; nx<=16; nx++){ if(ikuseiRate(nx)<m.rate){ bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>あと'+(nx-s.n)+'名（特定技能・技能実習・特定活動を含む）で、育成就労の単価が1名'+fmt(ikuseiRate(nx))+'に下がります</span></div>'); break; } }
+        for(var nx=s.n+1; nx<=16; nx++){ if(ikuseiRate(nx)<m.rate){ bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>あと'+(nx-s.n)+'名増えると（特定技能・技能実習・特定活動の方も数えます）、育成就労の単価が1名'+fmt(ikuseiRate(nx))+'に下がります</span></div>'); break; } }
       }
       line(bd,'システム管理料', fmt(SYS));
       if(s.mode!=='tk') line(bd,'送り出し機関 管理費（5,000×'+c+'名）', fmt(OKURI*c));
@@ -942,7 +943,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
     // D. reference calc for current headcount
     $('est-ref').innerHTML = s.ik>0
-      ? '参考試算（現在：育成就労 '+s.ik+'名／単価は特定技能・技能実習・特定活動 '+s.oth+'名との合算 '+s.n+'名で判定）<br>監理費 '+fmt(m.kanri)+' ＋ 必須費用 '+fmt(m.fixed)+' ＋ オプション '+fmt(m.opt)+' ＝ <b>月額 '+fmt(m.total)+'</b>（税別）'
+      ? '参考試算（現在：育成就労 '+s.ik+'名／単価は特定技能・技能実習・特定活動 '+s.oth+'名との合算 '+s.n+'名で判定。既存の方の料金は変わりません）<br>監理費 '+fmt(m.kanri)+' ＋ 必須費用 '+fmt(m.fixed)+' ＋ オプション '+fmt(m.opt)+' ＝ <b>月額 '+fmt(m.total)+'</b>（税別）'
       : '※ 人数を入力してから印刷すると、現時点の参考試算も表示されます。';
 
     // E. entry costs — all patterns side by side
