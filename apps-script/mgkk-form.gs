@@ -58,7 +58,6 @@ function onFormSubmit(e) {
 
   var now = e.response.getTimestamp();
   var c = calc(d);
-  markSheet(); // 控えのスプレッドシートに「対応状況：未対応」を入れる
   var pdf = makePdf(d, now);
   var when = Utilities.formatDate(now, 'Asia/Tokyo', 'yyyy/MM/dd HH:mm');
 
@@ -70,8 +69,7 @@ function onFormSubmit(e) {
   var todo = '■次にやること\n' +
     (warn.length ? warn.join('\n') + '\n' : '') +
     '1. ' + (d.person || 'ご担当者') + ' 様（' + (d.tel || '電話番号なし') + '）へお礼の電話・内容の確認\n' +
-    '2. スプレッドシート「MGKK 申し込み控え」の「対応状況」を「連絡済み」などに書き換え\n' +
-    (d.soft ? '3. 在留申請書類ソフトのお申し込みあり：下のリンクから企業のアカウントを発行（会社名・担当者・メールは入力済み）\n' + naviLink(d) + '\n' : '');
+    (d.soft ? '2. 在留申請書類ソフトのお申し込みあり：下のリンクから企業のアカウントを発行（会社名・担当者・メールは入力済み）\n' + naviLink(d) + '\n' : '');
   var body = '料金シミュレーターからお申し込みが届きました。\n' +
     (d.email ? '申込者には受付メールと見積書PDFを自動送信済みです。' : '申込者にはメールを送っていません（メールアドレスなし）。') + '\n\n' +
     todo + '\n' +
@@ -95,20 +93,6 @@ function onFormSubmit(e) {
 
 function naviLink(d) {
   return NAVI_ACCOUNTS + '?company=' + encodeURIComponent(d.company || '') + '&person=' + encodeURIComponent(d.person || '') + '&email=' + encodeURIComponent(d.email || '');
-}
-
-/** 控えのスプレッドシートの、いま届いた行に「対応状況：未対応」を入れる（列がなければ作る） */
-function markSheet() {
-  try {
-    var id = FormApp.openById(FORM_ID).getDestinationId();
-    if (!id) return;
-    var sh = SpreadsheetApp.openById(id).getSheets()[0];
-    var lastCol = sh.getLastColumn();
-    var head = sh.getRange(1, 1, 1, lastCol).getValues()[0];
-    var col = head.indexOf('対応状況') + 1;
-    if (!col) { col = lastCol + 1; sh.getRange(1, col).setValue('対応状況'); sh.getRange(1, col + 1).setValue('組合のメモ'); }
-    sh.getRange(sh.getLastRow(), col).setValue('未対応');
-  } catch (err) { Logger.log('控えの更新に失敗：' + err); }
 }
 
 function calc(d) {
