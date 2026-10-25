@@ -173,6 +173,12 @@ ul.clean li{margin:.3rem 0}
 }
 .restored{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.92rem;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:0 0 10px}
 .restored[hidden]{display:none}
+.staff-login{display:grid;gap:8px;max-width:360px;border:2px solid var(--warn);border-radius:12px;padding:14px;margin:0 0 14px;background:var(--surface)}
+.staff-login[hidden]{display:none}
+.staff-login input{font-size:1.1rem;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg);font-family:var(--sans)}
+.staff-login button,.staff-bar button{border:2px solid var(--accent);background:var(--accent);color:#fff;border-radius:9px;padding:10px 14px;font-weight:700;font-size:1rem;cursor:pointer;font-family:var(--sans)}
+.staff-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.92rem;font-weight:700;color:var(--warn);background:var(--warn-soft);border-radius:10px;padding:8px 12px;margin:0 0 10px}
+.staff-bar button{margin-left:auto;background:var(--surface);color:var(--accent);padding:6px 12px;font-size:.92rem}
 .restored button{margin-left:auto;border:2px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:9px;padding:6px 12px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:var(--sans)}
 .minibar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 -4px 16px rgba(0,0,0,.18);font-size:.95rem}
 .minibar b{font-size:1.3rem}
@@ -210,18 +216,19 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 @media print{
   @page{margin:9mm}
   :root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
-  .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result,.no-print,.hint,.warnmsg{display:none !important}
-  .print-only{display:block !important}
-  .minibar{display:none !important}
   body{background:#fff;color:#111}
-  .wrap{padding:0;max-width:none}
-  section{margin-top:0}
-  .card.sim{box-shadow:none;border:none;padding:0}
+  .theme-btn,.minibar,.restored,.st-btn{display:none !important}
+  /* お客様が印刷した時は画面のまま（目安）。正式な見積書の様式は組合職員用だけ */
+  body:not(.staff) .print-only{display:none !important}
+  body.staff .print-btn,body.staff .apply-btn,body.staff .apply-note,body.staff header.page,body.staff #details-wrap,body.staff .foot,body.staff #sim-wrap>.eyebrow,body.staff #company-field,body.staff #sim-intro,body.staff #sim-wrap .grid,body.staff #sim-wrap .opts,body.staff .result,body.staff .no-print,body.staff .hint,body.staff .warnmsg,body.staff .staff-bar,body.staff .mode-tabs{display:none !important}
+  body.staff .print-only{display:block !important}
+  body.staff .wrap{padding:0;max-width:none}
+  body.staff section{margin-top:0}
+  body.staff .card.sim{box-shadow:none;border:none;padding:0}
   .print-head{background:var(--accent);color:#fff;border-radius:10px;padding:12px 18px;margin-bottom:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .print-head .ph-org{font-weight:700;font-size:1rem;opacity:.92}
   .print-head .ph-title{font-family:var(--serif);font-size:1.7rem;font-weight:700;margin-top:3px}
   .print-head .ph-meta{display:flex;justify-content:space-between;gap:12px;font-size:1rem;margin-top:11px;opacity:.96}
-  .mode-tabs{display:none !important}
 }
 </style>
 
@@ -243,6 +250,14 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="ph-title tk-only">お見積り（特定技能｜月額／概算・税別）</div>
         <div class="ph-meta"><span id="ph-company"></span><span id="ph-date"></span></div>
       </div>
+      <div class="staff-login no-print" id="staff-login" hidden>
+        <b>組合職員用の画面です</b>
+        <label for="staff-pw">パスワード</label>
+        <input type="password" id="staff-pw" autocomplete="current-password">
+        <button type="button" id="staff-go">開く</button>
+        <p class="warnmsg" id="staff-err" hidden>パスワードが違います。</p>
+      </div>
+      <p class="staff-bar no-print staff-only">組合職員用の画面です。<button type="button" id="staff-out">終わる（この端末から閉じる）</button></p>
       <p class="restored no-print" id="restored" hidden>前回の入力内容を表示しています。<button type="button" id="resetBtn">最初からやり直す</button></p>
       <p class="sim-guide no-print" id="sim-intro"><span class="pub-only">上から順に入れるだけで、<b>毎月の費用</b>と<b>入国時の費用</b>の目安がわかります。<br>わからない所は、そのままで大丈夫です。</span><span class="staff-only">企業の状況を上から順に入れ、最後に「見積書を作る」を押してください。<br>見積書は単価表と、入れた人数での参考試算が載ります。</span></p>
 
@@ -464,6 +479,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <p class="warnmsg no-print" id="print-msg" role="alert" hidden></p>
         <button class="apply-btn" id="printBtn" type="button">見積書を作る（印刷・PDF保存）</button>
         <p class="apply-note">印刷の画面が開きます。メールで送る時は、プリンターの欄で「PDFに保存」を選んでください。</p>
+        <button class="print-btn" id="nextBtn" type="button">次の会社の見積書を作る（入力を全部消す）</button>
       </div>
     </div>
   </section>
@@ -646,8 +662,6 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <div class="foot">
     <p>表示は税別・予定価格です。相場に基づく目安の項目は委託先・案件により変動します。正式な料金は改めてご案内いたします。</p>
-    <p class="pub-only"><a href="?staff">組合職員の方（見積書を作る）</a></p>
-    <p class="staff-only"><a href="?">企業向けの表示に戻る</a></p>
   </div>
 
 </div>
@@ -855,8 +869,23 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   ids.forEach(function(id){var el=$(id); el.addEventListener('input',calc); el.addEventListener('change',calc);});
 
   // 組合職員用：URLの末尾に ?staff を付けて開くと、見積書を作る画面になる
-  var STAFF=/[?&#]staff\b/.test(location.search+location.hash);
+  // パスワードはこのページに書かず、照合用の値（SHA-256）だけを置く。合えばこの端末では次回から入力不要
+  var STAFF_HASH='4c7b420d9aa045df334a5c4e38a48824f66629a4ac980d0d2ae858cf95a919aa', STAFF_KEY='mgkk-staff-ok';
+  var wantStaff=/[?&#]staff\b/.test(location.search+location.hash), STAFF=false;
+  try{ STAFF = wantStaff && localStorage.getItem(STAFF_KEY)===STAFF_HASH; }catch(e){}
   document.body.classList.toggle('staff',STAFF);
+  function sha256(t){ return crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)).then(function(b){ return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join(''); }); }
+  if(wantStaff && !STAFF){
+    $('staff-login').hidden=false;
+    var go=function(){ sha256($('staff-pw').value).then(function(h){
+      if(h!==STAFF_HASH){ $('staff-err').hidden=false; return; }
+      try{ localStorage.setItem(STAFF_KEY,h); }catch(e){}
+      location.reload();
+    }); };
+    $('staff-go').addEventListener('click',go);
+    $('staff-pw').addEventListener('keydown',function(e){ if(e.key==='Enter') go(); });
+  }
+  $('staff-out').addEventListener('click',function(){ try{ localStorage.removeItem(STAFF_KEY); }catch(e){} location.href=location.pathname; });
 
   // 入力内容をこの端末に保存し、戻る・再読み込みで消えないようにする（職員用は別の会社と混ざらないよう会社名は残さない）
   var SAVE_KEY='mgkk-sim-input';
@@ -879,6 +908,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   ids.concat(['company']).forEach(function(id){ $(id).addEventListener('change',save); $(id).addEventListener('input',save); });
   document.querySelectorAll('.mode-tab,.st-btn').forEach(function(b){ b.addEventListener('click',save); });
   if(restore()) $('restored').hidden=false;
+  $('nextBtn').addEventListener('click',function(){ try{ localStorage.removeItem(SAVE_KEY); }catch(e){} location.reload(); });
   $('resetBtn').addEventListener('click',function(){
     try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
     location.reload();
