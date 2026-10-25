@@ -232,14 +232,98 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   .print-head .ph-title{font-family:var(--serif);font-size:1.7rem;font-weight:700;margin-top:3px}
   .print-head .ph-meta{display:flex;justify-content:space-between;gap:12px;font-size:1rem;margin-top:11px;opacity:.96}
 }
+
+/* ===== シンプル・ミニマル（2026-10 デザイン組み直し）===== 
+   目的は1つ「毎月いくらかかるかを知る」。装飾（枠線・ラベル・色面）を減らし、余白と柔らかな陰影で区切る。印刷には影響させない */
+@media screen{
+  :root{--bg:#eef1f4;--surface:#ffffff;--surface-2:#f4f6f8;--line:#e3e8ec;--muted:#5d6b77;
+    --soft:6px 6px 16px rgba(30,50,70,.08),-6px -6px 16px rgba(255,255,255,.9);
+    --inset:inset 2px 2px 6px rgba(30,50,70,.10),inset -2px -2px 6px rgba(255,255,255,.95)}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11181c;--surface:#182227;--surface-2:#141d21;--line:#26333a;
+    --soft:6px 6px 16px rgba(0,0,0,.45),-4px -4px 12px rgba(255,255,255,.03);
+    --inset:inset 2px 2px 6px rgba(0,0,0,.5),inset -2px -2px 6px rgba(255,255,255,.03)}}
+  :root[data-theme="dark"]{--bg:#11181c;--surface:#182227;--surface-2:#141d21;--line:#26333a;
+    --soft:6px 6px 16px rgba(0,0,0,.45),-4px -4px 12px rgba(255,255,255,.03);
+    --inset:inset 2px 2px 6px rgba(0,0,0,.5),inset -2px -2px 6px rgba(255,255,255,.03)}
+  h1,h2,h3,.sm-txt .t,.total .big{font-family:var(--sans)}
+  .wrap{max-width:720px;padding-block:48px 80px}
+  .eyebrow,.sm-txt .eyebrow,section>.eyebrow{display:none}
+  header.page{border:0;padding:0;margin-bottom:28px}
+  header.page .org{font-size:.85rem;font-weight:700;color:var(--accent);letter-spacing:.04em}
+  header.page h1{font-size:1.9rem;font-weight:700;margin:.3rem 0 .5rem;letter-spacing:.01em}
+  header.page .why{font-size:1.05rem;color:var(--muted);margin:0}
+  section{margin-top:0}
+  .card{border:0;border-radius:22px;box-shadow:var(--soft)}
+  .sim{padding:28px 26px}
+  .sim-guide{background:transparent;color:var(--muted);padding:0;border-radius:0;font-size:.98rem}
+  .step-h{font-size:1.15rem;margin:38px 0 14px;gap:12px}
+  .step-h:first-of-type{margin-top:22px}
+  .step-no{width:26px;height:26px;font-size:.85rem;background:transparent;color:var(--accent);border:2px solid var(--accent)}
+  .hint{font-size:.88rem}
+  .mode-tabs{border:0;background:var(--surface-2);box-shadow:var(--inset);border-radius:14px;padding:6px}
+  .mode-tab{border-radius:10px;padding:12px 6px}
+  .mode-tab.on{box-shadow:0 2px 8px rgba(15,110,106,.25)}
+  .sim .grid{gap:22px}
+  .stepper input[type=text],.field select,.field input[type=text],.staff-login input{border:0;background:var(--surface-2);box-shadow:var(--inset);border-radius:12px}
+  .stepper input[type=text]{padding:10px 6px}
+  .st-btn{border:0;background:var(--surface);box-shadow:var(--soft);border-radius:14px;color:var(--accent)}
+  .st-btn:active{box-shadow:var(--inset);background:var(--surface-2);color:var(--accent)}
+  .opts{gap:10px;margin-top:20px}
+  .opt{border:0;background:var(--surface-2);border-radius:14px;padding:14px 16px;transition:box-shadow .15s,background .15s}
+  .opt:has(input:checked){background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
+  .qlabel{margin-bottom:10px}
+  .result{border-top:0;margin-top:20px;padding:22px;background:var(--surface-2);border-radius:18px}
+  #init-result{margin-top:12px}
+  .rlabel{font-size:.9rem;font-weight:600}
+  .total .big{font-size:2.5rem;letter-spacing:-.01em}
+  .result .big.range{font-size:1.6rem}
+  .breakdown{margin-top:16px;gap:8px}
+  .breakdown .row{padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .breakdown .row:last-child{border-bottom:0;padding-bottom:0}
+  .breakdown .tierhint,.breakdown .sub{border-bottom:0;padding-top:0;margin-top:-6px}
+  .note-inline{font-size:.82rem}
+  .apply-btn{border:0;border-radius:14px;box-shadow:0 4px 14px rgba(15,110,106,.28)}
+  .print-btn{border-width:0;background:var(--surface-2);box-shadow:var(--soft);border-radius:14px}
+  .restored,.staff-bar{border:0;border-radius:12px}
+  .staff-login{border:0;box-shadow:var(--soft);border-radius:16px}
+  #details-wrap{margin-top:64px}
+  #details-wrap>h2{font-size:1.05rem;font-weight:700;color:var(--muted);margin-bottom:12px}
+  details.acc{border:0;border-radius:16px;box-shadow:none;background:transparent;margin-top:0;border-bottom:1px solid var(--line)}
+  details.acc:last-of-type{border-bottom:0}
+  details.acc>summary{padding:16px 6px}
+  details.acc>summary:hover{background:transparent}
+  details.acc>summary:hover .t{color:var(--accent)}
+  details.acc[open]{background:var(--surface);box-shadow:var(--soft);border-bottom-color:transparent;margin:8px 0}
+  details.acc[open]>summary{border-bottom:0;padding-left:18px}
+  .sm-txt .t{font-size:1rem;font-weight:600}
+  .tablebox{border:0;background:var(--surface-2);border-radius:12px}
+  th{background:transparent}
+  .layer{border:0;background:var(--surface-2)}
+  .callout{background:var(--surface-2);border-radius:12px;border-left:0}
+  .foot{border-top:0;margin-top:48px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+  .foot p{margin:0}
+  .foot .theme-btn,.theme-btn{position:static;box-shadow:none;border:1px solid var(--line);background:transparent}
+  .staff-link{margin:0 0 0 auto}
+  .minibar{box-shadow:0 -6px 20px rgba(0,0,0,.12)}
+  body.staff .staff-badge{display:none}
+  @media (max-width:460px){
+    .wrap{padding-block:28px 72px}
+    header.page h1{font-size:1.6rem}
+    .sim{padding:20px 16px}
+    .result{padding:18px 16px}
+    .total .big{font-size:2.1rem}
+  }
+  @media (max-width:360px){.sim{padding:16px 12px}}
+}
 </style>
 
-<button class="theme-btn" id="themeBtn" type="button">画面の明るさ</button>
 <div class="wrap">
 
   <header class="page">
-    <span class="eyebrow">MGKK協同組合｜料金改定</span><span class="staff-badge">組合職員用</span>
-    <h1>MGKK新料金体系</h1>
+    <div class="org">MGKK協同組合 新料金体系<span class="staff-badge">組合職員用</span></div>
+    <h1>受け入れ費用の目安</h1>
+    <p class="why pub-only">人数を入れるだけで、毎月の費用と入国時の費用がわかります。</p>
+    <p class="why staff-only">企業の状況を入れて、正式な見積書を作ります。</p>
   </header>
 
   <!-- SIMULATOR -->
@@ -261,7 +345,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       </div>
       <p class="staff-bar no-print staff-only">組合職員用の画面です。<button type="button" id="staff-out">終わる（この端末から閉じる）</button></p>
       <p class="restored no-print" id="restored" hidden>前回の入力内容を表示しています。<button type="button" id="resetBtn">最初からやり直す</button></p>
-      <p class="sim-guide no-print" id="sim-intro"><span class="pub-only">上から順に入れるだけで、<b>毎月の費用</b>と<b>入国時の費用</b>の目安がわかります。<br>わからない所は、そのままで大丈夫です。</span><span class="staff-only">企業の状況を上から順に入れ、最後に「見積書を作る」を押してください。<br>見積書は単価表と、入れた人数での参考試算が載ります。</span></p>
+      <p class="sim-guide no-print" id="sim-intro"><span class="pub-only">上から順に入れてください。わからない所は、そのままで大丈夫です。</span><span class="staff-only">上から順に入れ、最後に「見積書を作る」を押してください。単価表と参考試算が載ります。</span></p>
 
       <div class="step-h no-print"><span class="step-no">1</span>どちらの制度で受け入れますか？</div>
       <div class="mode-tabs" role="tablist" aria-label="在留資格">
@@ -279,7 +363,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="field ik-only">
           <label for="others">特定技能・技能実習・特定活動の合計人数</label>
           <div class="stepper"><button type="button" class="st-btn" data-for="others" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="others" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="others" data-d="1" aria-label="1名ふやす">＋</button></div>
-          <p class="hint"><span class="pub-only">御社</span><span class="staff-only">この会社</span>で働いている方の合計です（いなければ0）。合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります（今いる方の料金は上がりも下がりもしません）。特定技能の方の支援費は、上の「特定技能」を選ぶと別に計算できます。</p>
+          <p class="hint"><span class="pub-only">御社</span><span class="staff-only">この会社</span>で今働いている方の合計（いなければ0）。多いほど育成就労の単価が下がります。今いる方の料金は上がりも下がりもしません。</p>
         </div>
         <div class="field tk-only">
           <label for="tokutei">特定技能・特定活動で受け入れる人数</label>
@@ -664,6 +748,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <div class="foot">
     <p>表示は税別・予定価格です。相場に基づく目安の項目は委託先・案件により変動します。正式な料金は改めてご案内いたします。</p>
+    <p><button class="theme-btn" id="themeBtn" type="button">画面の明るさ</button></p>
     <p class="pub-only staff-link"><a href="?staff">職員ログイン</a></p>
   </div>
 
