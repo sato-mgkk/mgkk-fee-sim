@@ -249,7 +249,11 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   .wrap{max-width:720px;padding-block:48px 80px}
   .eyebrow,.sm-txt .eyebrow,section>.eyebrow{display:none}
   header.page{border:0;padding:0;margin-bottom:28px}
-  header.page .org{font-size:.85rem;font-weight:700;color:var(--accent);letter-spacing:.04em}
+  header.page .org{display:flex;align-items:center;gap:10px;color:var(--accent);margin-bottom:18px}
+  header.page .logo{display:inline-flex;flex:none;filter:drop-shadow(0 3px 8px rgba(15,110,106,.25))}
+  header.page .org-txt{display:flex;flex-direction:column;line-height:1.25}
+  header.page .org-txt b{font-size:1rem;color:var(--fg);letter-spacing:.03em}
+  header.page .org-txt small{font-size:.78rem;color:var(--muted);font-weight:600}
   header.page h1{font-size:1.9rem;font-weight:700;margin:.3rem 0 .5rem;letter-spacing:.01em}
   header.page .why{font-size:1.05rem;color:var(--muted);margin:0}
   section{margin-top:0}
@@ -320,7 +324,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 <div class="wrap">
 
   <header class="page">
-    <div class="org">MGKK協同組合 新料金体系<span class="staff-badge">組合職員用</span></div>
+    <div class="org"><span class="logo" aria-hidden="true"><svg viewBox="0 0 40 40" width="40" height="40"><rect width="40" height="40" rx="11" fill="currentColor"/><text x="20" y="24.5" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11.5" font-weight="800" fill="#fff" textLength="30" lengthAdjust="spacingAndGlyphs">MGKK</text></svg></span><span class="org-txt"><b>MGKK協同組合</b><small>新料金体系</small></span><span class="staff-badge">組合職員用</span></div>
     <h1>受け入れ費用の目安</h1>
     <p class="why pub-only">人数を入れるだけで、毎月の費用と入国時の費用がわかります。</p>
     <p class="why staff-only">企業の状況を入れて、正式な見積書を作ります。</p>
