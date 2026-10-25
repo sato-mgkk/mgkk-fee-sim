@@ -1,6 +1,9 @@
 var NOTIFY_TO = 'mgkk6271@gmail.com';
 var FORM_ID = '1Sf1Qs0uK0aYLk9h9jADdwAFrR_SbwcxvaHBzM7K0-qU';
 var SIM_URL = 'https://sato-mgkk.github.io/mgkk-fee-sim/';
+var NAVI_ACCOUNTS = 'https://zairyu-navi-nu.vercel.app/union/accounts';
+// 携帯会社のメール：パソコンからのメールを受け取らない設定のことが多い
+var CARRIER = /@(docomo\.ne\.jp|ezweb\.ne\.jp|au\.com|softbank\.ne\.jp|i\.softbank\.jp|[a-z]\.vodafone\.ne\.jp|ymobile\.ne\.jp|y-mobile\.ne\.jp|rakumail\.jp)$/i;
 
 // 料金（シミュレーターと同じ）
 var SYS = 10000, SOFT = 5000, KYUYO_BASE = 3000, KYUYO_PER = 1000, CCUS = 5000, TOKUTEI_RATE = 30000;
@@ -15,6 +18,17 @@ function updateForm() {
   form.setDescription('料金シミュレーターの内容が自動で入っています。ご担当者・連絡先をご入力のうえ送信してください。\n送信後、ご入力のメールアドレスに「お申し込み受付」と月額お見積書（PDF）を自動でお送りします。');
   form.setConfirmationMessage('お申し込みを受け付けました。ご入力のメールアドレスに受付メールと月額お見積書（PDF）をお送りしました。内容を確認のうえ、組合よりご連絡いたします。');
   Logger.log('フォームを更新しました');
+}
+
+/** 1回だけ実行：メール欄に「携帯のメールは届かないことがある」の説明を付ける */
+function updateEmailHelp() {
+  var form = FormApp.openById(FORM_ID);
+  form.getItems().forEach(function (it) {
+    var t = it.getTitle();
+    if (t === 'メールアドレス') it.setHelpText('見積書（PDF）をお送りします。携帯会社のメール（docomo・au・ソフトバンクなど）は、パソコンからのメールが届かない設定のことがあります。できればパソコンやGmailなどのアドレスをご入力ください。届かないときは組合からお電話します。');
+    if (t === '電話番号') it.setHelpText('日中につながる番号をご入力ください（携帯でも大丈夫です）。');
+  });
+  Logger.log('説明を付けました');
 }
 
 /** テスト用：サンプルの見積書PDFを組合のGmailに送る */
@@ -44,27 +58,57 @@ function onFormSubmit(e) {
 
   var now = e.response.getTimestamp();
   var c = calc(d);
+  markSheet(); // 控えのスプレッドシートに「対応状況：未対応」を入れる
   var pdf = makePdf(d, now);
   var when = Utilities.formatDate(now, 'Asia/Tokyo', 'yyyy/MM/dd HH:mm');
 
   // 1) 組合への通知（PDF付き）
-  var body = '料金シミュレーターからお申し込みが届きました。\n申込者には受付メールと見積書PDFを自動送信済みです。\n\n' +
-    lines.join('\n\n') + '\n\n■組合側で再計算した月額（税別）\n' + yen(c.total) +
+  var warn = [];
+  if (!c.n) warn.push('・人数が0名（未定）です。電話で予定の人数を確認してください（見積書は単価表のみ）。');
+  if (!d.email) warn.push('・メールアドレスがないため、受付メール・見積書は届いていません。電話で連絡してください。');
+  else if (CARRIER.test(d.email)) warn.push('・携帯会社のメール（' + d.email.split('@')[1] + '）です。受付メール・見積書が届いていないことがあります。電話で届いたか確認してください。');
+  var todo = '■次にやること\n' +
+    (warn.length ? warn.join('\n') + '\n' : '') +
+    '1. ' + (d.person || 'ご担当者') + ' 様（' + (d.tel || '電話番号なし') + '）へお礼の電話・内容の確認\n' +
+    '2. スプレッドシート「MGKK 申し込み控え」の「対応状況」を「連絡済み」などに書き換え\n' +
+    (d.soft ? '3. 在留申請書類ソフトのお申し込みあり：下のリンクから企業のアカウントを発行（会社名・担当者・メールは入力済み）\n' + naviLink(d) + '\n' : '');
+  var body = '料金シミュレーターからお申し込みが届きました。\n' +
+    (d.email ? '申込者には受付メールと見積書PDFを自動送信済みです。' : '申込者にはメールを送っていません（メールアドレスなし）。') + '\n\n' +
+    todo + '\n' +
+    lines.join('\n\n') + '\n\n■組合側で再計算した月額（税別）\n' + (c.n ? yen(c.total) : '人数未定（固定費のみ ' + yen(c.total) + '）') +
     '\n\n受付日時：' + when + '\n\n※ 全件はスプレッドシート「MGKK 申し込み控え」に記録されています。';
   var opt = { attachments: [pdf] };
   if (d.email) opt.replyTo = d.email;
-  MailApp.sendEmail(NOTIFY_TO, '【申し込み】' + (d.company || '（会社名なし）') + ' 様（月額 ' + yen(c.total) + '）', body, opt);
+  MailApp.sendEmail(NOTIFY_TO, '【申し込み】' + (d.company || '（会社名なし）') + ' 様（' + (c.n ? '月額 ' + yen(c.total) : '人数未定') + '）' + (warn.length ? '【要電話】' : ''), body, opt);
 
   // 2) 申込者への受付メール（PDF付き）
   if (d.email) {
     var cbody = (d.company ? d.company + '\n' : '') + (d.person ? d.person + ' 様\n' : '') + '\n' +
       'このたびはお申し込みいただき、誠にありがとうございます。\n以下の内容で受け付けました。月額お見積書（PDF）を添付いたします。\n\n' +
       '・育成就労：' + d.ikusei + '名\n・特定技能：' + d.tokutei + '名\n・オプション：' + (c.optNames.length ? c.optNames.join('、') : 'なし') + '\n' +
-      '・月額（概算・税別）：' + yen(c.total) + '\n\n' +
+      '・月額（概算・税別）：' + (c.n ? yen(c.total) : '人数が決まりしだい、添付の単価表でご確認いただけます') + '\n\n' +
       '内容を確認のうえ、組合よりあらためてご連絡いたします。\nご不明な点は、このメールにご返信ください。\n\n' +
       '――――――――――\nMGKK協同組合\n' + NOTIFY_TO + '\n' + SIM_URL + '\n';
     MailApp.sendEmail(d.email, '【MGKK協同組合】お申し込み受付・月額お見積書', cbody, { attachments: [pdf], replyTo: NOTIFY_TO, name: 'MGKK協同組合' });
   }
+}
+
+function naviLink(d) {
+  return NAVI_ACCOUNTS + '?company=' + encodeURIComponent(d.company || '') + '&person=' + encodeURIComponent(d.person || '') + '&email=' + encodeURIComponent(d.email || '');
+}
+
+/** 控えのスプレッドシートの、いま届いた行に「対応状況：未対応」を入れる（列がなければ作る） */
+function markSheet() {
+  try {
+    var id = FormApp.openById(FORM_ID).getDestinationId();
+    if (!id) return;
+    var sh = SpreadsheetApp.openById(id).getSheets()[0];
+    var lastCol = sh.getLastColumn();
+    var head = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+    var col = head.indexOf('対応状況') + 1;
+    if (!col) { col = lastCol + 1; sh.getRange(1, col).setValue('対応状況'); sh.getRange(1, col + 1).setValue('組合のメモ'); }
+    sh.getRange(sh.getLastRow(), col).setValue('未対応');
+  } catch (err) { Logger.log('控えの更新に失敗：' + err); }
 }
 
 function calc(d) {
@@ -150,12 +194,16 @@ function makePdf(d, date) {
   section('D. 月額の計算方法');
   box('月額 ＝ 監理費（表A 単価 × 人数）＋ 固定費（B）＋ お申込みオプション（C）', TL, INK, 10, true);
   gap(3);
-  var rc = box('参考試算（お申込み時：育成就労 ' + d.ikusei + '名・特定技能 ' + d.tokutei + '名／合算 ' + c.n + '名）', '#ffffff', '#111111', 10, false, T);
-  var rp = rc.appendParagraph('監理費 ' + yen(c.kanri) + ' ＋ 固定費 ' + yen(c.fixed) + ' ＋ オプション ' + yen(c.opt) + ' ＝ ');
-  txt(rp, 11, '#111111', false);
-  var tail = '月額 ' + yen(c.total);
-  rp.appendText(tail).setFontSize(16).setBold(true).setForegroundColor(INK);
-  rp.appendText('（税別）').setFontSize(10).setBold(false).setForegroundColor('#111111');
+  if (c.n) {
+    var rc = box('参考試算（お申込み時：育成就労 ' + d.ikusei + '名・特定技能 ' + d.tokutei + '名／合算 ' + c.n + '名）', '#ffffff', '#111111', 10, false, T);
+    var rp = rc.appendParagraph('監理費 ' + yen(c.kanri) + ' ＋ 固定費 ' + yen(c.fixed) + ' ＋ オプション ' + yen(c.opt) + ' ＝ ');
+    txt(rp, 11, '#111111', false);
+    var tail = '月額 ' + yen(c.total);
+    rp.appendText(tail).setFontSize(16).setBold(true).setForegroundColor(INK);
+    rp.appendText('（税別）').setFontSize(10).setBold(false).setForegroundColor('#111111');
+  } else {
+    box('参考試算：受け入れ人数が決まりしだい、上の計算方法でご確認いただけます（組合からもご案内します）。', '#ffffff', '#111111', 10, false, T);
+  }
 
   gap(2);
   txt(body.appendParagraph('表示は税別・予定価格です。送り出し機関の管理費は含みません。正式な料金は組合より改めてご案内いたします。'), 8, '#777777', false);

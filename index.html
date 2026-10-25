@@ -99,7 +99,7 @@ ul.clean li{margin:.3rem 0}
 .callout{border-left:3px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:12px 14px;font-size:.9rem}
 .callout.warn{border-left-color:var(--warn)}
 .foot{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;font-size:.8rem;color:var(--muted)}
-.theme-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:10;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px;font-size:.76rem;cursor:pointer;box-shadow:var(--shadow)}
+.theme-btn{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px;font-size:.76rem;cursor:pointer;box-shadow:var(--shadow)}
 @media (max-width:460px){
   .sim .grid{grid-template-columns:1fr}
   header.page h1{font-size:1.6rem}
@@ -113,6 +113,10 @@ ul.clean li{margin:.3rem 0}
 .apply-btn:hover{background:var(--accent);color:#fff}
 .apply-note{margin-top:6px;font-size:.78rem;color:var(--muted);text-align:center}
 .print-only{display:none}
+.hint{font-size:.78rem;color:var(--muted);margin:5px 0 0;line-height:1.45}
+.opt small{display:block;font-size:.76rem;color:var(--muted);font-weight:400;line-height:1.4;margin-top:2px}
+.apply-msg{margin:14px 0 0;padding:10px 12px;border-radius:9px;background:var(--warn-soft);color:var(--warn);font-weight:700;font-size:.9rem}
+.apply-msg[hidden]{display:none}
 /* estimate body (print) — colored, compact, larger type */
 .est-lead{font-size:.9rem;color:#555;margin:0 0 12px;line-height:1.55}
 .est-sec{margin-top:13px}
@@ -129,7 +133,7 @@ ul.clean li{margin:.3rem 0}
 @media print{
   @page{margin:9mm}
   :root,:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
-  .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result{display:none !important}
+  .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,.apply-msg,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result{display:none !important}
   .print-only{display:block !important}
   body{background:#fff;color:#111}
   .wrap{padding:0;max-width:none}
@@ -142,7 +146,6 @@ ul.clean li{margin:.3rem 0}
 }
 </style>
 
-<button class="theme-btn" id="themeBtn" type="button">テーマ切替</button>
 <div class="wrap">
 
   <header class="page">
@@ -165,10 +168,12 @@ ul.clean li{margin:.3rem 0}
         <div class="field">
           <label for="ikusei">育成就労（名）</label>
           <input type="number" id="ikusei" min="0" value="0" inputmode="numeric">
+          <p class="hint">2027年4月から始まる新しい制度で受け入れる人（これまでの技能実習にあたります）</p>
         </div>
         <div class="field">
           <label for="tokutei">特定技能・特定活動（名）</label>
           <input type="number" id="tokutei" min="0" value="0" inputmode="numeric">
+          <p class="hint">実習や育成就労を終えて、続けて働く人など。いなければ0のままで大丈夫です</p>
         </div>
       </div>
 
@@ -178,10 +183,10 @@ ul.clean li{margin:.3rem 0}
       </div>
 
       <div class="opts">
-        <span class="ohead">オプション（必要なものだけ）</span>
-        <label class="opt"><input type="checkbox" id="o_soft"><span>在留申請書類ソフト 使用料</span><span class="price">5,000円/人・月</span></label>
-        <label class="opt"><input type="checkbox" id="o_kyuyo"><span>給与計算サポート</span><span class="price">基本3,000＋1,000円/人</span></label>
-        <label class="opt"><input type="checkbox" id="o_ccus"><span>建設キャリアアップシステム（CCUS）月次運用サポート</span><span class="price">5,000円/社・月</span></label>
+        <span class="ohead">オプション（必要なものだけ。わからなければ選ばなくて大丈夫です）</span>
+        <label class="opt"><input type="checkbox" id="o_soft"><span>在留申請書類ソフト 使用料<small>入管・機構に出す書類を、資料を入れるだけで会社で作れるソフト</small></span><span class="price">5,000円/人・月</span></label>
+        <label class="opt"><input type="checkbox" id="o_kyuyo"><span>給与計算サポート<small>外国人の方の毎月の給与計算をお手伝いします</small></span><span class="price">基本3,000＋1,000円/人</span></label>
+        <label class="opt"><input type="checkbox" id="o_ccus"><span>建設キャリアアップシステム（CCUS）月次運用サポート<small>建設業の会社だけ。農業など他の業種の方は不要です</small></span><span class="price">5,000円/社・月</span></label>
       </div>
 
       <div class="result">
@@ -231,9 +236,10 @@ ul.clean li{margin:.3rem 0}
         </div>
       </div>
 
-      <button class="print-btn" id="printBtn" type="button">この条件で印刷 / PDF保存</button>
-      <button class="apply-btn" id="applyBtn" type="button">この内容で申し込む</button>
-      <p class="apply-note">人数・オプション・月額が入った申込フォームが開きます。送信後、受付メールと見積書PDFが自動で届きます。</p>
+      <p class="apply-msg" id="applyMsg" role="alert" hidden>先に、上の「育成就労」か「特定技能」の人数を入れてください（予定の人数で大丈夫です）。</p>
+      <button class="print-btn" id="applyBtn" type="button">この内容で申し込む（見積書がメールで届きます）</button>
+      <p class="apply-note">人数・オプション・月額が入った申込フォームが開きます。会社名・ご担当者・連絡先を入れて送信すると、受付メールと見積書PDFが自動で届きます。</p>
+      <button class="apply-btn" id="printBtn" type="button">この画面から見積書を印刷 / PDF保存する</button>
     </div>
   </section>
 
@@ -411,6 +417,7 @@ ul.clean li{margin:.3rem 0}
 
   <div class="foot">
     <p>表示は税別・予定価格です。相場に基づく目安の項目は委託先・案件により変動します。正式な料金は改めてご案内いたします。</p>
+    <p><button class="theme-btn" id="themeBtn" type="button">画面の明るさを切り替える</button></p>
   </div>
 
 </div>
@@ -448,6 +455,7 @@ ul.clean li{margin:.3rem 0}
     document.getElementById('total').textContent=fmt(total);
     document.getElementById('perhead').textContent = fmt(total/n);
     rows.forEach(function(r){
+      if(!r[2] && r[1]===0) return; // 0名の行は出さない（わかりやすさのため）
       var div=document.createElement('div'); div.className='row'+(r[2]?' sub':'');
       var a=document.createElement('span'); a.textContent=r[0];
       var b=document.createElement('span'); b.className='num'; b.textContent=fmt(r[1]);
@@ -500,6 +508,9 @@ ul.clean li{margin:.3rem 0}
     calc();
     var ik=Math.max(0,parseInt(document.getElementById('ikusei').value,10)||0);
     var tk=Math.max(0,parseInt(document.getElementById('tokutei').value,10)||0);
+    var msg=document.getElementById('applyMsg');
+    if(ik+tk<=0){ msg.hidden=false; document.getElementById('ikusei').focus(); return; }
+    msg.hidden=true;
     var opts=[];
     document.querySelectorAll('#breakdown .row.sub').forEach(function(r){
       var s=r.querySelectorAll('span'); opts.push(s[0].textContent+'：'+s[1].textContent);
