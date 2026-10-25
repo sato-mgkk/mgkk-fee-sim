@@ -165,7 +165,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 /* print: one-page estimate */
 @media print{
   @page{margin:9mm}
-  :root,:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
+  :root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
   .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result,.no-print,.hint,.warnmsg{display:none !important}
   .print-only{display:block !important}
   body{background:#fff;color:#111}
@@ -175,6 +175,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   .print-head{background:var(--accent);color:#fff;border-radius:10px;padding:12px 18px;margin-bottom:12px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .print-head .ph-org{font-weight:700;font-size:1rem;opacity:.92}
   .print-head .ph-title{font-family:var(--serif);font-size:1.7rem;font-weight:700;margin-top:3px}
+  .print-head .ph-contact{font-size:.85rem;margin-top:4px;opacity:.92}
   .print-head .ph-meta{display:flex;justify-content:space-between;gap:12px;font-size:1rem;margin-top:11px;opacity:.96}
   .mode-tabs{display:none !important}
 }
@@ -197,6 +198,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="ph-title ik-only">お見積り（育成就労｜月額・入国諸費用／概算・税別）</div>
         <div class="ph-title tk-only">お見積り（特定技能｜月額／概算・税別）</div>
         <div class="ph-meta"><span id="ph-company"></span><span id="ph-date"></span></div>
+        <div class="ph-contact">お問い合わせ：MGKK協同組合　mgkk6271@gmail.com</div>
       </div>
       <p class="sim-guide no-print" id="sim-intro">上から順に入れるだけで、<b>毎月の費用</b>と<b>入国時の費用</b>の目安がわかります。<br>わからない所は、そのままで大丈夫です。</p>
 
