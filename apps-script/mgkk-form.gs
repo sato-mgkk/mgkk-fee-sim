@@ -1,4 +1,5 @@
-var NOTIFY_TO = 'mgkk6271@gmail.com';
+var NOTIFY_TO = 'info@mgkk-navi.com';
+// 組合の窓口（通知の送り先・お客様の返信先・見積書の問い合わせ先）。Apps Script は mgkk6271@gmail.com のアカウントで動くが、このGmailは誰も見ていないため使わない
 var FORM_ID = '1Sf1Qs0uK0aYLk9h9jADdwAFrR_SbwcxvaHBzM7K0-qU';
 var SIM_URL = 'https://sato-mgkk.github.io/mgkk-fee-sim/';
 
