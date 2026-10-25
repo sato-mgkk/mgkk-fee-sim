@@ -54,6 +54,7 @@ function onFormSubmit(e) {
     else if (t.indexOf('育成就労') === 0) d.ikusei = Math.max(0, parseInt(v.replace(/[^0-9]/g, ''), 10) || 0);
     else if (t.indexOf('特定技能') === 0) d.tokutei = Math.max(0, parseInt(v.replace(/[^0-9]/g, ''), 10) || 0);
     else if (t === '選択オプション') d.options = v;
+    else if (t.indexOf('月額合計') === 0) d.total = v;
     else if (t === 'ご要望・備考') d.note = v;
   });
   d.soft = d.options.indexOf('在留申請書類ソフト') >= 0;
@@ -78,14 +79,20 @@ function onFormSubmit(e) {
 
   // 1) 組合への通知（PDF付き）
   var isTk = d.mode === 'tk', kind = isTk ? '特定技能' : '育成就労';
+  var checks = staffChecks(d, c);
   var body = '料金シミュレーターから' + kind + 'のお申し込みが届きました。\n申込者には受付メールと見積書PDFを自動送信済みです。\n\n' +
+    '━━ 組合の対応 ━━\n' +
+    '1. 内容を確認し、' + (d.person || 'ご担当者') + ' 様へ連絡（電話：' + (d.tel || '未記入') + '／メール：' + (d.email || '未記入') + '）\n' +
+    '2. 控えシート「MGKK 申し込み控え」の「対応状況」を更新（未対応 → 連絡済み など）\n' +
+    (checks.length ? '\n⚠ 確認が必要な点\n・' + checks.join('\n・') + '\n' : '\n確認が必要な点：なし（シミュレーターの金額と再計算が一致）\n') +
+    '━━━━━━━━━━\n\n' +
     lines.join('\n\n') + '\n\n■組合側で再計算した月額（' + kind + '・税別）\n' + yen(c.total) +
     (isTk ? '' : '\n\n■組合側で再計算した入国諸費用（新規入国 ' + d.ny + '名・税別・一時金）\n' + rng(it.lo, it.hi)) +
     (on.rows.length ? '\n\n■一時金オプション（税別）\n' + rng(on.lo, on.hi) : '') +
     '\n\n受付日時：' + when + '\n\n※ 全件はスプレッドシート「MGKK 申し込み控え」に記録されています。';
   var opt = { attachments: [pdf] };
   if (d.email) opt.replyTo = d.email;
-  MailApp.sendEmail(NOTIFY_TO, '【申し込み・' + kind + '】' + (d.company || '（会社名なし）') + ' 様（月額 ' + yen(c.total) + '）', body, opt);
+  MailApp.sendEmail(NOTIFY_TO, '【申し込み・' + kind + '】' + (checks.length ? '【要確認】' : '') + (d.company || '（会社名なし）') + ' 様（月額 ' + yen(c.total) + '）', body, opt);
 
   // 2) 申込者への受付メール（PDF付き）
   if (d.email) {
@@ -101,6 +108,38 @@ function onFormSubmit(e) {
       '――――――――――\nMGKK協同組合\n' + NOTIFY_TO + '\n' + SIM_URL + '\n';
     MailApp.sendEmail(d.email, '【MGKK協同組合】お申し込み受付・お見積書', cbody, { attachments: [pdf], replyTo: NOTIFY_TO, name: 'MGKK協同組合' });
   }
+
+  // 3) 控えシートに「対応状況」欄を付けて「未対応」を入れる（失敗してもメールは送信済み）
+  try { markStatus(e.response.getTimestamp()); } catch (err) { Logger.log('対応状況の記入に失敗：' + err); }
+}
+
+// 組合職員が電話で確かめるべき点（フォームで数字を書き換えた・人数0など）
+function staffChecks(d, c) {
+  var w = [];
+  var cnt = d.mode === 'tk' ? d.tokutei : d.ikusei;
+  if (cnt <= 0) w.push((d.mode === 'tk' ? '特定技能' : '育成就労') + 'の人数が0名です。人数をお客様に確認してください。');
+  var m = String(d.total || '').replace(/,/g, '').match(/¥\s*(\d+)/);
+  if (!m) w.push('シミュレーターの月額がフォームに入っていません（フォームを直接開いた可能性）。内容をお客様に確認してください。');
+  else if (parseInt(m[1], 10) !== c.total) w.push('フォームの月額 ' + yen(parseInt(m[1], 10)) + ' と組合の再計算 ' + yen(c.total) + ' が違います。フォームで人数等が書き換えられた可能性があります。見積書PDFは再計算の金額で作成済みです。');
+  if (d.mode !== 'tk' && d.ny > d.ikusei) w.push('新規入国 ' + d.ny + '名 が育成就労 ' + d.ikusei + '名 より多くなっています。');
+  if (d.mode === 'tk' && d.plan === 'each' && !d.items.length) w.push('個別依頼の支援業務が1つも選ばれていません。');
+  if (d.note) w.push('ご要望・備考の記入があります：' + d.note);
+  return w;
+}
+
+// 控えシートの回答行に「対応状況」（プルダウン）を付ける
+function markStatus(ts) {
+  var form = FormApp.openById(FORM_ID);
+  var ss = SpreadsheetApp.openById(form.getDestinationId());
+  var sh = ss.getSheets().filter(function (x) { var u = x.getFormUrl && x.getFormUrl(); return u && u.indexOf(FORM_ID) >= 0; })[0] || ss.getSheets()[0];
+  var lastCol = sh.getLastColumn(), head = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+  var col = head.indexOf('対応状況') + 1;
+  if (!col) { col = lastCol + 1; sh.getRange(1, col).setValue('対応状況').setFontWeight('bold'); sh.getRange(1, col + 1).setValue('対応メモ').setFontWeight('bold'); }
+  var row = sh.getLastRow();
+  var rule = SpreadsheetApp.newDataValidation().requireValueInList(['未対応', '連絡済み', '面談・説明済み', '契約', '見送り'], true).build();
+  var cell = sh.getRange(row, col);
+  if (!cell.getValue()) cell.setValue('未対応');
+  cell.setDataValidation(rule);
 }
 
 // 月額（育成就労と特定技能は別の見積もり。育成就労の単価だけ合算人数で決まる）

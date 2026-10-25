@@ -49,22 +49,22 @@ p{margin:.5rem 0}
 .sim{padding:20px}
 .sim h2{font-size:1.25rem}
 .sim .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-.field label{display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:5px}
+.field label{display:block;font-size:.98rem;font-weight:700;color:var(--fg);margin-bottom:6px}
 .field input[type=number]{width:100%;font-size:1.3rem;font-family:var(--sans);font-variant-numeric:tabular-nums;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
 .opts{margin-top:16px;display:grid;gap:8px}
 .opts .ohead{font-size:.82rem;font-weight:700;color:var(--muted)}
-.opt{display:flex;align-items:center;gap:10px;font-size:.9rem;padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2)}
-.opt input{width:18px;height:18px;accent-color:var(--accent);flex:none}
-.opt .price{margin-left:auto;color:var(--muted);font-size:.82rem;white-space:nowrap}
+.opt{display:flex;align-items:center;gap:12px;font-size:1rem;padding:12px;cursor:pointer;border:1px solid var(--line);border-radius:9px;background:var(--surface-2)}
+.opt input{width:24px;height:24px;accent-color:var(--accent);flex:none}
+.opt .price{margin-left:auto;color:var(--accent-ink);font-weight:700;font-size:.88rem;text-align:right;flex:none;max-width:9.5em}
 .result{margin-top:18px;border-top:1px dashed var(--line);padding-top:16px}
 .total{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .total .big{font-family:var(--serif);font-size:2.2rem;font-weight:700;color:var(--accent-ink)}
-.breakdown{margin-top:12px;display:grid;gap:4px;font-size:.9rem}
+.breakdown{margin-top:12px;display:grid;gap:4px;font-size:.95rem}
 .breakdown .row{display:flex;justify-content:space-between;gap:12px}
 .breakdown .row span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
 .breakdown .sub{color:var(--muted);padding-left:12px;font-size:.84rem}
 .tierpill{display:inline-block;font-size:.76rem;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);margin-left:8px}
-.note-inline{font-size:.8rem;color:var(--muted);margin-top:10px}
+.note-inline{font-size:.86rem;color:var(--muted);margin-top:10px}
 /* Accordion */
 details.acc{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-top:12px;overflow:hidden}
 details.acc>summary{list-style:none;cursor:pointer;padding:15px 18px;display:flex;align-items:center;gap:12px}
@@ -99,14 +99,17 @@ ul.clean li{margin:.3rem 0}
 .callout{border-left:3px solid var(--accent);background:var(--surface);border-radius:0 10px 10px 0;padding:12px 14px;font-size:.9rem}
 .callout.warn{border-left-color:var(--warn)}
 .foot{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;font-size:.8rem;color:var(--muted)}
-.theme-btn{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:10;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px;font-size:.76rem;cursor:pointer;box-shadow:var(--shadow)}
+.theme-btn{position:absolute;top:calc(env(safe-area-inset-top,0px) + 12px);right:12px;z-index:10;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:6px 12px;font-size:.76rem;cursor:pointer;box-shadow:var(--shadow)}
 @media (max-width:460px){
   .sim .grid{grid-template-columns:1fr}
   header.page h1{font-size:1.6rem}
   .total .big{font-size:1.9rem}
+  .opt{flex-wrap:wrap}
+  .opt .price{max-width:none;width:100%;text-align:left;padding-left:36px}
+  .st-btn{width:56px;height:56px}
 }
 /* text field + print button */
-.field select{width:100%;font-size:1rem;font-family:var(--sans);padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
+.field select{width:100%;font-size:1.02rem;font-family:var(--sans);padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
 .field select:disabled{opacity:.7}
 .result .big.range{font-size:1.55rem}
 .est-tbl td.tag{font-weight:400;color:#555;font-size:.85rem;white-space:nowrap;text-align:left}
@@ -115,11 +118,30 @@ ul.clean li{margin:.3rem 0}
 .est-cmp td:not(:first-child),.est-cmp th:not(:first-child){text-align:right;white-space:nowrap;font-weight:600}
 .est-cmp tr.sum td{background:#d7ebe9;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .field input[type=text]{width:100%;font-size:1rem;font-family:var(--sans);padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
-.print-btn{margin-top:16px;width:100%;border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
-.print-btn:hover{opacity:.92}
-.apply-btn{margin-top:10px;width:100%;border:2px solid var(--accent);background:transparent;color:var(--accent);border-radius:10px;padding:12px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
-.apply-btn:hover{background:var(--accent);color:#fff}
-.apply-note{margin-top:6px;font-size:.78rem;color:var(--muted);text-align:center}
+.apply-btn{margin-top:12px;width:100%;border:2px solid var(--accent);background:var(--accent);color:#fff;border-radius:12px;padding:16px 12px;font-size:1.15rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.apply-btn:hover{opacity:.92}
+.print-btn{margin-top:14px;width:100%;border:2px solid var(--accent);background:transparent;color:var(--accent);border-radius:12px;padding:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.print-btn:hover{background:var(--accent-soft)}
+.apply-note{margin-top:8px;font-size:.92rem;color:var(--fg);text-align:center;line-height:1.6}
+/* やさしい入力（大きめの文字・ステップ表示・＋−ボタン） */
+.sim{font-size:1.05rem}
+.sim-guide{font-size:1.02rem;margin:0 0 6px;background:var(--accent-soft);color:var(--accent-ink);border-radius:10px;padding:10px 14px}
+.step-h{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.12rem;margin:22px 0 10px;color:var(--fg)}
+.step-no{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1rem}
+.hint{font-size:.88rem;color:var(--muted);margin:6px 0 0;line-height:1.55}
+.warnmsg{font-size:.95rem;color:var(--warn);background:var(--warn-soft);border-radius:8px;padding:8px 12px;margin:8px 0 0;font-weight:700}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper input[type=text]{flex:1;min-width:0;text-align:center;font-size:1.5rem;font-weight:700;padding:8px 6px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:var(--fg);font-family:var(--sans);font-variant-numeric:tabular-nums}
+.stepper .unit{flex:none;font-weight:700}
+.st-btn{flex:none;width:52px;height:52px;border-radius:12px;border:2px solid var(--accent);background:var(--surface);color:var(--accent);font-size:1.6rem;font-weight:700;line-height:1;cursor:pointer;font-family:var(--sans)}
+.st-btn:active{background:var(--accent);color:#fff}
+.otxt{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.otxt small{font-size:.84rem;color:var(--muted);line-height:1.5}
+.breakdown .warnrow{color:var(--warn);font-weight:700}
+.ibd{margin-top:10px}
+.ibd>summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.98rem;padding:6px 0}
+.rlabel{font-size:.95rem;color:var(--muted);font-weight:700}
+.opt input:disabled+.otxt{opacity:.55}
 .print-only{display:none}
 /* 育成就労 / 特定技能 switch */
 .mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:5px;margin-bottom:14px}
@@ -144,7 +166,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 @media print{
   @page{margin:9mm}
   :root,:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
-  .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result{display:none !important}
+  .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result,.no-print,.hint,.warnmsg{display:none !important}
   .print-only{display:block !important}
   body{background:#fff;color:#111}
   .wrap{padding:0;max-width:none}
@@ -176,77 +198,80 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="ph-title tk-only">お見積り（特定技能｜月額／概算・税別）</div>
         <div class="ph-meta"><span id="ph-company"></span><span id="ph-date"></span></div>
       </div>
+      <p class="sim-guide no-print" id="sim-intro">上から順に入れるだけで、<b>毎月の費用</b>と<b>入国時の費用</b>の目安がわかります。<br>わからない所は、そのままで大丈夫です。</p>
+
+      <div class="step-h no-print"><span class="step-no">1</span>どちらの制度で受け入れますか？</div>
       <div class="mode-tabs" role="tablist" aria-label="在留資格">
         <button type="button" class="mode-tab on" data-mode="ik" role="tab" aria-selected="true">育成就労</button>
         <button type="button" class="mode-tab" data-mode="tk" role="tab" aria-selected="false">特定技能</button>
       </div>
-      <h2 id="sim-h2">月額を試算する</h2>
-      <p class="note-inline" id="sim-intro">人数を入れると月額を自動計算します。</p>
+      <p class="hint no-print">育成就労＝2027年4月から始まる新しい制度（技能実習のあとの制度）。特定技能＝技能と日本語の試験に合格した方の在留資格。迷ったら「育成就労」のままで大丈夫です。</p>
+
+      <div class="step-h no-print"><span class="step-no">2</span>人数を入れてください</div>
       <div class="grid">
         <div class="field ik-only">
-          <label for="ikusei">育成就労（名）</label>
-          <input type="number" id="ikusei" min="0" value="0" inputmode="numeric">
+          <label for="ikusei">育成就労で受け入れる人数</label>
+          <div class="stepper"><button type="button" class="st-btn" data-for="ikusei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="ikusei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="ikusei" data-d="1" aria-label="1名ふやす">＋</button></div>
         </div>
         <div class="field">
-          <label for="tokutei"><span class="tk-only">特定技能・特定活動（名）</span><span class="ik-only">同じ会社の特定技能（名）※単価の判定用</span></label>
-          <input type="number" id="tokutei" min="0" value="0" inputmode="numeric">
+          <label for="tokutei"><span class="tk-only">特定技能で受け入れる人数</span><span class="ik-only">御社の特定技能の方の人数（いなければ0）</span></label>
+          <div class="stepper"><button type="button" class="st-btn" data-for="tokutei" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="tokutei" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="tokutei" data-d="1" aria-label="1名ふやす">＋</button></div>
+          <p class="hint ik-only">特定技能の方と合わせた人数が多いほど、育成就労の1名あたりの料金が安くなります。</p>
         </div>
       </div>
 
-      <div class="field" id="company-field" style="margin-top:12px">
-        <label for="company">会社名（任意・見積書に表示）</label>
-        <input type="text" id="company" placeholder="〇〇株式会社" autocomplete="off">
+      <div class="opts ik-only" id="init-opts">
+        <div class="field">
+          <label for="nyukoku">そのうち、海外から新しく呼ぶ人数</label>
+          <div class="stepper"><button type="button" class="st-btn" data-for="nyukoku" data-d="-1" aria-label="1名へらす">−</button><input type="text" id="nyukoku" value="0" inputmode="numeric" autocomplete="off"><span class="unit">名</span><button type="button" class="st-btn" data-for="nyukoku" data-d="1" aria-label="1名ふやす">＋</button></div>
+          <p class="hint">入国時の費用（講習・航空券など）の計算に使います。ふつうは上の人数と同じです。</p>
+          <p class="warnmsg" id="ny-warn" hidden></p>
+        </div>
+        <div id="ny-detail">
+          <div class="field">
+            <label for="jlv">その方は、日本語試験 N5（A1）に合格していますか？</label>
+            <select id="jlv">
+              <option value="B">合格している（Bパターン）</option>
+              <option value="A">合格していない・わからない（Aパターン）</option>
+            </select>
+            <p class="hint">わからない場合は「合格していない・わからない」を選ぶと、高めの安全な金額で計算します。</p>
+            <p class="hint" id="a2-note" hidden>「来日前A2取得保証」を選んだため、来日時はN5合格以上になる前提（Bパターン）で計算しています。</p>
+          </div>
+        </div>
       </div>
 
+      <div class="step-h no-print"><span class="step-no">3</span>ご希望のサービスにチェック（なければ飛ばしてOK）</div>
       <div class="opts">
-        <span class="ohead">オプション（必要なものだけ）</span>
-        <label class="opt"><input type="checkbox" id="o_soft"><span>在留申請書類ソフト 使用料</span><span class="price">5,000円/人・月</span></label>
-        <label class="opt"><input type="checkbox" id="o_kyuyo"><span>給与計算サポート</span><span class="price">基本3,000＋1,000円/人</span></label>
+        <label class="opt"><input type="checkbox" id="o_soft"><span class="otxt">在留申請書類ソフト 使用料<small>在留申請の書類を御社で作るためのソフトです。使わない場合は、入国時に提携の行政書士への依頼料（概ね5.5〜20万円/人）がかかります。</small></span><span class="price">5,000円/人・月</span></label>
+        <label class="opt"><input type="checkbox" id="o_kyuyo"><span class="otxt">給与計算サポート<small>毎月の給与計算をお手伝いします。</small></span><span class="price">基本3,000円＋1,000円/人・月</span></label>
       </div>
 
       <div class="opts tk-only" id="tk-opts">
-        <span class="ohead">支援委託の契約方法</span>
         <div class="field">
-          <label for="tkplan">契約方法</label>
+          <label for="tkplan">支援業務の頼み方</label>
           <select id="tkplan">
-            <option value="pkg">一括契約（支援業務すべて・30,000円/人・月）</option>
-            <option value="each">業務ごとの個別依頼（必要な業務だけ）</option>
+            <option value="pkg">まとめて頼む（一括契約・30,000円/人・月）</option>
+            <option value="each">必要な業務だけ頼む（個別依頼）</option>
           </select>
+          <p class="hint">10項目すべてを個別に頼むと60,000円/人・月です。一括契約のほうが1名あたり月30,000円お得です。</p>
         </div>
         <div id="tk-items"></div>
       </div>
 
-      <div class="opts ik-only" id="init-opts">
-        <span class="ohead">入国諸費用（育成就労で新しく入国する方）</span>
-        <div class="grid" style="margin-top:0">
-          <div class="field">
-            <label for="nyukoku">うち新規入国（名）</label>
-            <input type="number" id="nyukoku" min="0" value="0" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label for="jlv">申請時の日本語レベル</label>
-            <select id="jlv">
-              <option value="B">A1（N5）合格済み（Bパターン）</option>
-              <option value="A">A1（N5）未合格（Aパターン）</option>
-            </select>
-          </div>
-        </div>
-        <label class="opt"><input type="checkbox" id="o_a2"><span>来日前A2（N4相当）取得保証</span><span class="price">60,000円/人</span></label>
+      <div class="opts ik-only" id="a2-opts">
+        <label class="opt" id="a2-wrap"><input type="checkbox" id="o_a2"><span class="otxt">来日前A2（N4相当）取得保証<small>来日前に日本語N4相当まで勉強してもらいます。入国後の講習が短くなり、働き始めてからのA2目標講習も不要になります（入国時に1回だけ）。</small></span><span class="price">60,000円/人</span></label>
+        <label class="opt" id="once-opts"><input type="checkbox" id="o_a2koshu"><span class="otxt">A2目標講習<small>日本語A2（N4相当）に合格していない方が、働き始めてから受ける100時間の講習です（他社合同オンライン・1回だけ）。</small></span><span class="price">約10〜20万円/人</span></label>
       </div>
 
-      <div class="opts ik-only" id="once-opts">
-        <span class="ohead">オプション（必要な時だけ・一時金）</span>
-        <label class="opt"><input type="checkbox" id="o_a2koshu"><span>A2目標講習（就労開始後100時間・他社合同オンライン）※A2未取得の方のみ</span><span class="price">約10〜20万円/人</span></label>
-      </div>
-
+      <div class="step-h no-print"><span class="step-no">4</span>金額の目安</div>
       <div class="result">
         <div class="total">
           <div>
-            <div style="font-size:.82rem;color:var(--muted);font-weight:700">月額合計（概算・税別）</div>
+            <div class="rlabel">毎月の費用（概算・税別）</div>
             <div class="big num" id="total">¥0</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:.82rem;color:var(--muted);font-weight:700">1人あたり平均</div>
+            <div class="rlabel">1人あたり</div>
             <div class="num" style="font-size:1.3rem;font-weight:700" id="perhead">¥0</div>
           </div>
         </div>
@@ -258,15 +283,15 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       <div class="result ik-only" id="init-result">
         <div class="total">
           <div>
-            <div style="font-size:.82rem;color:var(--muted);font-weight:700">入国諸費用 合計（入国時・一時金／概算・税別）</div>
+            <div class="rlabel">入国時の費用（1回だけ・概算・税別）</div>
             <div class="big range num" id="itotal">¥0</div>
           </div>
           <div style="text-align:right">
-            <div style="font-size:.82rem;color:var(--muted);font-weight:700">1人あたり</div>
+            <div class="rlabel">1人あたり</div>
             <div class="num" style="font-size:1.1rem;font-weight:700" id="iperhead">¥0</div>
           </div>
         </div>
-        <div class="breakdown" id="ibreakdown"></div>
+        <details class="ibd"><summary>内訳を見る</summary><div class="breakdown" id="ibreakdown"></div></details>
         <p class="note-inline">※ 幅のある項目は目安の下限〜上限です（航空券は実費のため時期・路線で変動）。</p>
       </div>
 
@@ -375,16 +400,22 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         </div>
       </div>
 
-      <button class="print-btn" id="printBtn" type="button">この条件で印刷 / PDF保存</button>
+      <div class="step-h no-print"><span class="step-no">5</span>お申し込み・見積書</div>
+      <div class="field" id="company-field">
+        <label for="company">会社名（見積書に載ります）</label>
+        <input type="text" id="company" placeholder="例：〇〇農園、〇〇株式会社" autocomplete="organization">
+      </div>
+      <p class="warnmsg no-print" id="apply-msg" role="alert" hidden></p>
       <button class="apply-btn" id="applyBtn" type="button">この内容で申し込む</button>
-      <p class="apply-note">人数・オプション・月額・入国諸費用が入った申込フォームが開きます。送信後、受付メールと見積書PDFが自動で届きます。</p>
+      <p class="apply-note">次の画面で、お名前・電話番号・メールアドレスを入れて「送信」を押してください。<br>見積書（PDF）がメールで届き、組合からもご連絡します。</p>
+      <button class="print-btn" id="printBtn" type="button">見積書を印刷・PDF保存する（申し込まずに確認だけ）</button>
     </div>
   </section>
 
   <!-- DETAILS (accordion) -->
   <section id="details-wrap">
     <span class="eyebrow">詳細</span>
-    <h2>各項目をクリックで開く</h2>
+    <h2>料金の詳しい説明（読まなくても申し込めます）</h2>
 
   <!-- STRUCTURE -->
   <details class="acc">
@@ -572,7 +603,9 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     ['携帯電話契約・購入手続き',5500], ['行政機関への手続き',5500], ['苦情受付／定期面談',11000], ['非自発的離職時の転職支援',5500]];
   var SHIEN_EACH=SHIEN_ITEMS.reduce(function(a,x){return a+x[1];},0);
   function ikuseiRate(n){ if(n<=1)return 50000; if(n<=2)return 40000; if(n<=5)return 35000; if(n<=10)return 33000; if(n<=15)return 31000; return 30000; }
-  function num(id){return Math.max(0,parseInt($(id).value,10)||0);}
+  // 全角数字（２など）や「3名」のような入力も人数として読む
+  function toHalf(v){return String(v||'').replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});}
+  function num(id){return Math.min(999,Math.max(0,parseInt(toHalf($(id).value).replace(/[^0-9]/g,''),10)||0));}
 
   // 個別依頼のチェック欄
   var tkBox=$('tk-items');
@@ -585,7 +618,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   // 育成就労 / 特定技能 の切り替え
   var mode='ik';
   function setMode(m){
-    mode=m; document.body.setAttribute('data-mode',m);
+    mode=m; document.body.setAttribute('data-mode',m); $('apply-msg').hidden=true;
     document.querySelectorAll('.mode-tab').forEach(function(b){ var on=b.getAttribute('data-mode')===m; b.classList.toggle('on',on); b.setAttribute('aria-selected',on?'true':'false'); });
     calc();
   }
@@ -593,15 +626,41 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   // 新規入国の人数は、手で変えるまで育成就労の人数に合わせる
   var nyTouched=false;
-  $('nyukoku').addEventListener('input',function(){nyTouched=true;});
-  $('ikusei').addEventListener('input',function(){ if(!nyTouched) $('nyukoku').value=$('ikusei').value; });
+  $('nyukoku').addEventListener('input',function(e){ if(e.isTrusted||e.detail==='step') nyTouched=true; });
+  $('ikusei').addEventListener('input',function(){ if(!nyTouched) $('nyukoku').value=num('ikusei'); });
+
+  // ＋／−ボタン（キーボード入力が苦手な方向け）
+  document.querySelectorAll('.st-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-for'), el=$(id);
+      el.value=Math.max(0,num(id)+parseInt(b.getAttribute('data-d'),10));
+      el.dispatchEvent(new CustomEvent('input',{detail:'step'}));
+    });
+  });
+  // 入力欄を押したら中身を選択（「0」を消さずにそのまま打ち直せる）。離れたら数字だけに整える
+  ['ikusei','tokutei','nyukoku'].forEach(function(id){
+    var el=$(id);
+    el.addEventListener('focus',function(){ setTimeout(function(){ try{el.select();}catch(e){} },0); });
+    el.addEventListener('blur',function(){ el.value=num(id); calc(); });
+  });
 
   function state(){
     var s={ik:num('ikusei'), tk:num('tokutei'), ny:num('nyukoku'), a2:$('o_a2').checked,
       soft:$('o_soft').checked, kyuyo:$('o_kyuyo').checked};
     // A2取得済みならA1も合格なのでBパターン、A2目標講習も不要
-    $('jlv').disabled=s.a2; if(s.a2) $('jlv').value='B';
+    $('jlv').disabled=s.a2; if(s.a2) $('jlv').value='B'; $('a2-note').hidden=!s.a2;
     $('o_a2koshu').disabled=s.a2; if(s.a2) $('o_a2koshu').checked=false;
+    // 新しく呼ぶ人数は育成就労の人数まで
+    var nyw=$('ny-warn');
+    if(s.ny>s.ik){ nyw.hidden=false; nyw.textContent='「新しく呼ぶ人数」は育成就労の人数（'+s.ik+'名）までで計算します。'; s.ny=s.ik; } else nyw.hidden=true;
+    // 新しく呼ぶ人がいる時だけ、日本語レベルと来日前A2保証を聞く
+    $('ny-detail').style.display = s.ny>0 ? '' : 'none';
+    $('a2-wrap').style.display = s.ny>0 ? '' : 'none';
+    if(s.ny<=0){ $('o_a2').checked=false; s.a2=false; $('jlv').disabled=false; $('o_a2koshu').disabled=false; }
+    $('once-opts').style.display = s.ik>0 ? '' : 'none';
+    if(s.ik<=0) $('o_a2koshu').checked=false;
+    $('a2-opts').style.display = s.ik>0 ? '' : 'none';
+    $('init-opts').style.display = s.ik>0 ? '' : 'none';
     s.a2koshu=$('o_a2koshu').checked;
     s.pat=$('jlv').value; s.n=s.ik+s.tk;
     s.mode=mode; s.plan=$('tkplan').value;
@@ -681,6 +740,10 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     if(on.rows.length>1) line(ex,'一時金オプション 合計', rng(on.lo,on.hi));
 
     var it=initRows(s);
+    $('init-result').style.display = s.ny>0 ? '' : 'none';
+    if(s.mode==='tk'&&s.plan==='each'&&!s.items.length){
+      bd.innerHTML='<div class="row warnrow"><span>頼みたい支援業務に1つ以上チェックを入れてください。</span></div>';
+    }
     if(s.ny<=0){
       $('itotal').textContent='¥0'; $('iperhead').textContent='¥0';
       ib.innerHTML='<div class="row"><span>新規入国の人数を入れると入国諸費用を計算します。</span></div>';
@@ -769,7 +832,11 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   var FORM_ENTRY={company:'entry.95220113', ikusei:'entry.291547831', tokutei:'entry.1189208840', options:'entry.1237508071', total:'entry.706478240'};
   var abtn=$('applyBtn');
   if(abtn){ abtn.addEventListener('click',function(){
-    var r=calc(), s=r.s, it=r.it, on=r.on, opts=[];
+    var r=calc(), s=r.s, it=r.it, on=r.on, opts=[], msg=$('apply-msg');
+    var bad = r.m.cnt<=0 ? (s.mode==='tk'?'特定技能':'育成就労')+'の人数が0名です。「2」で人数を入れてからお申し込みください。'
+      : (s.mode==='tk'&&s.plan==='each'&&!s.items.length) ? '頼みたい支援業務に1つ以上チェックを入れてください。' : '';
+    if(bad){ msg.hidden=false; msg.textContent=bad; msg.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+    msg.hidden=true;
     document.querySelectorAll('#breakdown .row.sub').forEach(function(row){
       var sp=row.querySelectorAll('span'); opts.push(sp[0].textContent+'：'+sp[1].textContent);
     });
