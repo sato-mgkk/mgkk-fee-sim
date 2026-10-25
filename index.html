@@ -161,6 +161,9 @@ ul.clean li{margin:.3rem 0}
   .mode-tabs{grid-template-columns:1fr}
   .step-h{font-size:1rem}
 }
+.restored{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.92rem;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin:0 0 10px}
+.restored[hidden]{display:none}
+.restored button{margin-left:auto;border:2px solid var(--accent);background:var(--surface);color:var(--accent);border-radius:9px;padding:6px 12px;font-weight:700;font-size:.92rem;cursor:pointer;font-family:var(--sans)}
 .minibar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 -4px 16px rgba(0,0,0,.18);font-size:.95rem}
 .minibar b{font-size:1.3rem}
 .minibar .mini-lbl{white-space:nowrap}
@@ -230,6 +233,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="ph-title tk-only">お見積り（特定技能｜月額／概算・税別）</div>
         <div class="ph-meta"><span id="ph-company"></span><span id="ph-date"></span></div>
       </div>
+      <p class="restored no-print" id="restored" hidden>前回の入力内容を表示しています。<button type="button" id="resetBtn">最初からやり直す</button></p>
       <p class="sim-guide no-print" id="sim-intro">上から順に入れるだけで、<b>毎月の費用</b>と<b>入国時の費用</b>の目安がわかります。<br>わからない所は、そのままで大丈夫です。</p>
 
       <div class="step-h no-print"><span class="step-no">1</span>どちらの制度で受け入れますか？</div>
@@ -820,6 +824,32 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     return {s:s, m:m, it:it, on:on};
   }
   ids.forEach(function(id){var el=$(id); el.addEventListener('input',calc); el.addEventListener('change',calc);});
+
+  // 入力内容をこの端末に保存し、戻る・再読み込み・申込後に戻った時に復元する
+  var SAVE_KEY='mgkk-sim-input';
+  function save(){
+    try{
+      var v={mode:mode, company:$('company').value, ny:nyTouched};
+      ids.forEach(function(id){ var el=$(id); v[id]= el.type==='checkbox' ? el.checked : el.value; });
+      localStorage.setItem(SAVE_KEY,JSON.stringify(v));
+    }catch(e){}
+  }
+  function restore(){
+    try{
+      var v=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(!v) return false;
+      ids.forEach(function(id){ var el=$(id); if(!(id in v)) return; if(el.type==='checkbox') el.checked=!!v[id]; else el.value=v[id]; });
+      $('company').value=v.company||''; nyTouched=!!v.ny;
+      if(v.mode==='tk') setMode('tk');
+      return num('ikusei')+num('tokutei')>0;
+    }catch(e){ return false; }
+  }
+  ids.concat(['company']).forEach(function(id){ $(id).addEventListener('change',save); $(id).addEventListener('input',save); });
+  document.querySelectorAll('.mode-tab,.st-btn').forEach(function(b){ b.addEventListener('click',save); });
+  if(restore()) $('restored').hidden=false;
+  $('resetBtn').addEventListener('click',function(){
+    try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+    location.reload();
+  });
   calc();
 
   // print / PDF save — builds a reusable unit-price estimate
