@@ -23,8 +23,8 @@ function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&
 function updateForm() {
   var form = FormApp.openById(FORM_ID);
   form.setTitle('MGKK お申し込み');
-  form.setDescription('料金シミュレーターの内容が自動で入っています。ご担当者・連絡先をご入力のうえ送信してください。\n送信後、ご入力のメールアドレスに「お申し込み受付」と月額お見積書（PDF）を自動でお送りします。');
-  form.setConfirmationMessage('お申し込みを受け付けました。ご入力のメールアドレスに受付メールと月額お見積書（PDF）をお送りしました。内容を確認のうえ、組合よりご連絡いたします。');
+  form.setDescription('料金シミュレーターの内容が自動で入っています。ご担当者・連絡先をご入力のうえ送信してください。\n送信後、ご入力のメールアドレスに「お申し込み受付」とお見積書（PDF）を自動でお送りします。');
+  form.setConfirmationMessage('お申し込みを受け付けました。ご入力のメールアドレスに受付メールとお見積書（PDF）をお送りしました。内容を確認のうえ、組合よりご連絡いたします。');
   Logger.log('フォームを更新しました');
 }
 

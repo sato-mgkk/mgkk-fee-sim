@@ -241,10 +241,10 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
           <div class="field">
             <label for="jlv">その方は、日本語試験 N5（A1）に合格していますか？</label>
             <select id="jlv">
-              <option value="B">合格している（Bパターン）</option>
               <option value="A">合格していない・わからない（Aパターン）</option>
+              <option value="B">合格している（Bパターン）</option>
             </select>
-            <p class="hint">わからない場合は「合格していない・わからない」を選ぶと、高めの安全な金額で計算します。</p>
+            <p class="hint">はじめは「合格していない・わからない」（高めの安全な金額）で計算しています。合格している場合だけ変えてください。</p>
             <p class="hint" id="a2-note" hidden>「来日前A2取得保証」を選んだため、来日時はN5合格以上になる前提（Bパターン）で計算しています。</p>
           </div>
         </div>
@@ -663,11 +663,15 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     el.addEventListener('blur',function(){ el.value=num(id); calc(); });
   });
 
+  var jlvBefore='A';
   function state(){
     var s={ik:num('ikusei'), tk:num('tokutei'), ny:num('nyukoku'), a2:$('o_a2').checked,
       soft:$('o_soft').checked, kyuyo:$('o_kyuyo').checked};
     // A2取得済みならA1も合格なのでBパターン、A2目標講習も不要
-    $('jlv').disabled=s.a2; if(s.a2) $('jlv').value='B'; $('a2-note').hidden=!s.a2;
+    // A2保証を外したら、選んでいた日本語レベルに戻す
+    if(s.a2 && !$('jlv').disabled){ jlvBefore=$('jlv').value; $('jlv').value='B'; }
+    if(!s.a2 && $('jlv').disabled){ $('jlv').value=jlvBefore; }
+    $('jlv').disabled=s.a2; $('a2-note').hidden=!s.a2;
     $('o_a2koshu').disabled=s.a2; if(s.a2) $('o_a2koshu').checked=false;
     // 新しく呼ぶ人数は育成就労の人数まで
     var nyw=$('ny-warn');
@@ -675,7 +679,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     // 新しく呼ぶ人がいる時だけ、日本語レベルと来日前A2保証を聞く
     $('ny-detail').style.display = s.ny>0 ? '' : 'none';
     $('a2-wrap').style.display = s.ny>0 ? '' : 'none';
-    if(s.ny<=0){ $('o_a2').checked=false; s.a2=false; $('jlv').disabled=false; $('o_a2koshu').disabled=false; }
+    if(s.ny<=0){ $('o_a2').checked=false; s.a2=false; if($('jlv').disabled) $('jlv').value=jlvBefore; $('jlv').disabled=false; $('o_a2koshu').disabled=false; }
     $('once-opts').style.display = s.ik>0 ? '' : 'none';
     if(s.ik<=0) $('o_a2koshu').checked=false;
     $('a2-opts').style.display = s.ik>0 ? '' : 'none';
