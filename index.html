@@ -140,6 +140,14 @@ ul.clean li{margin:.3rem 0}
 .breakdown .warnrow{color:var(--warn);font-weight:700}
 .ibd{margin-top:10px}
 .ibd>summary{cursor:pointer;color:var(--accent);font-weight:700;font-size:.98rem;padding:6px 0}
+.minibar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:var(--accent);color:#fff;text-decoration:none;box-shadow:0 -4px 16px rgba(0,0,0,.18);font-size:.95rem}
+.minibar b{font-size:1.3rem}
+.minibar .mini-go{margin-left:auto;font-weight:700;font-size:.9rem;white-space:nowrap}
+.minibar[hidden]{display:none}
+body.has-mini{padding-bottom:72px}
+#apply-ok:not([hidden])+.apply-note{display:none}
+.apply-ok{font-size:.95rem;background:var(--accent-soft);color:var(--accent-ink);border-radius:8px;padding:10px 12px;margin:10px 0 0;line-height:1.6}
+.apply-ok a{color:var(--accent-ink);font-weight:700}
 .rlabel{font-size:.95rem;color:var(--muted);font-weight:700}
 .opt input:disabled+.otxt{opacity:.55}
 .print-only{display:none}
@@ -168,6 +176,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   :root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#fff;--surface:#fff;--surface-2:#fff;--fg:#111;--muted:#555;--line:#bbb;--accent:#0f6e6a;--accent-ink:#0a4f4c;--accent-soft:#d7ebe9;color-scheme:light}
   .theme-btn,.print-btn,.apply-btn,.apply-note,header.page,#details-wrap,.foot,#sim-wrap>.eyebrow,#company-field,#sim-h2,#sim-intro,#sim-wrap .grid,#sim-wrap .opts,.result,.no-print,.hint,.warnmsg{display:none !important}
   .print-only{display:block !important}
+  .minibar,.apply-ok{display:none !important}
   body{background:#fff;color:#111}
   .wrap{padding:0;max-width:none}
   section{margin-top:0}
@@ -181,6 +190,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 </style>
 
 <button class="theme-btn" id="themeBtn" type="button">テーマ切替</button>
+<a class="minibar" id="minibar" href="#result-anchor" hidden><span>毎月の費用（目安）</span><b class="num" id="mini-total">¥0</b><span class="mini-go">金額を見る ↓</span></a>
 <div class="wrap">
 
   <header class="page">
@@ -263,7 +273,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <label class="opt" id="once-opts"><input type="checkbox" id="o_a2koshu"><span class="otxt">A2目標講習<small>日本語A2（N4相当）に合格していない方が、働き始めてから受ける100時間の講習です（他社合同オンライン・1回だけ）。</small></span><span class="price">約10〜20万円/人</span></label>
       </div>
 
-      <div class="step-h no-print"><span class="step-no">4</span>金額の目安</div>
+      <div class="step-h no-print" id="result-anchor"><span class="step-no">4</span>金額の目安</div>
       <div class="result">
         <div class="total">
           <div>
@@ -407,6 +417,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       </div>
       <p class="warnmsg no-print" id="apply-msg" role="alert" hidden></p>
       <button class="apply-btn" id="applyBtn" type="button">この内容で申し込む</button>
+      <p class="apply-ok no-print" id="apply-ok" hidden>申込フォームを新しい画面で開きました。お名前などを入れて「送信」を押すと完了です。<br>画面が開かない場合は <a id="apply-link" href="#" target="_blank" rel="noopener">こちらを押してください</a>。</p>
       <p class="apply-note">次の画面で、お名前・電話番号・メールアドレスを入れて「送信」を押してください。<br>見積書（PDF）がメールで届き、組合からもご連絡します。</p>
       <button class="print-btn" id="printBtn" type="button">見積書を印刷・PDF保存する（申し込まずに確認だけ）</button>
     </div>
@@ -722,9 +733,27 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     div.appendChild(a); div.appendChild(b); box.appendChild(div);
   }
 
+  // スマホで下の金額が画面外にある間だけ、画面下に毎月の費用を出す
+  var miniOn=false, resultSeen=true;
+  function updMini(){
+    var show=miniOn && !resultSeen && window.innerWidth<760;
+    $('minibar').hidden=!show; document.body.classList.toggle('has-mini',show);
+  }
+  if('IntersectionObserver' in window){
+    resultSeen=false;
+    var seen={};
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ seen[e.target.id]=e.isIntersecting; });
+      resultSeen=Object.keys(seen).some(function(k){return seen[k];}); updMini();
+    });
+    ['result-anchor','total','applyBtn'].forEach(function(id){ io.observe($(id)); });
+  }
+  window.addEventListener('resize',updMini);
+
   function calc(){
     var s=state(), m=monthly(s);
-    $('apply-msg').hidden=true;
+    $('apply-msg').hidden=true; $('apply-ok').hidden=true;
+    $('mini-total').textContent=fmt(m.total); miniOn=m.cnt>0; updMini();
     var bd=$('breakdown'), ex=$('extra'), ib=$('ibreakdown');
     bd.innerHTML=''; ex.innerHTML=''; ib.innerHTML='';
     var c=m.cnt;
@@ -737,7 +766,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         if(s.plan==='pkg') line(bd,'支援委託費・一括契約（特定技能 '+c+'名 × '+fmt(SHIEN_PKG)+'）', fmt(m.kanri));
         else line(bd,'支援委託費・個別依頼 '+s.items.length+'項目（特定技能 '+c+'名 × '+fmt(m.per)+'）', fmt(m.kanri));
       } else {
-        line(bd,'監理費（育成就労 '+c+'名 × '+fmt(m.rate)+'・合算'+s.n+'名の単価）', fmt(m.kanri));
+        line(bd,'監理費（育成就労 '+c+'名 × '+fmt(m.rate)+(s.tk>0?'・特定技能と合わせて'+s.n+'名の単価':'')+'）', fmt(m.kanri));
       }
       line(bd,'システム管理料', fmt(SYS));
       line(bd,'送り出し機関 管理費（5,000×'+c+'名）', fmt(OKURI*c));
@@ -868,7 +897,9 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     };
     var q=['usp=pp_url'];
     Object.keys(FORM_ENTRY).forEach(function(k){ if(v[k]) q.push(FORM_ENTRY[k]+'='+encodeURIComponent(v[k])); });
-    window.open(FORM_URL+'?'+q.join('&'),'_blank','noopener');
+    var url=FORM_URL+'?'+q.join('&');
+    $('apply-link').href=url; $('apply-ok').hidden=false;
+    window.open(url,'_blank','noopener');
   }); }
 
   // theme toggle
