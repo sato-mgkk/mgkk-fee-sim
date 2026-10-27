@@ -584,7 +584,8 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     <summary><div class="sm-txt"><span class="eyebrow">全体像</span><span class="t">料金のしくみ</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="layers">
-      <div class="layer"><div class="k">①</div><div class="b"><b>監理費（人数連動）</b><div class="d">法定監理業務。育成就労＝階段式（人数帯別）／特定技能＝据え置き。育成就労＋特定技能・技能実習・特定活動の合算人数で育成就労の単価が決まる（既存の方の料金は変わらない）</div></div></div>
+      <div class="layer tk-only"><div class="k">①</div><div class="b"><b>支援委託費（特定技能）</b><div class="d">登録支援機関としての支援業務。一括契約30,000円/人・月、または必要な業務だけ個別依頼（業務ごとの単価）</div></div></div>
+      <div class="layer ik-only"><div class="k">①</div><div class="b"><b>監理費（人数連動）</b><div class="d">法定監理業務。育成就労＝階段式（人数帯別）／特定技能＝据え置き。育成就労＋特定技能・技能実習・特定活動の合算人数で育成就労の単価が決まる（既存の方の料金は変わらない）</div></div></div>
       <div class="layer"><div class="k">②</div><div class="b"><b>システム管理料（全社必須）</b><div class="d">受入管理システム・セキュア環境の運用。10,000円/社・月</div></div></div>
       <div class="layer"><div class="k">③</div><div class="b"><b>付加価値オプション（選択制）</b><div class="d">在留申請書類ソフト・給与計算サポート</div></div></div>
       <div class="layer"><div class="k">＋</div><div class="b"><b>都度・休日の実費</b><div class="d">休日・時間外の出動は都度対応。<b>在留申請書類は①ソフトで自作（使用料5,000円/人・月）／②提携行政書士（実費）。</b>緊急対応と組合発意の訪問は無料</div></div></div>
@@ -593,7 +594,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   </details>
 
   <!-- KANRIHI TABLE -->
-  <details class="acc">
+  <details class="acc ik-only">
     <summary><div class="sm-txt"><span class="eyebrow">毎月</span><span class="t">人数ごとの監理費（育成就労・1名あたり）</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
@@ -617,6 +618,33 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     </div>
   </details>
 
+  <!-- SHIEN TABLE (特定技能) -->
+  <details class="acc tk-only">
+    <summary><div class="sm-txt"><span class="eyebrow">毎月</span><span class="t">支援委託費（特定技能・1名あたり）</span></div><span class="chev">›</span></summary>
+    <div class="body">
+    <div class="tablebox">
+      <table>
+        <caption>人数に関係なく、1名あたりの金額は同じです。</caption>
+        <thead><tr><th>頼み方・支援業務</th><th class="n">1名・月</th></tr></thead>
+        <tbody>
+          <tr class="em"><td>まとめて頼む（一括契約・10項目すべて）</td><td class="n">30,000円</td></tr>
+          <tr><td>（入国前）事前ガイダンスの実施代行</td><td class="n">2,500円</td></tr>
+          <tr><td>出入国時の送迎1回（2人まで）</td><td class="n">2,500円</td></tr>
+          <tr><td>（入国後）生活ガイダンスの実施代行</td><td class="n">5,500円</td></tr>
+          <tr><td>日本語学習の実施支援</td><td class="n">11,000円</td></tr>
+          <tr><td>預貯金口座の開設手続き</td><td class="n">5,500円</td></tr>
+          <tr><td>住居調査、契約、入居手続き</td><td class="n">5,500円</td></tr>
+          <tr><td>携帯電話契約・購入手続き</td><td class="n">5,500円</td></tr>
+          <tr><td>行政機関への手続き</td><td class="n">5,500円</td></tr>
+          <tr><td>苦情受付／定期面談</td><td class="n">11,000円</td></tr>
+          <tr><td>非自発的離職時の転職支援</td><td class="n">5,500円</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note-inline">10項目すべてを個別に頼むと60,000円/人・月です。一括契約のほうが1名あたり月30,000円お得です。</p>
+    </div>
+  </details>
+
   <!-- OPTIONS TABLE -->
   <details class="acc">
     <summary><div class="sm-txt"><span class="eyebrow">毎月</span><span class="t">システム管理料とオプションの料金</span></div><span class="chev">›</span></summary>
@@ -636,16 +664,17 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- onetime + todo -->
   <details class="acc">
-    <summary><div class="sm-txt"><span class="eyebrow">必要な時だけ</span><span class="t">在留手続き・資格取得などの費用</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">必要な時だけ</span><span class="t">必要な時だけかかる費用（在留資格の書類・試験・資格取得の引率）</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
       <table>
         <thead><tr><th>項目</th><th class="n">料金</th><th>単位</th></tr></thead>
         <tbody>
           <tr><td>建設就労者 資格取得の引率・通訳（送迎含む）</td><td class="n">30,000円</td><td>1回・都度</td></tr>
-          <tr><td>技能検定・技能評価試験 受検料</td><td class="n">実費</td><td>1回・都度・企業負担</td></tr>
-          <tr><td>A2（N4相当）受験料：日本語能力試験 N4（国内）</td><td class="n">7,500円（税込）</td><td>1回・都度</td></tr>
-          <tr><td>A2（N4相当）受験料：JFT-Basic（国内）</td><td class="n">10,000円</td><td>1回・都度</td></tr>
+          <tr class="ik-only"><td>技能検定・技能評価試験 受検料</td><td class="n">実費</td><td>1回・都度・企業負担</td></tr>
+          <tr class="tk-only"><td>技能評価試験 受検料</td><td class="n">実費</td><td>1回・都度・ご本人負担</td></tr>
+          <tr class="ik-only"><td>A2（N4相当）受験料：日本語能力試験 N4（国内）</td><td class="n">7,500円（税込）</td><td>1回・都度</td></tr>
+          <tr class="ik-only"><td>A2（N4相当）受験料：JFT-Basic（国内）</td><td class="n">10,000円</td><td>1回・都度</td></tr>
         </tbody>
       </table>
     </div>
@@ -653,7 +682,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       <li><b>在留資格の新規・変更・更新の書類作成</b>は、①企業が在留申請書類ソフトで自作（使用料5,000円/人・月）、または②組合が提携する行政書士へ依頼（行政書士実費・手続きにより概ね5.5万〜20万円／件）。</li>
       <li>当組合は、期限管理・チェック・申請取次・窓口を従来どおり一貫して担い、企業様のお手間を増やしません。</li>
       <li>印紙代や技能検定・技能評価試験の受検料等の実費は受け入れ企業様のご負担（特定技能の方はご本人負担）。受検料は職種・級により変動します。</li>
-      <li>育成就労計画の認定申請手数料（育成就労機構）6,100円（ペイジー払いの場合は＋440円）も企業様のご負担です。</li>
+      <li class="ik-only">育成就労計画の認定申請手数料（育成就労機構）6,100円（ペイジー払いの場合は＋440円）も企業様のご負担です。</li>
       <li>在留資格の変更・更新にかかる入管手数料は、在留期間（発行年数）に応じた実費で、当組合が入管へ納付のうえ企業様へご請求します（会社負担を推奨）。</li>
       <li>建設就労者の資格取得は、会場への引率・通訳の対価として30,000円/回です。</li>
       <li>当組合では、企業様が従来どおり必要資料をお送りいただく感覚で申請書類を作成できるソフトの開発を進めており、企業様のお手間が増えないよう対応してまいります。</li>
@@ -662,7 +691,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   </details>
 
   <!-- entry costs -->
-  <details class="acc">
+  <details class="acc ik-only">
     <summary><div class="sm-txt"><span class="eyebrow">入国時に1回</span><span class="t">入国時にかかる費用（1名あたり）</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
@@ -684,7 +713,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   </details>
 
   <!-- japanese training -->
-  <details class="acc">
+  <details class="acc ik-only">
     <summary><div class="sm-txt"><span class="eyebrow">日本語</span><span class="t">日本語の講習とA2保証について</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
