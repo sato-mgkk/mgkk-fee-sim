@@ -194,7 +194,7 @@ body:not(.staff) .staff-only,body.staff .pub-only{display:none !important}
 body.staff .staff-badge{display:inline-block}
 .rlabel{font-size:.95rem;color:var(--muted);font-weight:700}
 .opt input:disabled+.otxt{opacity:.55}
-#tk-items .opt input:disabled+.otxt{opacity:1}
+#tk-items .opt{cursor:default}
 .print-only{display:none}
 /* 育成就労 / 特定技能 switch */
 .mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:5px;margin-bottom:14px}
@@ -407,10 +407,10 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="field">
           <label for="tkplan">支援業務の頼み方</label>
           <select id="tkplan">
-            <option value="pkg">まとめて頼む（一括契約・30,000円/人・月）おすすめ</option>
-            <option value="each">必要な業務だけ頼む（個別依頼）</option>
+            <option value="pkg">支援をすべて任せる（一括契約・30,000円/人・月）おすすめ</option>
+            <option value="spot">自社で支援し、必要な時だけ頼む（単発スポット）</option>
           </select>
-          <p class="hint">一括契約がおすすめです。日本語学習・ガイダンス・送迎など、支援業務がすべて込みです。個別依頼は毎月22,000円/人＋入国時55,000円/人＋必要な時だけ1件・1回15,000円になります。</p>
+          <p class="hint">一括契約は、義務の支援（ガイダンス・送迎・日本語学習・定期面談など）がすべて毎月の定額に込みです。単発スポットは、自社で支援を行う会社向けに、必要な時だけ1回・1件ごとにお受けします（毎月の金額には入りません）。</p>
         </div>
         <div id="tk-items"></div>
       </div>
@@ -519,7 +519,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       </div>
 
       <div class="print-only tk-only" id="est-tk">
-        <p class="est-lead">本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表の単価でその都度ご確認いただけます。表示はすべて税別。A〜Dは月額、Eは一括契約と個別依頼の比較、F・Gは発生時のみの費用です。</p>
+        <p class="est-lead">本見積書は単価表です。受け入れ人数が変わっても再発行は不要で、下表の単価でその都度ご確認いただけます。表示はすべて税別。A〜Dは月額、Eは一括契約と単発スポットの料金、F・Gは発生時のみの費用です。</p>
         <div class="est-sec">
           <div class="est-h">A. 支援委託費（特定技能1名あたり・月額）</div>
           <table class="est-tbl"><tbody id="tk-plan-rows"></tbody></table>
@@ -540,9 +540,9 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
           <div class="est-ref" id="tk-est-ref"></div>
         </div>
         <div class="est-sec est-page2">
-          <div class="est-h">E. 一括契約と業務ごとの個別依頼の比較（1名あたり・月額）</div>
-          <table class="est-tbl est-cmp"><thead><tr><th>支援業務</th><th>業務ごとの<br>個別依頼</th><th>一括契約</th></tr></thead><tbody id="tk-cmp"></tbody></table>
-          <div class="est-ref" style="font-size:.9rem">一括契約（おすすめ）は毎月の定額にすべて込みで、入国時の費用（55,000円/人）や都度の費用（15,000円/件・回）はかかりません。</div>
+          <div class="est-h">E. 一括契約と単発スポットの料金（別メニュー）</div>
+          <table class="est-tbl est-cmp"><thead><tr><th>支援業務</th><th>単発スポット<br>（都度）</th><th>一括契約<br>（毎月定額）</th></tr></thead><tbody id="tk-cmp"></tbody></table>
+          <div class="est-ref" style="font-size:.9rem">一括契約（全部委託・おすすめ）は、毎月の定額で義務の支援がすべて込みです。単発スポットは自社で支援を行う会社向けで、ご依頼の都度の料金です（毎月の金額には含みません）。</div>
         </div>
         <div class="est-sec">
           <div class="est-h">F. 発生時のみの費用（単価）</div>
@@ -589,7 +589,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     <summary><div class="sm-txt"><span class="eyebrow">全体像</span><span class="t">料金のしくみ</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="layers">
-      <div class="layer tk-only"><div class="k">①</div><div class="b"><b>支援委託費（特定技能）</b><div class="d">登録支援機関としての支援業務。一括契約30,000円/人・月（おすすめ・すべて込み）。必要な業務だけの個別依頼もご提案できます</div></div></div>
+      <div class="layer tk-only"><div class="k">①</div><div class="b"><b>支援委託費（特定技能）</b><div class="d">登録支援機関としての支援業務。一括契約（全部委託）30,000円/人・月（おすすめ・すべて込み）。自社で支援する会社には、必要な時だけの単発スポットもあります</div></div></div>
       <div class="layer ik-only"><div class="k">①</div><div class="b"><b>監理費（人数連動）</b><div class="d">法定監理業務。育成就労＝階段式（人数帯別）／特定技能＝据え置き。育成就労＋特定技能・技能実習・特定活動の合算人数で育成就労の単価が決まる（既存の方の料金は変わらない）</div></div></div>
       <div class="layer"><div class="k">②</div><div class="b"><b>システム管理料（全社必須）</b><div class="d">受入管理システム・セキュア環境の運用。10,000円/社・月</div></div></div>
       <div class="layer"><div class="k">③</div><div class="b"><b>付加価値オプション（選択制）</b><div class="d">在留申請書類ソフト・給与計算サポート</div></div></div>
@@ -625,29 +625,29 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
 
   <!-- SHIEN TABLE (特定技能) -->
   <details class="acc tk-only">
-    <summary><div class="sm-txt"><span class="eyebrow">毎月</span><span class="t">支援委託費（特定技能・1名あたり）</span></div><span class="chev">›</span></summary>
+    <summary><div class="sm-txt"><span class="eyebrow">毎月</span><span class="t">支援の料金（一括契約・単発スポット）</span></div><span class="chev">›</span></summary>
     <div class="body">
     <div class="tablebox">
       <table>
-        <caption>人数に関係なく、1名あたりの金額は同じです。</caption>
-        <thead><tr><th>頼み方・支援業務</th><th class="n">1名あたり</th></tr></thead>
+        <caption>一括契約と単発スポットは別のメニューです。人数に関係なく、1名・1回あたりの金額は同じです。</caption>
+        <thead><tr><th>メニュー・支援業務</th><th class="n">料金</th></tr></thead>
         <tbody>
-          <tr class="em"><td>まとめて頼む（一括契約・おすすめ）すべて込み</td><td class="n">30,000円/月</td></tr>
-          <tr><td colspan="2" style="font-weight:700">個別依頼（ご提案用）</td></tr>
-          <tr><td>ガイダンス（入国前の事前ガイダンス・入国後の生活ガイダンス）</td><td class="n">30,000円（入国時1回）</td></tr>
-          <tr><td>出入国時の送迎</td><td class="n">25,000円（入国時1回）</td></tr>
-          <tr><td>日本語学習の実施支援（必須）</td><td class="n">11,000円/月</td></tr>
-          <tr><td>定期面談（3か月に1回・必須）</td><td class="n">11,000円/月</td></tr>
-          <tr><td>預貯金口座の開設手続き</td><td class="n">15,000円/件</td></tr>
-          <tr><td>住居調査、契約、入居手続き</td><td class="n">15,000円/件</td></tr>
-          <tr><td>携帯電話契約・購入手続き</td><td class="n">15,000円/件</td></tr>
-          <tr><td>行政機関への手続き</td><td class="n">15,000円/件</td></tr>
+          <tr class="em"><td>一括契約（全部委託・おすすめ）義務の支援がすべて込み</td><td class="n">30,000円/人・月</td></tr>
+          <tr><td colspan="2" style="font-weight:700">単発スポット（自社で支援する会社向け・必要な時だけ）</td></tr>
+          <tr><td>（入国前）事前ガイダンス</td><td class="n">30,000円/回</td></tr>
+          <tr><td>出入国時の空港送迎（2名まで）<br><small>遠方は別途</small></td><td class="n">25,000円/回</td></tr>
+          <tr><td>（入国後）生活ガイダンス（8時間相当）</td><td class="n">30,000円/回</td></tr>
+          <tr><td>預貯金口座の開設 同行</td><td class="n">15,000円/件</td></tr>
+          <tr><td>住居の調査・契約・入居 同行<br><small>物件探しが複数回の場合は別途</small></td><td class="n">15,000円/件</td></tr>
+          <tr><td>携帯電話の契約・購入 同行</td><td class="n">15,000円/件</td></tr>
+          <tr><td>行政機関への手続き 同行</td><td class="n">15,000円/件</td></tr>
+          <tr><td>病院（通院）付き添い・通訳（半日）<br><small>半日を超えると1日30,000円・休日は休日出動料</small></td><td class="n">15,000円/回</td></tr>
+          <tr><td>非自発的離職時の転職支援</td><td class="n">15,000円/件</td></tr>
           <tr><td>苦情・トラブル対応</td><td class="n">15,000円/回</td></tr>
-          <tr><td>非自発的離職時の転職支援</td><td class="n">15,000円/回</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note-inline">個別依頼は、毎月22,000円/人（日本語学習・定期面談は必須）＋入国時55,000円/人＋必要な時だけ1件・1回15,000円です。一括契約なら毎月30,000円/人だけで、入国時や都度の費用はかかりません。</p>
+    <p class="note-inline">単発スポットは毎月の金額には入らず、ご依頼の都度の料金です。単発スポットの会社は、日本語学習・定期面談（3か月に1回）などの義務の支援を自社で行う必要があります。</p>
     </div>
   </details>
 
@@ -663,7 +663,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         </tbody>
       </table>
     </div>
-    <p class="note-inline">空港への送迎は、支援業務（一括契約に含む／個別依頼は「出入国時の送迎」2,500円）で対応します。すでに日本にいる方は不要です。</p>
+    <p class="note-inline">空港への送迎は、支援業務（一括契約に含む／単発スポットは「出入国時の空港送迎」25,000円/回・2名まで）で対応します。すでに日本にいる方は不要です。</p>
     </div>
   </details>
 
@@ -823,29 +823,23 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   // 入国時の初期費用（1名あたり。[下限, 上限]）
   var PRE=15000, POST={A:[160000,260000], B:[100000,160000]}, AIR=[140000,140000], TRAVEL=30000, INS=[20000,33000], NINTEI=6100,
       GYOSEI=[55000,200000], A2KOSHU=[100000,200000], A2HOSHO=60000;
-  // 特定技能の支援委託：一括契約（1名・月）と、業務ごとの個別依頼の単価（支援委託手数料に係る説明書）
-  // [業務, 単価, 'm'=毎月 / 'o'=入国時1回 / 'e'=必要な時だけ, 必須, 単位]。一括契約はすべて込み（ガイダンス・送迎の一回払いも不要）
-  var SHIEN_PKG=30000, SHIEN_ITEMS=[
-    ['ガイダンス（入国前の事前ガイダンス・入国後の生活ガイダンス）',30000,'o'], ['出入国時の送迎',25000,'o'],
-    ['日本語学習の実施支援（必須）',11000,'m',true], ['定期面談（3か月に1回・必須）',11000,'m',true],
-    ['預貯金口座の開設手続き',15000,'e',false,'件'], ['住居調査、契約、入居手続き',15000,'e',false,'件'],
-    ['携帯電話契約・購入手続き',15000,'e',false,'件'], ['行政機関への手続き',15000,'e',false,'件'],
-    ['苦情・トラブル対応',15000,'e',false,'回'], ['非自発的離職時の転職支援',15000,'e',false,'回']];
-  function shienSum(list,t){ return list.reduce(function(a,x){return a+(x[2]===t?x[1]:0);},0); }
-  var SHIEN_EACH=shienSum(SHIEN_ITEMS,'m'), SHIEN_ONCE=shienSum(SHIEN_ITEMS,'o');
-  function shienUnit(x){ return x[2]==='o' ? '円/人（入国時1回）' : x[2]==='e' ? '円/'+x[4]+'（必要な時だけ）' : '円/人・月'; }
+  // 特定技能の支援：一括契約（全部委託・1名・月）と、自社支援の会社向けの単発スポット（回・件ごと、月額には足さない）は別メニュー
+  // [業務, 単価, 単位, 補足]
+  var SHIEN_PKG=30000, SPOT=[
+    ['（入国前）事前ガイダンス',30000,'回',''], ['出入国時の空港送迎（2名まで）',25000,'回','遠方は別途'],
+    ['（入国後）生活ガイダンス（8時間相当）',30000,'回',''], ['預貯金口座の開設 同行',15000,'件',''],
+    ['住居の調査・契約・入居 同行',15000,'件','物件探しが複数回の場合は別途'], ['携帯電話の契約・購入 同行',15000,'件',''],
+    ['行政機関への手続き 同行',15000,'件',''], ['病院（通院）付き添い・通訳（半日）',15000,'回','半日を超えると1日30,000円・休日は休日出動料'],
+    ['非自発的離職時の転職支援',15000,'件',''], ['苦情・トラブル対応',15000,'回','']];
+  function spotPrice(x){ return x[1].toLocaleString('ja-JP')+'円/'+x[2]; }
   function ikuseiRate(n){ if(n<=1)return 50000; if(n<=2)return 40000; if(n<=5)return 35000; if(n<=10)return 33000; if(n<=15)return 31000; return 30000; }
   // 全角数字（２など）や「3名」のような入力も人数として読む
   function toHalf(v){return String(v||'').replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});}
   function num(id){return Math.min(999,Math.max(0,parseInt(toHalf($(id).value).replace(/[^0-9]/g,''),10)||0));}
 
-  // 個別依頼のチェック欄
-  var tkBox=$('tk-items');
-  SHIEN_ITEMS.forEach(function(x,i){
-    var l=document.createElement('label'); l.className='opt sub-item';
-    l.innerHTML='<input type="checkbox" id="tki'+i+'" checked'+(x[3]?' disabled':'')+'><span class="otxt">'+x[0]+(x[3]?'<small>特定技能の義務の支援で、続けて行うため外せません</small>':x[2]==='e'?'<small>毎月の金額には入りません。行った時だけかかります</small>':'')+'</span><span class="price">'+x[1].toLocaleString('ja-JP')+shienUnit(x)+'</span>';
-    tkBox.appendChild(l); ids.push('tki'+i);
-  });
+  // 単発スポットの料金一覧（選んだ時だけ表示）
+  $('tk-items').innerHTML='<p class="warnmsg">単発スポットの会社は、日本語学習・定期面談（3か月に1回）などの義務の支援を自社で行う必要があります。</p>'
+    + SPOT.map(function(x){ return '<div class="opt sub-item"><span class="otxt">'+x[0]+(x[3]?'<small>'+x[3]+'</small>':'')+'</span><span class="price">'+spotPrice(x)+'</span></div>'; }).join('');
 
   // 育成就労 / 特定技能 の切り替え
   var mode='ik';
@@ -903,9 +897,9 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     $('init-opts').style.display = s.ik>0 ? '' : 'none';
     s.a2koshu=$('o_a2koshu').checked;
     s.pat=$('jlv').value; s.n=s.ik+s.oth;
+    if($('tkplan').value!=='spot') $('tkplan').value='pkg';
     s.mode=mode; s.plan=$('tkplan').value;
-    s.items=SHIEN_ITEMS.filter(function(x,i){ if(x[3]) $('tki'+i).checked=true; return $('tki'+i).checked; });
-    $('tk-items').style.display = s.plan==='each' ? '' : 'none';
+    $('tk-items').style.display = s.plan==='spot' ? '' : 'none';
     return s;
   }
 
@@ -914,7 +908,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     var rate=ikuseiRate(s.n), cnt, kanri;
     if(s.mode==='tk'){
       cnt=s.tk;
-      var per = s.plan==='pkg' ? SHIEN_PKG : shienSum(s.items,'m');
+      var per = s.plan==='pkg' ? SHIEN_PKG : 0;
       kanri=cnt*per;
     } else {
       cnt=s.ik; kanri=cnt*rate;
@@ -986,7 +980,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       $('total').textContent=fmt(m.total); $('perhead').textContent=fmt(m.total/c);
       if(s.mode==='tk'){
         if(s.plan==='pkg') line(bd,'支援委託費・一括契約（特定技能 '+c+'名 × '+fmt(SHIEN_PKG)+'）', fmt(m.kanri));
-        else line(bd,'支援委託費・個別依頼（毎月の業務 特定技能 '+c+'名 × '+fmt(m.per)+'）', fmt(m.kanri));
+        else { line(bd,'支援委託費（単発スポットのため毎月はかかりません）', fmt(0)); bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>頼んだ時だけ1回・1件ごとに15,000〜30,000円かかります（下の一覧）</span></div>'); }
       } else {
         line(bd,'監理費（育成就労 '+c+'名 × '+fmt(m.rate)+'）', fmt(m.kanri));
         if(s.oth>0) bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>この単価は、今いる特定技能・技能実習・特定活動の方'+s.oth+'名も数えた'+s.n+'名の単価です。今いる方の料金は変わりません</span></div>');
@@ -1000,21 +994,11 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     }
     var on=onceRows(s); if(s.mode==='tk') on=sum([]);
     on.rows.forEach(function(x){ line(ex,'一時金：'+x[0], rng(x[2],x[3])); });
-    // 個別依頼のガイダンス・送迎は入国時に1回だけ（一括契約は込み）
-    if(s.mode==='tk'&&s.plan==='each'&&m.cnt>0){
-      var once=s.items.filter(function(x){return x[2]==='o';});
-      once.forEach(function(x){ line(ex,'入国時1回：'+x[0]+'（'+fmt(x[1])+'×'+m.cnt+'名）', fmt(x[1]*m.cnt)); });
-      var ev=s.items.filter(function(x){return x[2]==='e';});
-      if(ev.length) line(ex,'必要な時だけ：口座開設・住居・携帯・行政手続き・苦情対応・転職支援など（'+ev.length+'項目）','1件・1回 '+fmt(15000));
-      if(once.length||ev.length) bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>一括契約なら、入国時の費用や必要な時の費用もかかりません</span></div>');
-    }
+
     if(on.rows.length>1) line(ex,'一時金オプション 合計', rng(on.lo,on.hi));
 
     var it=initRows(s);
     $('init-result').style.display = s.ny>0 ? '' : 'none';
-    if(s.mode==='tk'&&s.plan==='each'&&!s.items.length){
-      bd.innerHTML='<div class="row warnrow"><span>頼みたい支援業務に1つ以上チェックを入れてください。</span></div>';
-    }
     if(s.ny<=0){
       $('itotal').textContent='¥0'; $('iperhead').textContent='¥0';
       ib.innerHTML='<div class="row"><span>新規入国の人数を入れると入国諸費用を計算します。</span></div>';
@@ -1135,19 +1119,16 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   function printTokutei(s,m){
     var y=function(n){return n.toLocaleString('ja-JP')+'円';};
     $('tk-plan-rows').innerHTML = s.plan==='pkg'
-      ? '<tr><td>一括契約（下記E の支援業務すべてを含む。ガイダンス・送迎の入国時の費用もかかりません）</td><td>'+y(SHIEN_PKG)+'/人・月</td></tr>'
-      : s.items.map(function(x){ return '<tr><td>個別依頼：'+x[0]+'</td><td>'+x[1].toLocaleString('ja-JP')+shienUnit(x)+'</td></tr>'; }).join('')
-        + '<tr><td><b>個別依頼 毎月の業務 合計</b></td><td>'+y(m.per)+'/人・月</td></tr>'
-        + (shienSum(s.items,'o')?'<tr><td><b>個別依頼 入国時1回 合計</b></td><td>'+y(shienSum(s.items,'o'))+'/人</td></tr>':'');
+      ? '<tr><td>一括契約（全部委託）：下記E の支援業務すべてを含む</td><td>'+y(SHIEN_PKG)+'/人・月</td></tr>'
+      : '<tr><td>単発スポット（自社で支援を行う会社向け）：毎月の支援委託費はかかりません。ご依頼の都度、下記E の単価で申し受けます</td><td>0円/月</td></tr>';
     $('tk-est-opts').innerHTML=optUnitRows(s);
     $('tk-est-ref').innerHTML = s.tk>0
-      ? '参考試算（現在：特定技能 '+s.tk+'名・'+(s.plan==='pkg'?'一括契約':'個別依頼'+s.items.length+'項目')+'）<br>支援委託費 '+fmt(m.kanri)+' ＋ 必須費用 '+fmt(m.fixed)+' ＋ オプション '+fmt(m.opt)+' ＝ <b>月額 '+fmt(m.total)+'</b>（税別）'+(s.plan==='each'&&shienSum(s.items,'o')?'<br>このほか入国時1回：ガイダンス・送迎 '+fmt(shienSum(s.items,'o')*s.tk)+'（'+s.tk+'名分）':'')
+      ? '参考試算（現在：特定技能 '+s.tk+'名・'+(s.plan==='pkg'?'一括契約':'単発スポット')+'）<br>支援委託費 '+fmt(m.kanri)+' ＋ 必須費用 '+fmt(m.fixed)+' ＋ オプション '+fmt(m.opt)+' ＝ <b>月額 '+fmt(m.total)+'</b>（税別）'+(s.plan==='spot'?'<br>このほか、ご依頼の都度：下記E の単発スポット料金':'')
       : '※ 人数を入力してから印刷すると、現時点の参考試算も表示されます。';
-    var h=SHIEN_ITEMS.map(function(x,i){ return '<tr><td>'+(i+1)+'. '+x[0]+'</td><td>'+x[1].toLocaleString('ja-JP')+shienUnit(x)+'</td><td>含む</td></tr>'; }).join('');
-    h+='<tr class="sum"><td>1名あたり 毎月</td><td>'+y(SHIEN_EACH)+'</td><td>'+y(SHIEN_PKG)+'</td></tr>';
-    h+='<tr class="sum"><td>1名あたり 入国時1回</td><td>'+y(SHIEN_ONCE)+'</td><td>0円（込み）</td></tr>';
-    h+='<tr class="sum"><td>必要な時だけ（口座開設・苦情対応など）</td><td>15,000円/件・回</td><td>0円（込み）</td></tr>';
-    if(s.tk>0) h+='<tr class="sum"><td>特定技能 '+s.tk+'名 毎月</td><td>'+y(SHIEN_EACH*s.tk)+'</td><td>'+y(SHIEN_PKG*s.tk)+'</td></tr>';
+    var h=SPOT.map(function(x,i){ return '<tr><td>'+(i+1)+'. '+x[0]+(x[3]?'（'+x[3]+'）':'')+'</td><td>'+spotPrice(x)+'</td><td>含む</td></tr>'; }).join('');
+    h+='<tr><td>日本語学習の実施支援・定期面談（3か月に1回）</td><td>自社で実施</td><td>含む</td></tr>';
+    h+='<tr class="sum"><td>毎月の支援委託費（1名あたり）</td><td>0円（都度のみ）</td><td>'+y(SHIEN_PKG)+'</td></tr>';
+    if(s.tk>0) h+='<tr class="sum"><td>特定技能 '+s.tk+'名 毎月</td><td>0円（都度のみ）</td><td>'+y(SHIEN_PKG*s.tk)+'</td></tr>';
     $('tk-cmp').innerHTML=h;
     window.print();
   }
