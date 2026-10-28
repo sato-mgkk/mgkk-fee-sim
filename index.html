@@ -410,7 +410,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
             <option value="pkg">まとめて頼む（一括契約・30,000円/人・月）おすすめ</option>
             <option value="each">必要な業務だけ頼む（個別依頼）</option>
           </select>
-          <p class="hint">一括契約がおすすめです。日本語学習・ガイダンス・送迎など、支援業務がすべて込みです。個別依頼は毎月49,500円/人＋入国時55,000円/人になります。</p>
+          <p class="hint">一括契約がおすすめです。日本語学習・ガイダンス・送迎など、支援業務がすべて込みです。個別依頼は毎月22,000円/人＋入国時55,000円/人＋必要な時だけ1件・1回15,000円になります。</p>
         </div>
         <div id="tk-items"></div>
       </div>
@@ -542,7 +542,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <div class="est-sec est-page2">
           <div class="est-h">E. 一括契約と業務ごとの個別依頼の比較（1名あたり・月額）</div>
           <table class="est-tbl est-cmp"><thead><tr><th>支援業務</th><th>業務ごとの<br>個別依頼</th><th>一括契約</th></tr></thead><tbody id="tk-cmp"></tbody></table>
-          <div class="est-ref" style="font-size:.9rem">一括契約（おすすめ）はすべての支援業務を含み、個別依頼の合計より1名あたり月19,500円お得です。さらに、ガイダンス・送迎の入国時の費用（55,000円/人）もかかりません。個別依頼は、必要な業務だけをご依頼いただく場合のご提案です。</div>
+          <div class="est-ref" style="font-size:.9rem">一括契約（おすすめ）は毎月の定額にすべて込みで、入国時の費用（55,000円/人）や都度の費用（15,000円/件・回）はかかりません。</div>
         </div>
         <div class="est-sec">
           <div class="est-h">F. 発生時のみの費用（単価）</div>
@@ -637,16 +637,17 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
           <tr><td>ガイダンス（入国前の事前ガイダンス・入国後の生活ガイダンス）</td><td class="n">30,000円（入国時1回）</td></tr>
           <tr><td>出入国時の送迎</td><td class="n">25,000円（入国時1回）</td></tr>
           <tr><td>日本語学習の実施支援（必須）</td><td class="n">11,000円/月</td></tr>
-          <tr><td>預貯金口座の開設手続き</td><td class="n">5,500円/月</td></tr>
-          <tr><td>住居調査、契約、入居手続き</td><td class="n">5,500円/月</td></tr>
-          <tr><td>携帯電話契約・購入手続き</td><td class="n">5,500円/月</td></tr>
-          <tr><td>行政機関への手続き</td><td class="n">5,500円/月</td></tr>
-          <tr><td>苦情受付／定期面談</td><td class="n">11,000円/月</td></tr>
-          <tr><td>非自発的離職時の転職支援</td><td class="n">5,500円/月</td></tr>
+          <tr><td>定期面談（3か月に1回・必須）</td><td class="n">11,000円/月</td></tr>
+          <tr><td>預貯金口座の開設手続き</td><td class="n">15,000円/件</td></tr>
+          <tr><td>住居調査、契約、入居手続き</td><td class="n">15,000円/件</td></tr>
+          <tr><td>携帯電話契約・購入手続き</td><td class="n">15,000円/件</td></tr>
+          <tr><td>行政機関への手続き</td><td class="n">15,000円/件</td></tr>
+          <tr><td>苦情・トラブル対応</td><td class="n">15,000円/回</td></tr>
+          <tr><td>非自発的離職時の転職支援</td><td class="n">15,000円/回</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="note-inline">個別依頼をすべて頼むと、毎月49,500円/人＋入国時55,000円/人です。一括契約なら毎月30,000円/人だけで、ガイダンス・送迎の入国時の費用もかかりません。日本語学習の実施支援は特定技能の義務の支援のため、個別依頼でも外せません。</p>
+    <p class="note-inline">個別依頼は、毎月22,000円/人（日本語学習・定期面談は必須）＋入国時55,000円/人＋必要な時だけ1件・1回15,000円です。一括契約なら毎月30,000円/人だけで、入国時や都度の費用はかかりません。</p>
     </div>
   </details>
 
@@ -823,14 +824,16 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   var PRE=15000, POST={A:[160000,260000], B:[100000,160000]}, AIR=[140000,140000], TRAVEL=30000, INS=[20000,33000], NINTEI=6100,
       GYOSEI=[55000,200000], A2KOSHU=[100000,200000], A2HOSHO=60000;
   // 特定技能の支援委託：一括契約（1名・月）と、業務ごとの個別依頼の単価（支援委託手数料に係る説明書）
-  // [業務, 単価, 'm'=毎月 / 'o'=入国時1回, 必須]。一括契約はすべて込み（ガイダンス・送迎の一回払いも不要）
+  // [業務, 単価, 'm'=毎月 / 'o'=入国時1回 / 'e'=必要な時だけ, 必須, 単位]。一括契約はすべて込み（ガイダンス・送迎の一回払いも不要）
   var SHIEN_PKG=30000, SHIEN_ITEMS=[
     ['ガイダンス（入国前の事前ガイダンス・入国後の生活ガイダンス）',30000,'o'], ['出入国時の送迎',25000,'o'],
-    ['日本語学習の実施支援（必須）',11000,'m',true], ['預貯金口座の開設手続き',5500,'m'], ['住居調査、契約、入居手続き',5500,'m'],
-    ['携帯電話契約・購入手続き',5500,'m'], ['行政機関への手続き',5500,'m'], ['苦情受付／定期面談',11000,'m'], ['非自発的離職時の転職支援',5500,'m']];
+    ['日本語学習の実施支援（必須）',11000,'m',true], ['定期面談（3か月に1回・必須）',11000,'m',true],
+    ['預貯金口座の開設手続き',15000,'e',false,'件'], ['住居調査、契約、入居手続き',15000,'e',false,'件'],
+    ['携帯電話契約・購入手続き',15000,'e',false,'件'], ['行政機関への手続き',15000,'e',false,'件'],
+    ['苦情・トラブル対応',15000,'e',false,'回'], ['非自発的離職時の転職支援',15000,'e',false,'回']];
   function shienSum(list,t){ return list.reduce(function(a,x){return a+(x[2]===t?x[1]:0);},0); }
   var SHIEN_EACH=shienSum(SHIEN_ITEMS,'m'), SHIEN_ONCE=shienSum(SHIEN_ITEMS,'o');
-  function shienUnit(x){ return x[2]==='o' ? '円/人（入国時1回）' : '円/人・月'; }
+  function shienUnit(x){ return x[2]==='o' ? '円/人（入国時1回）' : x[2]==='e' ? '円/'+x[4]+'（必要な時だけ）' : '円/人・月'; }
   function ikuseiRate(n){ if(n<=1)return 50000; if(n<=2)return 40000; if(n<=5)return 35000; if(n<=10)return 33000; if(n<=15)return 31000; return 30000; }
   // 全角数字（２など）や「3名」のような入力も人数として読む
   function toHalf(v){return String(v||'').replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0);});}
@@ -840,7 +843,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   var tkBox=$('tk-items');
   SHIEN_ITEMS.forEach(function(x,i){
     var l=document.createElement('label'); l.className='opt sub-item';
-    l.innerHTML='<input type="checkbox" id="tki'+i+'" checked'+(x[3]?' disabled':'')+'><span class="otxt">'+x[0]+(x[3]?'<small>特定技能の義務の支援のため、外せません</small>':'')+'</span><span class="price">'+x[1].toLocaleString('ja-JP')+shienUnit(x)+'</span>';
+    l.innerHTML='<input type="checkbox" id="tki'+i+'" checked'+(x[3]?' disabled':'')+'><span class="otxt">'+x[0]+(x[3]?'<small>特定技能の義務の支援で、続けて行うため外せません</small>':x[2]==='e'?'<small>毎月の金額には入りません。行った時だけかかります</small>':'')+'</span><span class="price">'+x[1].toLocaleString('ja-JP')+shienUnit(x)+'</span>';
     tkBox.appendChild(l); ids.push('tki'+i);
   });
 
@@ -1001,7 +1004,9 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     if(s.mode==='tk'&&s.plan==='each'&&m.cnt>0){
       var once=s.items.filter(function(x){return x[2]==='o';});
       once.forEach(function(x){ line(ex,'入国時1回：'+x[0]+'（'+fmt(x[1])+'×'+m.cnt+'名）', fmt(x[1]*m.cnt)); });
-      if(once.length) bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>一括契約なら、ガイダンス・送迎の入国時の費用もかかりません</span></div>');
+      var ev=s.items.filter(function(x){return x[2]==='e';});
+      if(ev.length) line(ex,'必要な時だけ：口座開設・住居・携帯・行政手続き・苦情対応・転職支援など（'+ev.length+'項目）','1件・1回 '+fmt(15000));
+      if(once.length||ev.length) bd.insertAdjacentHTML('beforeend','<div class="row tierhint"><span>一括契約なら、入国時の費用や必要な時の費用もかかりません</span></div>');
     }
     if(on.rows.length>1) line(ex,'一時金オプション 合計', rng(on.lo,on.hi));
 
@@ -1141,6 +1146,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
     var h=SHIEN_ITEMS.map(function(x,i){ return '<tr><td>'+(i+1)+'. '+x[0]+'</td><td>'+x[1].toLocaleString('ja-JP')+shienUnit(x)+'</td><td>含む</td></tr>'; }).join('');
     h+='<tr class="sum"><td>1名あたり 毎月</td><td>'+y(SHIEN_EACH)+'</td><td>'+y(SHIEN_PKG)+'</td></tr>';
     h+='<tr class="sum"><td>1名あたり 入国時1回</td><td>'+y(SHIEN_ONCE)+'</td><td>0円（込み）</td></tr>';
+    h+='<tr class="sum"><td>必要な時だけ（口座開設・苦情対応など）</td><td>15,000円/件・回</td><td>0円（込み）</td></tr>';
     if(s.tk>0) h+='<tr class="sum"><td>特定技能 '+s.tk+'名 毎月</td><td>'+y(SHIEN_EACH*s.tk)+'</td><td>'+y(SHIEN_PKG*s.tk)+'</td></tr>';
     $('tk-cmp').innerHTML=h;
     window.print();
