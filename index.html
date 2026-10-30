@@ -727,7 +727,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
         <tbody>
           <tr><td>入国前講習費（送り出し国での事前講習）</td><td class="n">15,000円</td><td>目安（1名あたり）</td></tr>
           <tr><td>入国後講習費＋手当・施設（Bパターン：A1=N5合格済）</td><td class="n">14〜16万円</td><td>概算（講習施設の正式見積り前）</td></tr>
-          <tr><td>入国後講習費＋手当・施設（Aパターン：A1=N5未合格）</td><td class="n">16〜26万円</td><td>概算（講習施設の正式見積り前）</td></tr>
+          <tr><td>入国後講習費＋手当・施設（Aパターン：A1=N5未合格）</td><td class="n">28〜32万円</td><td>概算（講習施設の正式見積り前）</td></tr>
           <tr class="em"><td>来日前A2（N4相当）取得保証（送り出し日本語教育・任意）</td><td class="n">60,000円/人</td><td>任意（下記参照）</td></tr>
           <tr><td>渡航費（航空券・往復：片道7万円×2）</td><td class="n">14万円</td><td>実費目安・企業負担・時期と路線で変動</td></tr>
           <tr><td>入国時サポート費用（空港出迎え〜配属まで：転出・転入の手続き、ゆうちょ口座開設を含む）</td><td class="n">30,000円</td><td>1名あたり</td></tr>
@@ -824,7 +824,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   var ids=['ikusei','others','tokutei','nyukoku','ny_all','ny_some','jlv','o_soft','o_kyuyo','o_a2','o_a2koshu','tkplan'];
   var SYS=10000, SOFT=5000, KYUYO_BASE=3000, KYUYO_PER=1000, TOKUTEI_RATE=30000, OKURI=5000;
   // 入国時の初期費用（1名あたり。[下限, 上限]）
-  var PRE=15000, POST={A:[160000,260000], B:[140000,160000]}, AIR=[140000,140000], TRAVEL=30000, INS=[20000,33000], NINTEI=6100,
+  var PRE=15000, POST={A:[280000,320000], B:[140000,160000]}, AIR=[140000,140000], TRAVEL=30000, INS=[20000,33000], NINTEI=6100,
       GYOSEI=[55000,200000], A2KOSHU=[100000,200000], A2HOSHO=60000;
   // 特定技能の支援：一括契約（全部委託・1名・月）と、自社支援の会社向けの単発スポット（回・件ごと、月額には足さない）は別メニュー
   // [業務, 単価, 単位, 補足]
@@ -929,7 +929,7 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
   function initRows(s){
     var ny=s.ny, post=POST[s.pat], r=[];
     r.push(['入国前講習費', '15,000円/人', PRE*ny, PRE*ny, false]);
-    r.push(['入国後講習費＋手当・施設（'+s.pat+'パターン）【概算・講習施設の正式見積り前】', s.pat==='A'?'16〜26万円/人':'14〜16万円/人', post[0]*ny, post[1]*ny, false]);
+    r.push(['入国後講習費＋手当・施設（'+s.pat+'パターン）【概算・講習施設の正式見積り前】', s.pat==='A'?'28〜32万円/人':'14〜16万円/人', post[0]*ny, post[1]*ny, false]);
     r.push(['渡航費 航空券（往復：片道7万円×2・実費目安）', '140,000円/人', AIR[0]*ny, AIR[1]*ny, false]);
     r.push(['入国時サポート費用（空港出迎え〜配属まで：転出・転入、ゆうちょ口座開設含む）', '30,000円/人', TRAVEL*ny, TRAVEL*ny, false]);
     r.push(['技能実習生総合保険（3年一括）', '約2〜3.3万円/人', INS[0]*ny, INS[1]*ny, false]);
