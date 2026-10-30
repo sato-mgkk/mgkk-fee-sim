@@ -120,6 +120,7 @@ ul.clean li{margin:.3rem 0}
 .est-page2{break-before:page}
 .est-cmp td,.est-cmp th{font-size:.9rem;padding:6px 9px}
 .est-cmp td:not(:first-child),.est-cmp th:not(:first-child){text-align:right;white-space:nowrap;font-weight:600}
+.est-cmp tr.best td:last-child{background:#0f6e6a;color:#fff}
 .est-cmp tr.sum td{background:#d7ebe9;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .field input[type=text]{width:100%;font-size:1rem;font-family:var(--sans);padding:8px 10px;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);color:var(--fg)}
 .apply-btn{margin-top:12px;width:100%;border:2px solid var(--accent);background:var(--accent);color:#fff;border-radius:12px;padding:16px 12px;font-size:1.15rem;font-weight:700;cursor:pointer;font-family:var(--sans)}
@@ -1097,10 +1098,14 @@ body[data-mode="tk"] .ik-only,body:not([data-mode="tk"]) .tk-only{display:none !
       h+='<tr><td>'+PATS[0].rows[i][0].replace(/（[AB]パターン）/,'')+'</td>'+PATS.map(function(p){ var x=p.rows[i]; return '<td>'+rng(x[2],x[3])+'</td>'; }).join('')+'</tr>';
     }
     h+='<tr><td>来日前A2（N4相当）取得保証（任意）</td><td>—</td><td>—</td><td>'+fmt(A2HOSHO)+'</td></tr>';
-    h+='<tr class="sum"><td>1名あたり 合計</td>'+PATS.map(function(p){ return '<td>'+rng(p.lo,p.hi)+'</td>'; }).join('')+'</tr>';
-    if(s.ny>0) h+='<tr class="sum"><td>新規入国 '+s.ny+'名 合計</td>'+PATS.map(function(p){ return '<td>'+rng(p.lo*s.ny,p.hi*s.ny)+'</td>'; }).join('')+'</tr>';
+    h+='<tr class="sum"><td>1名あたり 合計（入国時）</td>'+PATS.map(function(p){ return '<td>'+rng(p.lo,p.hi)+'</td>'; }).join('')+'</tr>';
+    if(s.ny>1) h+='<tr class="sum"><td>新規入国 '+s.ny+'名 合計（入国時）</td>'+PATS.map(function(p){ return '<td>'+rng(p.lo*s.ny,p.hi*s.ny)+'</td>'; }).join('')+'</tr>';
+    // 働き始めてからのA2目標講習まで含めると、B＋（来日前A2取得保証）が一番安くなる
+    var ko=PATS.map(function(p,i){ return i===2?[0,0]:A2KOSHU; });
+    h+='<tr><td>【入国後】A2目標講習（A2未合格の場合・就労開始後100時間）</td>'+ko.map(function(k,i){ return '<td>'+(i===2?'不要（0円）':rng(k[0],k[1]))+'</td>'; }).join('')+'</tr>';
+    h+='<tr class="sum best"><td>A2目標講習まで含めた 1名あたりの総額</td>'+PATS.map(function(p,i){ return '<td>'+rng(p.lo+ko[i][0],p.hi+ko[i][1])+(i===2?'<br><small>いちばんお得</small>':'')+'</td>'; }).join('')+'</tr>';
     $('est-init').innerHTML=h;
-    $('est-iref').innerHTML = 'Aパターン：入国後講習320時間以上（入国前160時間で160時間に短縮）／Bパターン：220時間以上（入国前110時間で110時間に短縮）。<br>来日前A2取得保証を選ぶと、就労開始後のA2目標講習（約10〜20万円/人・オプション）が不要になります。'
+    $('est-iref').innerHTML = '<span style="font-weight:700">来日前A2取得保証（B＋）は入国時に6万円多くかかりますが、働き始めてからのA2目標講習（約10〜20万円）が不要になるため、総額ではいちばんお得です。</span><br>Aパターン：入国後講習320時間以上（入国前160時間で160時間に短縮）／Bパターン：220時間以上（入国前110時間で110時間に短縮）。<br>来日前A2取得保証を選ぶと、就労開始後のA2目標講習（約10〜20万円/人・オプション）が不要になります。'
       + (s.ny>0 ? '' : '<br>※ 新規入国の人数を入力してから印刷すると、人数分の合計も表示されます。');
 
     // F. one-time options
